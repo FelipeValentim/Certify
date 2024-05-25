@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\event-checkin-api.props" />
+</Project>

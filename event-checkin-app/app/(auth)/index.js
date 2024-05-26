@@ -16,41 +16,92 @@ import {
   Pressable,
   ImageBackground,
 } from "react-native";
-
-interface User {
-  userName: string;
-  password: string;
-}
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AccountAPI } from "@/services/AccountAPI";
+import { setToken } from "@/storage/AsyncStorage";
 
 export default function Login() {
-  const [name, setName] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [user, setUser] = React.useState<User>({ userName: "", password: "" });
+  const [user, setUser] = React.useState({ email: "", password: "" });
+  const [errors, setErrors] = React.useState({
+    email: undefined,
+    password: undefined,
+    invalidCredentials: undefined,
+  });
+
+  const setEmail = (value) => {
+    if (value) {
+      setErrors({ ...errors, email: undefined });
+      setUser({ ...user, email: value });
+    } else {
+      setErrors({ ...errors, email: "E-mail inválido" });
+      setUser({ ...user, email: "" });
+    }
+  };
+
+  const setPassword = (value) => {
+    if (value) {
+      setErrors({ ...errors, password: undefined });
+      setUser({ ...user, password: value });
+    } else {
+      setErrors({ ...errors, password: "Senha inválido" });
+      setUser({ ...user, password: "" });
+    }
+  };
+
+  const login = async () => {
+    if (!user.email || !user.password) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: !user.email ? "E-mail é obrigatório" : undefined,
+        password: !user.password ? "Senha é obrigatória" : undefined,
+      }));
+    } else {
+      try {
+        const response = await AccountAPI.login(user);
+
+        setToken(response.data);
+      } catch (error) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          invalidCredentials: error.response?.data,
+        }));
+      }
+    }
+  };
+
   return (
     <ImageBackground
       source={require("@/assets/images/background-login.svg")}
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
+        <MaterialCommunityIcons
+          style={styles.qrCode}
+          name="qrcode"
+          size={100}
+          color="black"
+        />
         <View>
-          <H1 style={styles.h1}>Olá</H1>
+          <H1 style={styles.h1}>Bem-vindo</H1>
           <H3 style={styles.h2}>Entre na sua conta</H3>
         </View>
 
         <View>
           <Input
-            value={user.userName}
-            onChangeText={(text) => setUser({ ...user, userName: text })}
-            placeholder="Nome"
+            value={user.email}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
+            error={errors.email}
           ></Input>
           <InputPassword
             value={user.password}
-            onChangeText={(text) => setUser({ ...user, password: text })}
+            onChangeText={(text) => setPassword(text)}
             placeholder="Senha"
+            error={errors.password}
           ></InputPassword>
         </View>
 
-        <Pressable style={styles.button} onPress={() => console.log("clicou")}>
+        <Pressable style={styles.button} onPress={login}>
           <Text style={styles.textButton}>Login</Text>
         </Pressable>
 
@@ -107,5 +158,8 @@ const styles = StyleSheet.create({
   },
   register: {
     color: primaryColor,
+  },
+  qrCode: {
+    alignSelf: "center",
   },
 });

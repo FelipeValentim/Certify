@@ -11,7 +11,12 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function InputPassword({ value, onChangeText, placeholder }) {
+export default function InputPassword({
+  value,
+  onChangeText,
+  placeholder,
+  error,
+}) {
   const { width } = Dimensions.get("window");
   const [focus, setFocus] = React.useState(false);
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
@@ -51,7 +56,6 @@ export default function InputPassword({ value, onChangeText, placeholder }) {
         useNativeDriver: false,
       }).start();
     }
-    console.log(lineAnim);
   }, [focus]);
 
   const styles = StyleSheet.create({
@@ -73,7 +77,7 @@ export default function InputPassword({ value, onChangeText, placeholder }) {
     placeholder: {
       position: "absolute",
       left: 15,
-      color: "#999",
+      color: error ? "#92000A" : "#999",
       bottom: placeholderAnim,
       pointerEvents: "none",
       fontFamily: "PoppinsRegular",
@@ -90,7 +94,7 @@ export default function InputPassword({ value, onChangeText, placeholder }) {
       position: "absolute",
       width: "100%",
       height: 2,
-      backgroundColor: "#adadad",
+      backgroundColor: error ? "#92000A" : "#adadad",
       bottom: 0,
     },
     focusLine: {

@@ -6,26 +6,15 @@ import InputPassword from "@/components/InputPassword";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";
 import {
-  Animated,
   StyleSheet,
   View,
-  TextInput,
   Text,
-  Dimensions,
-  Button,
   Pressable,
   ImageBackground,
 } from "react-native";
 
-interface User {
-  userName: string;
-  password: string;
-}
-
 export default function Register() {
-  const [name, setName] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [user, setUser] = React.useState<User>({ userName: "", password: "" });
+  const [user, setUser] = React.useState({ userName: "", password: "" });
 
   return (
     <ImageBackground

@@ -30,3 +30,8 @@ C:\Projects\event-checkin\event-checkin-api\event-checkin-api\obj\Debug\net6.0\r
 C:\Projects\event-checkin\event-checkin-api\event-checkin-api\obj\Debug\net6.0\event-checkin-api.pdb
 C:\Projects\event-checkin\event-checkin-api\event-checkin-api\obj\Debug\net6.0\event-checkin-api.genruntimeconfig.cache
 C:\Projects\event-checkin\event-checkin-api\event-checkin-api\obj\Debug\net6.0\ref\event-checkin-api.dll
+C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll

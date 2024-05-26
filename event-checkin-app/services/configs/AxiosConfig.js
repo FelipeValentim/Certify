@@ -3,16 +3,15 @@ import { httpStatus } from "../../constants/Default";
 
 // initializing the axios instance with custom configs
 const api = axios.create({
-  withCredentials: true,
-  baseURL: "http://localhost:8081",
+  baseURL: "https://localhost:7093",
 });
 
-const errorHandler = async (error: AxiosError) => {
+const errorHandler = async (error) => {
   const statusCode = error.response?.status;
   // logging only errors that are not 401
   if (statusCode && statusCode !== httpStatus.unauthorized) {
     if (typeof error.response?.data === "string") {
-      const message: string = error.response?.data;
+      const message = error.response?.data;
     }
   } else if (statusCode && statusCode === httpStatus.unauthorized) {
   }

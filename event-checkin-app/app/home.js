@@ -4,7 +4,7 @@ import H3 from "@/components/H3";
 import Input from "@/components/Input";
 import InputPassword from "@/components/InputPassword";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Animated,
   StyleSheet,
@@ -17,46 +17,39 @@ import {
   ImageBackground,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { AccountAPI } from "@/services/AccountAPI";
-import { removeToken, setToken } from "@/storage/AsyncStorage";
-import { useDispatch } from "react-redux";
-import { signOut } from "@/redux/isSignedIn";
+import { EventAPI } from "@/services/EventAPI";
+import { removeToken } from "@/storage/AsyncStorage";
+import { useDispatch, useSelector } from "react-redux";
+import api from "@/services/configs/AxiosConfig";
 
 export default function HomeScreen() {
+  const [events, setEvents] = useState();
   const dispatch = useDispatch();
-
-  const [user, setUser] = React.useState({ email: "", password: "" });
-  const [errors, setErrors] = React.useState({
-    email: undefined,
-    password: undefined,
-    invalidCredentials: undefined,
-  });
+  const token = useSelector((state) => state.token);
 
   const logout = async () => {
     await removeToken();
-    dispatch(signOut());
+    dispatch(removeToken());
   };
 
-  React.useEffect(() => {
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      email: !user.email ? "E-mail é obrigatório" : undefined,
-      password: !user.password ? "Senha é obrigatória" : undefined,
-    }));
-  }, [user]);
+  useEffect(() => {
+    const getEvents = async () => {
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+      const response = await api.get("/event/getevents");
+      console.log(response);
+      setEvents(response.data);
+    };
+    getEvents();
+  }, []);
 
   return (
-    <ImageBackground
-      source={require("@/assets/images/background-login.svg")}
-      style={styles.backgroundImage}
-    >
-      <View style={styles.container}>
-        <Text>Guests</Text>
-        <Pressable onPress={() => logout()}>
-          <MaterialCommunityIcons name="light-switch" size={100} />
-        </Pressable>
-      </View>
-    </ImageBackground>
+    <View style={styles.container}>
+      <Text>Guests</Text>
+      <Pressable onPress={() => logout()}>
+        <MaterialCommunityIcons name="light-switch" size={100} />
+      </Pressable>
+    </View>
   );
 }
 
@@ -68,9 +61,5 @@ const styles = StyleSheet.create({
     gap: 32,
     justifyContent: "center",
     alignContent: "center",
-  },
-  backgroundImage: {
-    width: screenWidth,
-    height: screenHeight,
   },
 });

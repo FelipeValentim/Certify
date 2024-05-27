@@ -1,4 +1,5 @@
 import api from "./configs/AxiosConfig";
+import { defineCancelApiObject } from "./configs/AxiosUtils";
 
 export const AccountAPI = {
   login: async function (user, cancel = false) {
@@ -14,3 +15,4 @@ export const AccountAPI = {
 };
 
 // defining the cancel API object for ProductAPI
+const cancelApiObject = defineCancelApiObject(AccountAPI);

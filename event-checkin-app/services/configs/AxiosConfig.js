@@ -1,6 +1,16 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { httpStatus } from "../../constants/Default";
 
+// store
+import store from "@/redux/configureStore";
+store.subscribe(listener);
+
+function listener() {
+  const token = store.getState().token;
+  console.log("dsa", token);
+  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+}
+console.log("dasdds");
 // initializing the axios instance with custom configs
 const api = axios.create({
   baseURL: "https://localhost:7093",

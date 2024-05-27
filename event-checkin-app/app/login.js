@@ -19,8 +19,12 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AccountAPI } from "@/services/AccountAPI";
 import { setToken } from "@/storage/AsyncStorage";
+import { useDispatch } from "react-redux";
+import { signIn } from "@/redux/isSignedIn";
 
-export default function Login() {
+export default function LoginScreen() {
+  const dispatch = useDispatch();
+
   const [user, setUser] = React.useState({ email: "", password: "" });
   const [errors, setErrors] = React.useState({
     email: undefined,
@@ -59,7 +63,8 @@ export default function Login() {
       try {
         const response = await AccountAPI.login(user);
 
-        setToken(response.data);
+        await setToken(response.data);
+        dispatch(signIn());
       } catch (error) {
         setErrors((prevErrors) => ({
           ...prevErrors,

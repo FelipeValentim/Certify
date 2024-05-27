@@ -13,7 +13,7 @@ import {
   ImageBackground,
 } from "react-native";
 
-export default function Register() {
+export default function RegisterScreen() {
   const [user, setUser] = React.useState({ userName: "", password: "" });
 
   return (
@@ -47,10 +47,6 @@ export default function Register() {
     </ImageBackground>
   );
 }
-
-Register.navigationOptions = {
-  title: "register",
-};
 
 const styles = StyleSheet.create({
   container: {

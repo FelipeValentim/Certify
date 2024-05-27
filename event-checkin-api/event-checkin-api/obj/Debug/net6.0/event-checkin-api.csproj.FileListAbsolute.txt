@@ -35,3 +35,6 @@ C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\M
 C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
 C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
 C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Projects\event-checkin\event-checkin-api\event-checkin-api\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll

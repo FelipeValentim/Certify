@@ -20,7 +20,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AccountAPI } from "@/services/AccountAPI";
 import { setToken } from "@/storage/AsyncStorage";
 import { useDispatch } from "react-redux";
-import { signIn } from "@/redux/isSignedIn";
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
@@ -64,7 +63,7 @@ export default function LoginScreen() {
         const response = await AccountAPI.login(user);
 
         await setToken(response.data);
-        dispatch(signIn());
+        dispatch(setToken(response.data));
       } catch (error) {
         setErrors((prevErrors) => ({
           ...prevErrors,

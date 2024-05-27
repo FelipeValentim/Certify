@@ -1,8 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import isSignedIn from "./isSignedIn";
+import token from "./token";
 
 const reducer = combineReducers({
-  isSignedIn,
+  token,
 });
 
 // export const store = configureStore({

@@ -13,7 +13,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signIn } from "@/redux/isSignedIn";
+import { setToken } from "@/redux/token";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -21,17 +21,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const dispatch = useDispatch();
-  const isSignedIn = useSelector((state) => state.isSignedIn);
-
-  useEffect(() => {
-    const login = async () => {
-      const token = await getToken();
-      if (token) {
-        dispatch(signIn());
-      }
-    };
-    login();
-  }, []);
+  const isSignedIn = useSelector((state) => state.token);
 
   useEffect(() => {
     async function prepare() {
@@ -45,6 +35,13 @@ const App = () => {
         });
         // Artificially delay for two seconds to simulate a slow loading
         // experience. Please remove this if you copy and paste the code!
+
+        // GET TOKEN
+        const token = await getToken();
+        if (token) {
+          dispatch(setToken(token));
+        }
+
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } finally {
         // Tell the application to render
@@ -76,7 +73,7 @@ const App = () => {
         {isSignedIn ? (
           <Stack.Screen
             name="home"
-            options={{ headerShown: false, title: "home" }}
+            options={{ title: "home" }}
             component={HomeScreen}
           />
         ) : (

@@ -18,9 +18,13 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AccountAPI } from "@/services/AccountAPI";
-import { setToken } from "@/storage/AsyncStorage";
+import { removeToken, setToken } from "@/storage/AsyncStorage";
+import { useDispatch } from "react-redux";
+import { signOut } from "@/redux/isSignedIn";
 
-export default function Login() {
+export default function HomeScreen() {
+  const dispatch = useDispatch();
+
   const [user, setUser] = React.useState({ email: "", password: "" });
   const [errors, setErrors] = React.useState({
     email: undefined,
@@ -28,26 +32,9 @@ export default function Login() {
     invalidCredentials: undefined,
   });
 
-  const login = async () => {
-    if (!user.email || !user.password) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: !user.email ? "E-mail é obrigatório" : undefined,
-        password: !user.password ? "Senha é obrigatória" : undefined,
-      }));
-    } else {
-      try {
-        const response = await AccountAPI.login(user);
-
-        setToken(response.data);
-      } catch (error) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          invalidCredentials: error.response?.data,
-        }));
-      }
-      // console.log(response);
-    }
+  const logout = async () => {
+    await removeToken();
+    dispatch(signOut());
   };
 
   React.useEffect(() => {
@@ -65,6 +52,9 @@ export default function Login() {
     >
       <View style={styles.container}>
         <Text>Guests</Text>
+        <Pressable onPress={() => logout()}>
+          <MaterialCommunityIcons name="light-switch" size={100} />
+        </Pressable>
       </View>
     </ImageBackground>
   );

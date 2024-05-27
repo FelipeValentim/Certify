@@ -4,7 +4,7 @@ export const setToken = async (token) => {
   await AsyncStorage.setItem("accessToken", token);
 };
 
-export const removeToken = async (token) => {
+export const removeToken = async () => {
   await AsyncStorage.removeItem("accessToken");
 };
 

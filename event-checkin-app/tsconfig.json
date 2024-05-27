@@ -15,8 +15,8 @@
     "app/+not-found.js",
     "app/+html.js",
     "app/_layout.js",
-    "app/(auth)/_layout.js",
-    "app/(auth)/register.js",
-    "app/(auth)/index.js"
+    "app/auth/_layout.js",
+    "app/auth/register.js",
+    "app/auth/index.js"
   ]
 }

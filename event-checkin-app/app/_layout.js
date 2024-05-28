@@ -1,6 +1,6 @@
 import "react-native-reanimated";
 
-import App from "./_app";
+import App from "./_main";
 import { Provider } from "react-redux";
 import store from "@/redux/configureStore";
 

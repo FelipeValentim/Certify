@@ -4,14 +4,14 @@ const slice = createSlice({
   name: "token",
   initialState: null,
   reducers: {
-    setToken: (_, action) => {
+    signIn: (_, action) => {
       return action.payload;
     },
-    removeToken: () => {
+    signOut: () => {
       return null;
     },
   },
 });
 
-export const { setToken, removeToken } = slice.actions;
+export const { signIn, signOut } = slice.actions;
 export default slice.reducer;

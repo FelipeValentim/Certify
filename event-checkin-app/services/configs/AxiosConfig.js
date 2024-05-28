@@ -1,5 +1,5 @@
 import axios from "axios";
-import { httpStatus } from "../../constants/Default";
+import { baseURL, httpStatus } from "../../constants/Default";
 
 // store
 import store from "@/redux/configureStore";
@@ -13,7 +13,7 @@ function listener() {
 console.log("dasdds");
 // initializing the axios instance with custom configs
 const api = axios.create({
-  baseURL: "https://localhost:7093",
+  baseURL: baseURL,
 });
 
 const errorHandler = async (error) => {

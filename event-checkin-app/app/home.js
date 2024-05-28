@@ -1,37 +1,12 @@
-import H1 from "@/components/H1";
-import H2 from "@/components/H2";
-import H3 from "@/components/H3";
-import Input from "@/components/Input";
-import InputPassword from "@/components/InputPassword";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React, { useEffect, useState } from "react";
-import {
-  Animated,
-  StyleSheet,
-  View,
-  TextInput,
-  Text,
-  Dimensions,
-  Button,
-  Pressable,
-  ImageBackground,
-} from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { EventAPI } from "@/services/EventAPI";
-import { removeToken } from "@/storage/AsyncStorage";
-import { useDispatch, useSelector } from "react-redux";
+import { StyleSheet, View, Text, Image } from "react-native";
 import api from "@/services/configs/AxiosConfig";
-import { signOut } from "@/redux/token";
+import { useSelector } from "react-redux";
 
 export default function HomeScreen() {
   const [events, setEvents] = useState();
-  const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
-
-  const logout = async () => {
-    await removeToken();
-    dispatch(signOut());
-  };
 
   useEffect(() => {
     const getEvents = async () => {
@@ -46,21 +21,44 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text>Guests</Text>
-      <Pressable onPress={() => logout()}>
-        <MaterialCommunityIcons name="light-switch" size={100} />
-      </Pressable>
+      {events &&
+        events.map((event) => (
+          <View key={event.id} style={styles.event}>
+            <Image
+              style={styles.photo}
+              source={{
+                uri: event.photo,
+              }}
+            />
+            <Text style={styles.name}>{event.name}</Text>
+          </View>
+        ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#FFF",
     height: screenHeight,
-    padding: 16,
+  },
+  event: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: primaryColor,
     display: "flex",
-    gap: 32,
-    justifyContent: "center",
-    alignContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  name: {
+    fontSize: 16,
+    fontFamily: "PoppinsRegular",
+    fontWeight: "bold",
+  },
+  photo: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
   },
 });

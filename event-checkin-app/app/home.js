@@ -1,6 +1,6 @@
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import api from "@/services/configs/AxiosConfig";
 import { useSelector } from "react-redux";
 
@@ -21,31 +21,39 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {events &&
-        events.map((event) => (
-          <View key={event.id} style={styles.event}>
-            <Image
-              style={styles.photo}
-              source={{
-                uri: event.photo,
-              }}
-            />
-            <Text style={styles.name}>{event.name}</Text>
-          </View>
-        ))}
+      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+        {events &&
+          events.map((event) => (
+            <View key={event.id} style={styles.card}>
+              <View style={styles.event}>
+                <Image
+                  style={styles.photo}
+                  source={{
+                    uri: event.photo,
+                  }}
+                />
+                <Text style={styles.name}>{event.name}</Text>
+                <Text style={styles.date}>{event.date}</Text>
+              </View>
+            </View>
+          ))}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#F5F0FF",
     height: screenHeight,
+  },
+  card: {
+    backgroundColor: "#FFF",
+    margin: 10,
+    borderRadius: 20,
   },
   event: {
     padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: primaryColor,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -60,5 +68,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
+  },
+  date: {
+    fontSize: 12,
+    fontFamily: "PoppinsRegular",
   },
 });

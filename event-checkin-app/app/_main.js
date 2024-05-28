@@ -17,6 +17,7 @@ import { signIn } from "@/redux/token";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import DismissKeyboard from "@/components/DismissKeyboard";
+import Header from "@/components/Header";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -73,11 +74,24 @@ const Main = () => {
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator
+            screenOptions={{
+              header: (props) => <Header {...props} />,
+              headerStyle: {
+                backgroundColor: "#7b55e0",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+            }}
+          >
             {isSignedIn ? (
               <Stack.Screen
                 name="home"
-                options={{ title: "home" }}
+                options={{
+                  title: "Início",
+                }}
                 component={HomeScreen}
               />
             ) : (

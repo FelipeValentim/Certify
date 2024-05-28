@@ -21,6 +21,7 @@ import { EventAPI } from "@/services/EventAPI";
 import { removeToken } from "@/storage/AsyncStorage";
 import { useDispatch, useSelector } from "react-redux";
 import api from "@/services/configs/AxiosConfig";
+import { signOut } from "@/redux/token";
 
 export default function HomeScreen() {
   const [events, setEvents] = useState();
@@ -29,7 +30,7 @@ export default function HomeScreen() {
 
   const logout = async () => {
     await removeToken();
-    dispatch(removeToken());
+    dispatch(signOut());
   };
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import LoginScreen from "./login";
 import HomeScreen from "./home";
 import RegisterScreen from "./register";
 import NotFoundScreen from "./+not-found";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import * as Font from "expo-font";
 import { getToken } from "@/storage/AsyncStorage";
@@ -13,12 +13,15 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setToken } from "@/redux/token";
+import { signIn } from "@/redux/token";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import DismissKeyboard from "@/components/DismissKeyboard";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 
-const App = () => {
+const Main = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const dispatch = useDispatch();
   const isSignedIn = useSelector((state) => state.token);
@@ -39,7 +42,7 @@ const App = () => {
         // GET TOKEN
         const token = await getToken();
         if (token) {
-          dispatch(setToken(token));
+          dispatch(signIn(token));
         }
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -52,15 +55,14 @@ const App = () => {
     prepare();
   }, []);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      await SplashScreen.hideAsync();
-    }
+  useEffect(() => {
+    const hideSplashScreen = async () => {
+      if (appIsReady) {
+        await SplashScreen.hideAsync();
+      }
+    };
+
+    hideSplashScreen();
   }, [appIsReady]);
 
   if (!appIsReady) {
@@ -68,40 +70,28 @@ const App = () => {
   }
 
   return (
-    <View style={styles.root} onLayout={onLayoutRootView}>
-      <Stack.Navigator>
-        {isSignedIn ? (
-          <Stack.Screen
-            name="home"
-            options={{ title: "home" }}
-            component={HomeScreen}
-          />
-        ) : (
-          <>
-            <Stack.Screen
-              name="login"
-              options={{ headerShown: false, title: "login" }}
-              component={LoginScreen}
-            />
-            <Stack.Screen
-              name="register"
-              options={{ headerShown: false, title: "register" }}
-              component={RegisterScreen}
-            />
-          </>
-        )}
-
-        <Stack.Screen name="+not-found" component={NotFoundScreen} />
-      </Stack.Navigator>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            {isSignedIn ? (
+              <Stack.Screen
+                name="home"
+                options={{ title: "home" }}
+                component={HomeScreen}
+              />
+            ) : (
+              <Stack.Screen
+                name="login"
+                options={{ headerShown: false, title: "login" }}
+                component={LoginScreen}
+              />
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
-const styles = StyleSheet.create({
-  root: {
-    fontFamily: "PoppinsRegular",
-    backgroundColor: "#FFF",
-  },
-});
-
-export default App;
+export default Main;

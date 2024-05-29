@@ -7,12 +7,6 @@ import { signOut } from "@/redux/token";
 import { removeToken } from "@/storage/AsyncStorage";
 store.subscribe(listener);
 
-function listener() {
-  const token = store.getState().token;
-  console.log("dsa", token);
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-}
-console.log("dasdds");
 // initializing the axios instance with custom configs
 const api = axios.create({
   baseURL: baseURL,
@@ -38,5 +32,10 @@ const errorHandler = async (error) => {
 api.interceptors.response.use(undefined, (error) => {
   return errorHandler(error);
 });
+
+function listener() {
+  const token = store.getState().token;
+  api.defaults.headers.common.Authorization = `Bearer ${token}`;
+}
 
 export default api;

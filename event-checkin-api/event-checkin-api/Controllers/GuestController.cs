@@ -18,7 +18,7 @@ namespace event_checkin_api.Controllers
         }
 
         [HttpGet("GetGuests/{eventId}")]
-        public IActionResult GetEvents(string eventId) 
+        public IActionResult GetGuests(string eventId) 
         {
             var guests = _guestRepository.GetGuests(eventId);
 

@@ -12,7 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 export default function Input({ value, onChangeText, placeholder, error }) {
   const { width } = Dimensions.get("window");
   const [focus, setFocus] = React.useState(false);
-  const placeholderAnim = React.useRef(new Animated.Value(20)).current;
+  const placeholderAnim = React.useRef(new Animated.Value(15)).current;
   const lineAnim = React.useRef(new Animated.Value(width)).current;
 
   const handleFocus = () => {
@@ -43,7 +43,7 @@ export default function Input({ value, onChangeText, placeholder, error }) {
         useNativeDriver: false,
       }).start();
       Animated.timing(placeholderAnim, {
-        toValue: 20,
+        toValue: 15,
         duration: 300,
         useNativeDriver: false,
       }).start();
@@ -76,6 +76,7 @@ export default function Input({ value, onChangeText, placeholder, error }) {
     },
     textInput: {
       padding: 16,
+      paddingBottom: 12,
       fontSize: 16,
       width: "100%",
       outlineStyle: "none",

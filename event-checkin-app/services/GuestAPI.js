@@ -1,10 +1,10 @@
 import api from "./configs/AxiosConfig";
 import { defineCancelApiObject } from "./configs/AxiosUtils";
 
-export const EventAPI = {
-  getAll: async function (cancel = false) {
+export const GuestAPI = {
+  getAll: async function (eventoId, cancel = false) {
     return api.request({
-      url: `/Event/GetEvents`,
+      url: `/Guest/GetGuests/${eventoId}`,
       method: "GET",
       signal: cancel
         ? cancelApiObject[this.getAll.name].handleRequestCancellation().signal
@@ -14,4 +14,4 @@ export const EventAPI = {
 };
 
 // defining the cancel API object for ProductAPI
-const cancelApiObject = defineCancelApiObject(EventAPI);
+const cancelApiObject = defineCancelApiObject(GuestAPI);

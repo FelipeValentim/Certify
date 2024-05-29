@@ -2,10 +2,6 @@ import React from "react";
 import LoginScreen from "./login";
 import HomeScreen from "./home";
 import EventScreen from "./event";
-import RegisterScreen from "./register";
-import NotFoundScreen from "./+not-found";
-import { View, StyleSheet, Text } from "react-native";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import * as Font from "expo-font";
 import { getToken } from "@/storage/AsyncStorage";
 import { NavigationContainer } from "@react-navigation/native";
@@ -13,16 +9,15 @@ import {
   createNativeStackNavigator,
   TransitionPresets,
 } from "@react-navigation/native-stack";
-import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "@/redux/token";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import DismissKeyboard from "@/components/DismissKeyboard";
 import Header from "@/components/Header";
 import { routes } from "@/constants/Default";
+import api from "@/services/configs/AxiosConfig";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();

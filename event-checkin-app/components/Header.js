@@ -18,7 +18,6 @@ const Header = (props) => {
     props.navigation.goBack();
   };
 
-  console.log(props);
   return (
     <View style={styles.container}>
       {props.back && (

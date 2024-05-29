@@ -1,6 +1,7 @@
 import React from "react";
 import LoginScreen from "./login";
 import HomeScreen from "./home";
+import EventScreen from "./event";
 import RegisterScreen from "./register";
 import NotFoundScreen from "./+not-found";
 import { View, StyleSheet, Text } from "react-native";
@@ -8,7 +9,10 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import * as Font from "expo-font";
 import { getToken } from "@/storage/AsyncStorage";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
@@ -18,6 +22,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import DismissKeyboard from "@/components/DismissKeyboard";
 import Header from "@/components/Header";
+import { routes } from "@/constants/Default";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -75,6 +80,7 @@ const Main = () => {
       <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer>
           <Stack.Navigator
+            initialRouteName="home"
             screenOptions={{
               header: (props) => <Header {...props} />,
               headerStyle: {
@@ -87,16 +93,25 @@ const Main = () => {
             }}
           >
             {isSignedIn ? (
-              <Stack.Screen
-                name="home"
-                options={{
-                  title: "Início",
-                }}
-                component={HomeScreen}
-              />
+              <>
+                <Stack.Screen
+                  name={routes.home}
+                  options={{
+                    title: "Início",
+                  }}
+                  component={HomeScreen}
+                />
+                <Stack.Screen
+                  name={routes.event}
+                  options={{
+                    title: "Evento",
+                  }}
+                  component={EventScreen}
+                />
+              </>
             ) : (
               <Stack.Screen
-                name="login"
+                name={routes.login}
                 options={{ headerShown: false, title: "login" }}
                 component={LoginScreen}
               />

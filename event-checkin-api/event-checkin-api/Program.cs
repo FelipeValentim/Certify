@@ -23,6 +23,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<EventRepository>();
+builder.Services.AddTransient<GuestRepository>();
 builder.Services.AddHttpContextAccessor();
 
 

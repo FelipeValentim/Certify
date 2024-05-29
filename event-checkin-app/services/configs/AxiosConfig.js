@@ -3,6 +3,8 @@ import { baseURL, httpStatus } from "../../constants/Default";
 
 // store
 import store from "@/redux/configureStore";
+import { signOut } from "@/redux/token";
+import { removeToken } from "@/storage/AsyncStorage";
 store.subscribe(listener);
 
 function listener() {
@@ -24,6 +26,8 @@ const errorHandler = async (error) => {
       const message = error.response?.data;
     }
   } else if (statusCode && statusCode === httpStatus.unauthorized) {
+    await removeToken();
+    store.dispatch(signOut());
   }
 
   return Promise.reject(error);

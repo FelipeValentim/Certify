@@ -1,10 +1,22 @@
-import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
+import {
+  primaryColor,
+  routes,
+  screenHeight,
+  screenWidth,
+} from "@/constants/Default";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import api from "@/services/configs/AxiosConfig";
 import { useSelector } from "react-redux";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [events, setEvents] = useState();
   const token = useSelector((state) => state.token);
 
@@ -24,18 +36,23 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
         {events &&
           events.map((event) => (
-            <View key={event.id} style={styles.card}>
-              <View style={styles.event}>
-                <Image
-                  style={styles.photo}
-                  source={{
-                    uri: event.photo,
-                  }}
-                />
-                <Text style={styles.name}>{event.name}</Text>
-                <Text style={styles.date}>{event.date}</Text>
+            <Pressable
+              key={event.id}
+              onPress={() => navigation.navigate(routes.event)}
+            >
+              <View style={styles.card}>
+                <View style={styles.event}>
+                  <Image
+                    style={styles.photo}
+                    source={{
+                      uri: event.photo,
+                    }}
+                  />
+                  <Text style={styles.name}>{event.name}</Text>
+                  <Text style={styles.date}>{event.dateEvent}</Text>
+                </View>
               </View>
-            </View>
+            </Pressable>
           ))}
       </ScrollView>
     </View>
@@ -63,6 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "PoppinsRegular",
     fontWeight: "bold",
+    flex: 1,
   },
   photo: {
     width: 50,
@@ -72,5 +90,9 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 12,
     fontFamily: "PoppinsRegular",
+    backgroundColor: primaryColor,
+    padding: 5,
+    borderRadius: 10,
+    color: "#FFF",
   },
 });

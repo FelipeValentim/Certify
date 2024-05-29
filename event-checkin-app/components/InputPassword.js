@@ -20,7 +20,7 @@ export default function InputPassword({
   const { width } = Dimensions.get("window");
   const [focus, setFocus] = React.useState(false);
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
-  const placeholderAnim = React.useRef(new Animated.Value(20)).current;
+  const placeholderAnim = React.useRef(new Animated.Value(15)).current;
   const lineAnim = React.useRef(new Animated.Value(width)).current;
 
   const handleFocus = () => {
@@ -51,7 +51,7 @@ export default function InputPassword({
         useNativeDriver: false,
       }).start();
       Animated.timing(placeholderAnim, {
-        toValue: 20,
+        toValue: 15,
         duration: 300,
         useNativeDriver: false,
       }).start();
@@ -84,6 +84,7 @@ export default function InputPassword({
     },
     textInput: {
       padding: 16,
+      paddingBottom: 12,
       fontSize: 16,
       width: "100%",
       outlineStyle: "none",

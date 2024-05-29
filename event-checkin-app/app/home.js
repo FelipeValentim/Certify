@@ -13,7 +13,7 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import api from "@/services/configs/AxiosConfig";
+import { EventAPI } from "@/services/EventAPI";
 import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation }) {
@@ -22,10 +22,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     const getEvents = async () => {
-      api.defaults.headers.common.Authorization = `Bearer ${token}`;
-
-      const response = await api.get("/event/getevents");
-      console.log(response);
+      const response = await EventAPI.getAll("/event/getevents");
       setEvents(response.data);
     };
     getEvents();
@@ -38,7 +35,9 @@ export default function HomeScreen({ navigation }) {
           events.map((event) => (
             <Pressable
               key={event.id}
-              onPress={() => navigation.navigate(routes.event)}
+              onPress={() =>
+                navigation.navigate(routes.event, { eventId: event.id })
+              }
             >
               <View style={styles.card}>
                 <View style={styles.event}>

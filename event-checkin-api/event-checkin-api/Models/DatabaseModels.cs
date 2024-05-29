@@ -26,8 +26,10 @@ namespace event_checkin_api.Models
             public string Name { get; set; }
 
             [JsonPropertyName("date")]
-
             public DateTime Date { get; set; }
+
+            [JsonPropertyName("dateEvent")]
+            public string DateEvent => Date.ToString("dd/MM/yyyy");
 
             [JsonPropertyName("photo")]
 
@@ -37,6 +39,29 @@ namespace event_checkin_api.Models
             public User User { get; set; }
 
             public Event()
+            {
+                Id = Guid.NewGuid().ToString();
+            }
+        }
+
+        public class Guest
+        {
+            [JsonPropertyName("id")]
+            public string Id { get; set; }
+
+            [JsonPropertyName("name")]
+            public string Name { get; set; }
+
+            [JsonPropertyName("photo")]
+            public string Photo { get; set; }
+
+            [JsonPropertyName("dateCheckin")]
+            public DateTime? DateCheckin { get; set; }
+
+            [JsonPropertyName("event")]
+            public Event Event { get; set; }
+
+            public Guest()
             {
                 Id = Guid.NewGuid().ToString();
             }

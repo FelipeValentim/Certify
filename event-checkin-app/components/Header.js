@@ -14,11 +14,25 @@ const Header = (props) => {
     dispatch(signOut());
   };
 
+  const goBack = async () => {
+    props.navigation.goBack();
+  };
+
+  console.log(props);
   return (
     <View style={styles.container}>
+      {props.back && (
+        <Pressable style={styles.goBackButton} onPress={goBack}>
+          <MaterialCommunityIcons
+            name="chevron-left"
+            size={30}
+            color={"#FFF"}
+          />
+        </Pressable>
+      )}
       <Text style={styles.title}>{props.options.title}</Text>
       <Pressable style={styles.signOutButton} onPress={logout}>
-        <MaterialCommunityIcons name="logout" size={30} color={"#FFF"} />
+        <MaterialCommunityIcons name="power-standby" size={30} color={"#FFF"} />
       </Pressable>
     </View>
   );
@@ -42,6 +56,13 @@ const styles = StyleSheet.create({
   signOutButton: {
     padding: 10,
     right: 10,
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+  },
+  goBackButton: {
+    padding: 10,
+    left: 10,
     position: "absolute",
     top: 0,
     bottom: 0,

@@ -15,10 +15,10 @@ import {
 } from "react-native";
 import { EventAPI } from "@/services/EventAPI";
 import { useSelector } from "react-redux";
+import Loading from "@/components/Loading";
 
 export default function HomeScreen({ navigation }) {
   const [events, setEvents] = useState();
-  const token = useSelector((state) => state.token);
 
   useEffect(() => {
     const getEvents = async () => {
@@ -30,9 +30,11 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-        {events &&
-          events.map((event) => (
+      {!events ? (
+        <Loading color={primaryColor} size={36} />
+      ) : (
+        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+          {events.map((event) => (
             <Pressable
               key={event.id}
               onPress={() =>
@@ -53,7 +55,8 @@ export default function HomeScreen({ navigation }) {
               </View>
             </Pressable>
           ))}
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 }

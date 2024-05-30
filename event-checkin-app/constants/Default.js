@@ -7,7 +7,7 @@ export const httpStatus = {
 
 export const primaryColor = "#7B55E0";
 
-export const baseURL = "https://c1f1-187-111-4-76.ngrok-free.app/";
+export const baseURL = "https://36e9-187-111-4-76.ngrok-free.app/";
 
 export const screenHeight = Dimensions.get("window").height;
 export const screenWidth = Dimensions.get("window").width;

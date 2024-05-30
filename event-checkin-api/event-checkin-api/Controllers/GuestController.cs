@@ -20,7 +20,7 @@ namespace event_checkin_api.Controllers
         [HttpGet("GetGuests/{eventId}")]
         public async Task<IActionResult> GetGuests(string eventId) 
         {
-            await Task.Delay(2000);
+            await Task.Delay(200);
 
             var guests = _guestRepository.GetGuests(eventId);
 

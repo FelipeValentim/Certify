@@ -17,20 +17,48 @@ import EventGuestsTab from "./guestsTab";
 import EventScannerTab from "./eventScanner";
 import { Ionicons } from "@expo/vector-icons";
 import { EventAPI } from "@/services/EventAPI";
+import { getCurrentDateFormatted } from "@/helper/date";
 
 const Tab = createBottomTabNavigator();
 
 export default function EventScreen({ route, navigation }) {
   const { eventId } = route.params;
-  const [data, setData] = useState();
+  const [info, setInfo] = useState();
+  const [guests, setGuests] = useState();
 
   useEffect(() => {
     const getData = async () => {
-      const response = await EventAPI.get(eventId);
-      setData(response.data);
+      const { data } = await EventAPI.get(eventId);
+      console.log(data);
+      setInfo(data);
+      setGuests(data.guests);
     };
     getData();
   }, []);
+
+  const checkin = async (id) => {
+    const newGuests = guests.map((guest) =>
+      guest.id === id ? { ...guest, checkin: getCurrentDateFormatted() } : guest
+    );
+    setGuests(newGuests);
+  };
+
+  const updateUncheckin = async (id) => {
+    const newGuests = guests.map((guest) =>
+      guest.id === id ? { ...guest, checkin: null } : guest
+    );
+    setGuests(newGuests);
+  };
+
+  useEffect(() => {
+    if (guests) {
+      setInfo({
+        ...info,
+        checkinCount: guests.filter((x) => x.checkin).length,
+        dropCount: guests.filter((x) => !x.checkin).length,
+      });
+    }
+  }, [guests]);
 
   return (
     <Tab.Navigator
@@ -62,7 +90,7 @@ export default function EventScreen({ route, navigation }) {
         }}
         name="Início"
       >
-        {(props) => <EventInfoTab {...props} info={data} />}
+        {(props) => <EventInfoTab {...props} info={info} />}
       </Tab.Screen>
       <Tab.Screen
         options={{
@@ -91,7 +119,14 @@ export default function EventScreen({ route, navigation }) {
         }}
         name="Convidados"
       >
-        {(props) => <EventGuestsTab {...props} guests={data?.guests} />}
+        {(props) => (
+          <EventGuestsTab
+            {...props}
+            guests={guests}
+            updateUncheckin={updateUncheckin}
+            updateCheckin={checkin}
+          />
+        )}
       </Tab.Screen>
     </Tab.Navigator>
   );

@@ -1,4 +1,5 @@
 ﻿using event_checkin_api.Services;
+using System.Collections.Generic;
 using static event_checkin_api.Models.DatabaseModels;
 
 namespace event_checkin_api.Database
@@ -32,6 +33,20 @@ namespace event_checkin_api.Database
         public ICollection<Guest> GetGuests(string eventId)
         {
             return Guests.Where(x => x.Event.Id == eventId).ToList();
+        }
+
+        public Guest GetGuest(string id)
+        {
+            return Guests.FirstOrDefault(x => x.Id == id);
+        }
+
+        public void Checkin(string id)
+        {
+            Guests = Guests.Select(guest =>
+            {
+                if (guest.Id == id) guest.DateCheckin = DateTime.Now;
+                return guest;
+            }).ToList();
         }
     }
 }

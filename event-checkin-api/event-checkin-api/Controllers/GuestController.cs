@@ -1,6 +1,7 @@
 ﻿using event_checkin_api.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static event_checkin_api.Models.DatabaseModels;
 
 namespace event_checkin_api.Controllers
 {
@@ -25,6 +26,28 @@ namespace event_checkin_api.Controllers
             var guests = _guestRepository.GetGuests(eventId);
 
             return StatusCode(StatusCodes.Status200OK, guests);
+        }
+
+        [HttpPut("Checkin/{id}")]
+        public async Task<IActionResult> Checkin(string id)
+        {
+            await Task.Delay(200);
+
+            var guest = _guestRepository.GetGuest(id);
+
+            if (guest == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
+            }
+
+            if (guest.DateCheckin.HasValue)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, "Já foi realizado checkin para este convidado.");
+            }
+
+            _guestRepository.Checkin(id);
+
+            return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
         }
 
     }

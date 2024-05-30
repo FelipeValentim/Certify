@@ -3,6 +3,7 @@ import { Dimensions } from "react-native";
 export const httpStatus = {
   ok: 200,
   unauthorized: 401,
+  conflict: 409,
 };
 
 export const primaryColor = "#7B55E0";

@@ -12,7 +12,6 @@ import {
   TextInput,
   Text,
   Dimensions,
-  Button,
   Pressable,
   ImageBackground,
 } from "react-native";
@@ -22,6 +21,7 @@ import { setToken } from "@/storage/AsyncStorage";
 
 import { useDispatch } from "react-redux";
 import DismissKeyboard from "@/components/DismissKeyboard";
+import ButtonLoading from "@/components/ButtonLoading";
 import { signIn } from "@/redux/token";
 
 export default function LoginScreen() {
@@ -117,9 +117,9 @@ export default function LoginScreen() {
             ></InputPassword>
           </View>
 
-          <Pressable style={styles.button} onPress={login}>
-            <Text style={styles.textButton}>Login</Text>
-          </Pressable>
+          <ButtonLoading loading={loading} onPress={login}>
+            Login
+          </ButtonLoading>
 
           <H3 style={styles.h3}>
             Não tem conta?{" "}
@@ -163,19 +163,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontWeight: "normal",
   },
-  button: {
-    backgroundColor: primaryColor,
-    borderRadius: 32,
-    padding: 8,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textButton: {
-    color: "#FFF",
-    fontSize: 16,
-    fontFamily: "PoppinsBold",
-  },
+
   register: {
     color: primaryColor,
   },

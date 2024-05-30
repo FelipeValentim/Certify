@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
 import React, { useEffect, useState } from "react";
@@ -18,7 +19,6 @@ export default function EventScreen({ route, navigation }) {
     const getGuests = async () => {
       console.log(eventId);
       const response = await GuestAPI.getAll(eventId);
-      console.log(response.data);
       setGuests(response.data);
     };
     getGuests();
@@ -26,9 +26,11 @@ export default function EventScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-        {guests &&
-          guests.map(({ id, name, photo, dateCheckin }) => (
+      {!guests ? (
+        <Loading color={primaryColor} size={36} />
+      ) : (
+        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+          {guests.map(({ id, name, photo, dateCheckin }) => (
             <Pressable
               key={id}
               // onPress={() =>
@@ -53,7 +55,8 @@ export default function EventScreen({ route, navigation }) {
               </View>
             </Pressable>
           ))}
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 }

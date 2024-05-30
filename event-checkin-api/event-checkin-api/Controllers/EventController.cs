@@ -20,8 +20,10 @@ namespace event_checkin_api.Controllers
         }
 
         [HttpGet("GetEvents")]
-        public IActionResult GetEvents() 
+        public async Task<IActionResult> GetEvents() 
         {
+            await Task.Delay(2000);
+
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Id);
 
             var events = _eventRepository.GetEvents(userId);

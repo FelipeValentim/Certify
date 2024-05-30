@@ -11,6 +11,15 @@ export const EventAPI = {
         : undefined,
     });
   },
+  get: async function (eventoId, cancel = false) {
+    return api.request({
+      url: `/Event/GetEvent/${eventoId}`,
+      method: "GET",
+      signal: cancel
+        ? cancelApiObject[this.get.name].handleRequestCancellation().signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

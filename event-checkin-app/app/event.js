@@ -12,24 +12,24 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import EventInfoScreen from "./eventInfo";
-import EventGuestsScreen from "./eventGuests";
-import EventScannerScreen from "./eventScanner";
+import EventInfoTab from "./eventTab";
+import EventGuestsTab from "./guestsTab";
+import EventScannerTab from "./eventScanner";
 import { Ionicons } from "@expo/vector-icons";
+import { EventAPI } from "@/services/EventAPI";
 
 const Tab = createBottomTabNavigator();
 
 export default function EventScreen({ route, navigation }) {
   const { eventId } = route.params;
-  const [guests, setGuests] = useState();
+  const [data, setData] = useState();
 
   useEffect(() => {
-    const getGuests = async () => {
-      console.log(eventId);
-      const response = await GuestAPI.getAll(eventId);
-      setGuests(response.data);
+    const getData = async () => {
+      const response = await EventAPI.get(eventId);
+      setData(response.data);
     };
-    getGuests();
+    getData();
   }, []);
 
   return (
@@ -61,8 +61,9 @@ export default function EventScreen({ route, navigation }) {
           },
         }}
         name="Início"
-        component={EventInfoScreen}
-      />
+      >
+        {(props) => <EventInfoTab {...props} info={data} />}
+      </Tab.Screen>
       <Tab.Screen
         options={{
           headerShown: false,
@@ -75,10 +76,9 @@ export default function EventScreen({ route, navigation }) {
           },
         }}
         name="Scanner"
-        component={EventScannerScreen}
+        component={EventScannerTab}
       />
       <Tab.Screen
-        initialParams={{ guests: guests }}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => {
@@ -91,7 +91,7 @@ export default function EventScreen({ route, navigation }) {
         }}
         name="Convidados"
       >
-        {(props) => <EventGuestsScreen {...props} guests={guests} />}
+        {(props) => <EventGuestsTab {...props} guests={data?.guests} />}
       </Tab.Screen>
     </Tab.Navigator>
   );

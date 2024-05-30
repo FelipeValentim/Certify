@@ -1,5 +1,7 @@
 import Loading from "@/components/Loading";
-import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
+import { primaryColor, screenHeight } from "@/constants/Default";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import { GuestAPI } from "@/services/GuestAPI";
 import React, { useEffect, useState } from "react";
 import {
@@ -10,6 +12,12 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
+import EventInfoScreen from "./eventInfo";
+import EventGuestsScreen from "./eventGuests";
+import EventScannerScreen from "./eventScanner";
+import { Ionicons } from "@expo/vector-icons";
+
+const Tab = createBottomTabNavigator();
 
 export default function EventScreen({ route, navigation }) {
   const { eventId } = route.params;
@@ -25,84 +33,66 @@ export default function EventScreen({ route, navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {!guests ? (
-        <Loading color={primaryColor} size={36} />
-      ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-          {guests.map(({ id, name, photo, dateCheckin }) => (
-            <Pressable
-              key={id}
-              // onPress={() =>
-              //   navigation.navigate(routes.event, { eventId: event.id })
-              // }
-            >
-              <View style={styles.card}>
-                <View style={styles.guest}>
-                  <Image
-                    style={styles.photo}
-                    source={{
-                      uri: photo,
-                    }}
-                  />
-                  <Text style={styles.name}>{name}</Text>
-                  {dateCheckin ? (
-                    <Text style={styles.checkin}>checkin</Text>
-                  ) : (
-                    <Text style={styles.notCheckin}>checkin</Text>
-                  )}
-                </View>
-              </View>
-            </Pressable>
-          ))}
-        </ScrollView>
-      )}
-    </View>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: primaryColor,
+        tabBarStyle: {
+          position: "absolute",
+          bottom: 14,
+          left: 14,
+          right: 14,
+          backgroundColor: "#000",
+          elevation: 0,
+          borderRadius: 10,
+          height: 60,
+        },
+      }}
+    >
+      <Tab.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => {
+            return focused ? (
+              <Ionicons name="home" size={size} color={color} />
+            ) : (
+              <Ionicons name="home-outline" size={size} color={color} />
+            );
+          },
+        }}
+        name="Início"
+        component={EventInfoScreen}
+      />
+      <Tab.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => {
+            return focused ? (
+              <Ionicons name="qr-code" size={size} color={color} />
+            ) : (
+              <Ionicons name="qr-code-outline" size={size} color={color} />
+            );
+          },
+        }}
+        name="Scanner"
+        component={EventScannerScreen}
+      />
+      <Tab.Screen
+        initialParams={{ guests: guests }}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => {
+            return focused ? (
+              <Ionicons name="people" size={size} color={color} />
+            ) : (
+              <Ionicons name="people-outline" size={size} color={color} />
+            );
+          },
+        }}
+        name="Convidados"
+      >
+        {(props) => <EventGuestsScreen {...props} guests={guests} />}
+      </Tab.Screen>
+    </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#F5F0FF",
-    height: screenHeight,
-  },
-  card: {
-    backgroundColor: "#FFF",
-    margin: 10,
-    borderRadius: 20,
-  },
-  guest: {
-    padding: 20,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  name: {
-    fontSize: 16,
-    fontFamily: "PoppinsRegular",
-    fontWeight: "bold",
-    flex: 1,
-  },
-  photo: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-  checkin: {
-    fontSize: 12,
-    fontFamily: "PoppinsRegular",
-    backgroundColor: primaryColor,
-    padding: 5,
-    borderRadius: 10,
-    color: "#FFF",
-  },
-  notCheckin: {
-    fontSize: 12,
-    fontFamily: "PoppinsRegular",
-    backgroundColor: "#ccc",
-    padding: 5,
-    borderRadius: 10,
-    color: "#FFF",
-  },
-});

@@ -1,5 +1,6 @@
 import Loading from "@/components/Loading";
 import { primaryColor, routes } from "@/constants/Default";
+import { GuestAPI } from "@/services/GuestAPI";
 import React from "react";
 import {
   View,
@@ -10,7 +11,7 @@ import {
   Image,
 } from "react-native";
 
-function GuestsTab({ guests, navigation }) {
+function GuestsTab({ updateUncheckin, updateCheckin, guests, navigation }) {
   return !guests ? (
     <Loading color={primaryColor} size={36} />
   ) : (
@@ -19,7 +20,11 @@ function GuestsTab({ guests, navigation }) {
         <Pressable
           key={guest.id}
           onPress={() => {
-            navigation.navigate(routes.guest, { guest: guest });
+            navigation.navigate(routes.guest, {
+              guest,
+              updateCheckin,
+              updateUncheckin,
+            });
           }}
         >
           <View style={styles.card}>

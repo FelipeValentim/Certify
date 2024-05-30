@@ -11,6 +11,25 @@ export const GuestAPI = {
         : undefined,
     });
   },
+  checkin: async function (id, cancel = false) {
+    return api.request({
+      url: `/Guest/Checkin/${id}`,
+      method: "PUT",
+      signal: cancel
+        ? cancelApiObject[this.checkin.name].handleRequestCancellation().signal
+        : undefined,
+    });
+  },
+  uncheckin: async function (id, cancel = false) {
+    return api.request({
+      url: `/Guest/Uncheckin/${id}`,
+      method: "PUT",
+      signal: cancel
+        ? cancelApiObject[this.uncheckin.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

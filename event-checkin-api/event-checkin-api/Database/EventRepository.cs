@@ -1,5 +1,6 @@
 ﻿using event_checkin_api.Services;
 using static event_checkin_api.Models.DatabaseModels;
+using static event_checkin_api.Models.EventModels;
 
 namespace event_checkin_api.Database
 {
@@ -15,6 +16,11 @@ namespace event_checkin_api.Database
         public ICollection<Event> GetEvents(string userId)
         {
             return Events.Where(x => x.User.Id == userId).ToList();
-        }  
+        }
+
+        public Event GetEvent(string id)
+        {
+            return Events.FirstOrDefault(x => x.Id == id);
+        }
     }
 }

@@ -2,6 +2,8 @@ import React from "react";
 import LoginScreen from "./login";
 import HomeScreen from "./home";
 import EventScreen from "./event";
+import GuestScreen from "./guest";
+
 import * as Font from "expo-font";
 import { getToken } from "@/storage/AsyncStorage";
 import { NavigationContainer } from "@react-navigation/native";
@@ -102,6 +104,13 @@ const Main = () => {
                     title: "Evento",
                   }}
                   component={EventScreen}
+                />
+                <Stack.Screen
+                  name={routes.guest}
+                  options={{
+                    title: "Convidado",
+                  }}
+                  component={GuestScreen}
                 />
               </>
             ) : (

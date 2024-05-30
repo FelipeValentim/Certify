@@ -40,7 +40,7 @@ const Header = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: primaryColor,
-    height: 50,
+    height: 60,
     position: "relative",
   },
   title: {
@@ -50,21 +50,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     position: "absolute",
-    top: 10,
+    top: 15,
   },
   signOutButton: {
     padding: 10,
     right: 10,
     position: "absolute",
-    top: 0,
-    bottom: 0,
+    top: 5,
   },
   goBackButton: {
     padding: 10,
     left: 10,
     position: "absolute",
-    top: 0,
-    bottom: 0,
+    top: 5,
   },
 });
 

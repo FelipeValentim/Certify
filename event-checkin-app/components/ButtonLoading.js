@@ -2,7 +2,7 @@ import { primaryColor } from "@/constants/Default";
 import React, { useEffect, useRef } from "react";
 import { Pressable, Text, StyleSheet, Animated } from "react-native";
 
-function ButtonLoading({ children, onPress, loading }) {
+function ButtonLoading({ children, onPress, loading, style = {} }) {
   const bounce1 = useRef(new Animated.Value(15)).current;
   const bounce2 = useRef(new Animated.Value(15)).current;
   const bounce3 = useRef(new Animated.Value(15)).current;
@@ -48,8 +48,33 @@ function ButtonLoading({ children, onPress, loading }) {
     loop.start();
   }, []);
 
+  const styles = StyleSheet.create({
+    button: {
+      backgroundColor: primaryColor,
+      borderRadius: 32,
+      padding: 8,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      height: 40,
+    },
+    textButton: {
+      color: "#FFF",
+      fontSize: 16,
+      fontFamily: "PoppinsBold",
+    },
+    loading: {
+      position: "absolute",
+      backgroundColor: "#FFF",
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+    },
+  });
+
   return (
-    <Pressable style={styles.button} onPress={onPress}>
+    <Pressable style={[styles.button, { ...style }]} onPress={onPress}>
       {loading ? (
         <>
           <Animated.View
@@ -77,30 +102,5 @@ function ButtonLoading({ children, onPress, loading }) {
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: primaryColor,
-    borderRadius: 32,
-    padding: 8,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    height: 40,
-  },
-  textButton: {
-    color: "#FFF",
-    fontSize: 16,
-    fontFamily: "PoppinsBold",
-  },
-  loading: {
-    position: "absolute",
-    backgroundColor: "#FFF",
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-});
 
 export default ButtonLoading;

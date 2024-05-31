@@ -51,7 +51,7 @@ function Guest({ route }) {
     try {
       if (!loading) {
         setLoading(true);
-        // await GuestAPI.uncheckin(id);
+        await GuestAPI.uncheckin(id);
         setGuest({ ...guest, checkin: null });
         updateUncheckin(id);
       }

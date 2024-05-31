@@ -50,5 +50,27 @@ namespace event_checkin_api.Controllers
             return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
         }
 
+        [HttpPut("Uncheckin/{id}")]
+        public async Task<IActionResult> Uncheckin(string id)
+        {
+            await Task.Delay(200);
+
+            var guest = _guestRepository.GetGuest(id);
+
+            if (guest == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
+            }
+
+            if (!guest.DateCheckin.HasValue)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, "Já foi desfeito o checkin para este convidado.");
+            }
+
+            _guestRepository.Uncheckin(id);
+
+            return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
+        }
+
     }
 }

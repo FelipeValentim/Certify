@@ -3,12 +3,7 @@ import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 
-import { BarChart, ProgressChart } from "react-native-chart-kit";
-
-const data = {
-  labels: ["Swim", "Bike", "Run"], // optional
-  data: [0.4, 0.6, 0.8],
-};
+import { BarChart } from "react-native-chart-kit";
 
 const chartConfig = {
   // backgroundColor: "#e26a00",

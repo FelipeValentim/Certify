@@ -1,17 +1,7 @@
-import Loading from "@/components/Loading";
 import { primaryColor, screenHeight } from "@/constants/Default";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { GuestAPI } from "@/services/GuestAPI";
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  ScrollView,
-  Pressable,
-} from "react-native";
 import EventInfoTab from "./eventTab";
 import EventGuestsTab from "./guestsTab";
 import EventScannerTab from "./eventScanner";
@@ -29,7 +19,6 @@ export default function EventScreen({ route, navigation }) {
   useEffect(() => {
     const getData = async () => {
       const { data } = await EventAPI.get(eventId);
-      console.log(data);
       setInfo(data);
       setGuests(data.guests);
     };
@@ -72,6 +61,7 @@ export default function EventScreen({ route, navigation }) {
           right: 14,
           backgroundColor: "#000",
           elevation: 0,
+          borderColor: "transparent",
           borderRadius: 10,
           height: 60,
         },
@@ -104,8 +94,16 @@ export default function EventScreen({ route, navigation }) {
           },
         }}
         name="Scanner"
-        component={EventScannerTab}
-      />
+      >
+        {(props) => (
+          <EventScannerTab
+            guests={guests}
+            updateUncheckin={updateUncheckin}
+            updateCheckin={checkin}
+            {...props}
+          />
+        )}
+      </Tab.Screen>
       <Tab.Screen
         options={{
           headerShown: false,

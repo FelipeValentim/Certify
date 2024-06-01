@@ -7,7 +7,7 @@ import {
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -20,6 +20,15 @@ import { SwipeListView } from "react-native-swipe-list-view";
 
 function GuestsTab({ updateUncheckin, updateCheckin, guests, navigation }) {
   const [loading, setLoading] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const selectItem = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter((x) => x !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  };
 
   const uncheckin = async (id) => {
     try {
@@ -51,15 +60,25 @@ function GuestsTab({ updateUncheckin, updateCheckin, guests, navigation }) {
         renderItem={({ item }, rowMap) => (
           <Pressable
             key={item.id}
+            onLongPress={() => selectItem(item.id)}
             onPress={() => {
-              navigation.navigate(routes.guest, {
-                guest: item,
-                updateCheckin,
-                updateUncheckin,
-              });
+              if (selectedItems.length > 0) {
+                selectItem(item.id);
+              } else {
+                navigation.navigate(routes.guest, {
+                  guest: item,
+                  updateCheckin,
+                  updateUncheckin,
+                });
+              }
             }}
           >
-            <View style={styles.card}>
+            <View
+              style={[
+                styles.card,
+                selectedItems.includes(item.id) ? styles.selectedItem : null,
+              ]}
+            >
               <View style={styles.guest}>
                 <Image
                   style={styles.photo}
@@ -78,7 +97,8 @@ function GuestsTab({ updateUncheckin, updateCheckin, guests, navigation }) {
           </Pressable>
         )}
         renderHiddenItem={({ item }, rowMap) =>
-          item.checkin && (
+          item.checkin &&
+          selectedItems.length === 0 && (
             <Pressable
               onPress={() => uncheckin(item.id)}
               style={styles.swipeHiddenContainer}
@@ -102,6 +122,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     margin: 10,
     borderRadius: 20,
+  },
+  selectedItem: {
+    backgroundColor: "#C3B1E1",
   },
   guest: {
     padding: 20,

@@ -16,13 +16,8 @@ const FLASH_MODE = {
 
 function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
   const [hasPermission, setHasPermission] = useState(null);
-  const [flashMode, setFlashMode] = useState(FLASH_MODE.off);
 
   const scannerAnim = useRef(new Animated.Value(0)).current;
-
-  const toggleFlashMode = () => {
-    setFlashMode(flashMode === FLASH_MODE.on ? FLASH_MODE.off : FLASH_MODE.on);
-  };
 
   const sequence = Animated.sequence([
     Animated.timing(scannerAnim, {

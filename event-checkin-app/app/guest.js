@@ -22,7 +22,6 @@ import { getCurrentDateFormatted } from "@/helper/date";
 function Guest({ route }) {
   const [guest, setGuest] = useState(route.params?.guest);
   const { updateCheckin, updateUncheckin } = route.params;
-
   const [loading, setLoading] = useState(false);
 
   const checkin = async (id) => {

@@ -1,7 +1,13 @@
 import Loading from "@/components/Loading";
-import { primaryColor, routes } from "@/constants/Default";
+import {
+  backgroundColor,
+  primaryColor,
+  redColor,
+  routes,
+} from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
-import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,46 +16,88 @@ import {
   Pressable,
   Image,
 } from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 function GuestsTab({ updateUncheckin, updateCheckin, guests, navigation }) {
+  const [loading, setLoading] = useState(false);
+
+  const uncheckin = async (id) => {
+    try {
+      if (!loading) {
+        setLoading(true);
+        await GuestAPI.uncheckin(id);
+        updateUncheckin(id);
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status == httpStatus.conflict) {
+          updateUncheckin(id);
+        } else {
+          console.log(response.data);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return !guests ? (
     <Loading color={primaryColor} size={36} />
   ) : (
-    <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-      {guests.map((guest) => (
-        <Pressable
-          key={guest.id}
-          onPress={() => {
-            navigation.navigate(routes.guest, {
-              guest,
-              updateCheckin,
-              updateUncheckin,
-            });
-          }}
-        >
-          <View style={styles.card}>
-            <View style={styles.guest}>
-              <Image
-                style={styles.photo}
-                source={{
-                  uri: guest.photo,
-                }}
-              />
-              <Text style={styles.name}>{guest.name}</Text>
-              {guest.checkin ? (
-                <Text style={styles.checkin}>checkin</Text>
-              ) : (
-                <Text style={styles.notCheckin}>checkin</Text>
-              )}
+    <View style={styles.container}>
+      <SwipeListView
+        contentContainerStyle={{ paddingBottom: 50 }}
+        data={guests}
+        renderItem={({ item }, rowMap) => (
+          <Pressable
+            key={item.id}
+            onPress={() => {
+              navigation.navigate(routes.guest, {
+                guest: item,
+                updateCheckin,
+                updateUncheckin,
+              });
+            }}
+          >
+            <View style={styles.card}>
+              <View style={styles.guest}>
+                <Image
+                  style={styles.photo}
+                  source={{
+                    uri: item.photo,
+                  }}
+                />
+                <Text style={styles.name}>{item.name}</Text>
+                {item.checkin ? (
+                  <Text style={styles.checkin}>checkin</Text>
+                ) : (
+                  <Text style={styles.notCheckin}>checkin</Text>
+                )}
+              </View>
             </View>
-          </View>
-        </Pressable>
-      ))}
-    </ScrollView>
+          </Pressable>
+        )}
+        renderHiddenItem={({ item }, rowMap) =>
+          item.checkin && (
+            <Pressable
+              onPress={() => uncheckin(item.id)}
+              style={styles.swipeHiddenContainer}
+            >
+              <View style={styles.swipeHiddenItem}>
+                <Ionicons name="arrow-undo" size={30} color={redColor} />
+                <Text>Uncheckin</Text>
+              </View>
+            </Pressable>
+          )
+        }
+        leftOpenValue={100}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: { backgroundColor: backgroundColor },
   card: {
     backgroundColor: "#FFF",
     margin: 10,
@@ -61,6 +109,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
+  },
+  swipeHiddenContainer: {
+    margin: 10,
+    borderRadius: 20,
+    // backgroundColor: "red",
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  swipeHiddenItem: {
+    backgroundColor: "#FFF",
+    borderRadius: 20,
+    padding: 10,
+    display: "flex",
+    alignItems: "center",
   },
   name: {
     fontSize: 16,

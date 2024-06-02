@@ -21,19 +21,25 @@ const Header = ({ navigation, title, route, component }) => {
     component
   ) : (
     <View style={styles.container}>
-      {navigation.canGoBack() && (
-        <Pressable style={styles.goBackButton} onPress={goBack}>
+      <View style={styles.innerContainer}>
+        {navigation.canGoBack() && (
+          <Pressable style={styles.goBackButton} onPress={goBack}>
+            <MaterialCommunityIcons
+              name="chevron-left"
+              size={30}
+              color={"#FFF"}
+            />
+          </Pressable>
+        )}
+        <Text style={styles.title}>{title ?? route.name}</Text>
+        <Pressable style={styles.signOutButton} onPress={logout}>
           <MaterialCommunityIcons
-            name="chevron-left"
+            name="power-standby"
             size={30}
             color={"#FFF"}
           />
         </Pressable>
-      )}
-      <Text style={styles.title}>{title ?? route.name}</Text>
-      <Pressable style={styles.signOutButton} onPress={logout}>
-        <MaterialCommunityIcons name="power-standby" size={30} color={"#FFF"} />
-      </Pressable>
+      </View>
     </View>
   );
 };
@@ -42,28 +48,28 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: primaryColor,
     height: 60,
-    position: "relative",
+  },
+  innerContainer: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 20,
   },
   title: {
     color: "#FFF",
     fontSize: 20,
     fontFamily: "PoppinsRegular",
     fontWeight: "bold",
-    alignSelf: "center",
-    position: "absolute",
-    top: 15,
+    flex: 1,
+    textAlign: "center",
   },
   signOutButton: {
-    padding: 10,
-    right: 10,
-    position: "absolute",
-    top: 5,
+    padding: 15,
   },
   goBackButton: {
-    padding: 10,
-    left: 10,
-    position: "absolute",
-    top: 5,
+    padding: 15,
   },
 });
 

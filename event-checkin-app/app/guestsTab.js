@@ -8,16 +8,68 @@ import {
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Pressable,
-  Image,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
+
+const SelectionHeader = ({ selectedItems, setSelectedItems }) => {
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: primaryColor,
+      height: 60,
+    },
+    innerContainer: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      marginHorizontal: 20,
+    },
+    options: {
+      display: "flex",
+      flexDirection: "row",
+      gap: 15,
+      flex: 1,
+      justifyContent: "flex-end",
+    },
+    option: {
+      padding: 15,
+    },
+  });
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Ionicons
+          onPress={() => setSelectedItems([])}
+          style={styles.option}
+          name="close"
+          color={"#FFF"}
+          size={30}
+        />
+
+        <View style={styles.options}>
+          {selectedItems.filter((x) => x.checkin).length > 0 && (
+            <Ionicons
+              style={styles.option}
+              name="arrow-undo"
+              color={"#FFF"}
+              size={30}
+            />
+          )}
+          {selectedItems.filter((x) => !x.checkin).length > 0 && (
+            <Ionicons
+              style={styles.option}
+              name="checkmark-done"
+              color={"#FFF"}
+              size={30}
+            />
+          )}
+        </View>
+      </View>
+    </View>
+  );
+};
 
 function GuestsTab({
   updateUncheckin,
@@ -28,11 +80,14 @@ function GuestsTab({
 }) {
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
-  const selectItem = (id) => {
-    if (selectedItems.includes(id)) {
-      setSelectedItems(selectedItems.filter((x) => x !== id));
+  const selectItem = (item) => {
+    if (selectedItems.some((x) => x.id == item.id)) {
+      setSelectedItems(selectedItems.filter((x) => x.id !== item.id));
     } else {
-      setSelectedItems([...selectedItems, id]);
+      setSelectedItems([
+        ...selectedItems,
+        { id: item.id, checkin: item.checkin },
+      ]);
     }
   };
 
@@ -58,7 +113,18 @@ function GuestsTab({
 
   return (
     <React.Fragment>
-      <Header navigation={navigation} route={route} />
+      <Header
+        navigation={navigation}
+        route={route}
+        component={
+          selectedItems.length > 0 && (
+            <SelectionHeader
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
+            />
+          )
+        }
+      />
       {!guests ? (
         <Loading color={primaryColor} size={36} />
       ) : (
@@ -69,10 +135,10 @@ function GuestsTab({
             renderItem={({ item }, rowMap) => (
               <Pressable
                 key={item.id}
-                onLongPress={() => selectItem(item.id)}
+                onLongPress={() => selectItem(item)}
                 onPress={() => {
                   if (selectedItems.length > 0) {
-                    selectItem(item.id);
+                    selectItem(item);
                   } else {
                     navigation.navigate(routes.guest, {
                       guest: item,
@@ -85,7 +151,7 @@ function GuestsTab({
                 <View
                   style={[
                     styles.card,
-                    selectedItems.includes(item.id)
+                    selectedItems.some((x) => x.id == item.id)
                       ? styles.selectedItem
                       : null,
                   ]}

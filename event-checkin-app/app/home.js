@@ -4,7 +4,7 @@ import {
   screenHeight,
   screenWidth,
 } from "@/constants/Default";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -16,8 +16,9 @@ import {
 import { EventAPI } from "@/services/EventAPI";
 import { useSelector } from "react-redux";
 import Loading from "@/components/Loading";
+import Header from "@/components/Header";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const [events, setEvents] = useState();
 
   useEffect(() => {
@@ -29,35 +30,39 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {!events ? (
-        <Loading color={primaryColor} size={36} />
-      ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-          {events.map((event) => (
-            <Pressable
-              key={event.id}
-              onPress={() =>
-                navigation.navigate(routes.event, { eventId: event.id })
-              }
-            >
-              <View style={styles.card}>
-                <View style={styles.event}>
-                  <Image
-                    style={styles.photo}
-                    source={{
-                      uri: event.photo,
-                    }}
-                  />
-                  <Text style={styles.name}>{event.name}</Text>
-                  <Text style={styles.date}>{event.dateEvent}</Text>
+    <Fragment>
+      <Header route={route} navigation={navigation} />
+
+      <View style={styles.container}>
+        {!events ? (
+          <Loading color={primaryColor} size={36} />
+        ) : (
+          <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+            {events.map((event) => (
+              <Pressable
+                key={event.id}
+                onPress={() =>
+                  navigation.navigate(routes.event, { eventId: event.id })
+                }
+              >
+                <View style={styles.card}>
+                  <View style={styles.event}>
+                    <Image
+                      style={styles.photo}
+                      source={{
+                        uri: event.photo,
+                      }}
+                    />
+                    <Text style={styles.name}>{event.name}</Text>
+                    <Text style={styles.date}>{event.dateEvent}</Text>
+                  </View>
                 </View>
-              </View>
-            </Pressable>
-          ))}
-        </ScrollView>
-      )}
-    </View>
+              </Pressable>
+            ))}
+          </ScrollView>
+        )}
+      </View>
+    </Fragment>
   );
 }
 

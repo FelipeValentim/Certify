@@ -79,14 +79,7 @@ const Main = () => {
           <Stack.Navigator
             initialRouteName="home"
             screenOptions={{
-              header: (props) => <Header {...props} />,
-              headerStyle: {
-                backgroundColor: "#7b55e0",
-              },
-              headerTintColor: "#fff",
-              headerTitleStyle: {
-                fontWeight: "bold",
-              },
+              headerShown: false,
             }}
           >
             {isSignedIn ? (
@@ -116,7 +109,7 @@ const Main = () => {
             ) : (
               <Stack.Screen
                 name={routes.login}
-                options={{ headerShown: false, title: "login" }}
+                options={{ title: "login" }}
                 component={LoginScreen}
               />
             )}

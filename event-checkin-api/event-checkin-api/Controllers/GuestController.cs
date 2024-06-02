@@ -72,5 +72,27 @@ namespace event_checkin_api.Controllers
             return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
         }
 
+        [HttpPut("Checkin")]
+        public async Task<IActionResult> Checkin(string[] ids)
+        {
+            await Task.Delay(200);
+
+            _guestRepository.Checkin(ids);
+
+            return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
+        }
+
+
+        [HttpPut("Uncheckin")]
+        public async Task<IActionResult> Uncheckin(string[] ids)
+        {
+            await Task.Delay(200);
+
+            _guestRepository.Uncheckin(ids);
+
+            return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
+        }
+
+
     }
 }

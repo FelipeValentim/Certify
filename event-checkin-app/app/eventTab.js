@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";
@@ -13,44 +14,51 @@ const chartConfig = {
   color: (opacity = 1) => `rgba(123, 85, 224, ${opacity})`, //123, 85, 224
 };
 
-const EventTab = ({ info }) => {
+const EventTab = ({ navigation, route, info, title }) => {
   return (
-    <View style={styles.container}>
-      {!info ? (
-        <Loading color={primaryColor} size={36} />
-      ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-          <View style={styles.event}>
-            <Image
-              style={styles.photo}
-              source={{
-                uri: info.photo,
-              }}
-            />
-            <Text style={styles.name}>{info.name}</Text>
-            <Text style={styles.date}>{info.date}</Text>
+    <React.Fragment>
+      <Header route={route} navigation={navigation} />
+      <View style={styles.container}>
+        {!info ? (
+          <Loading color={primaryColor} size={36} />
+        ) : (
+          <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+            <View style={styles.event}>
+              <Image
+                style={styles.photo}
+                source={{
+                  uri: info.photo,
+                }}
+              />
+              <Text style={styles.name}>{info.name}</Text>
+              <Text style={styles.date}>{info.date}</Text>
 
-            <BarChart
-              withInnerLines={false}
-              data={{
-                labels: ["Convidados", "Checkin", "Quebra"],
-                datasets: [
-                  {
-                    data: [info.guestsCount, info.checkinCount, info.dropCount],
-                  },
-                ],
-              }}
-              width={screenWidth}
-              height={280}
-              chartConfig={chartConfig}
-              verticalLabelRotation={0}
-              fromZero
-              showValuesOnTopOfBars
-            />
-          </View>
-        </ScrollView>
-      )}
-    </View>
+              <BarChart
+                withInnerLines={false}
+                data={{
+                  labels: ["Convidados", "Checkin", "Quebra"],
+                  datasets: [
+                    {
+                      data: [
+                        info.guestsCount,
+                        info.checkinCount,
+                        info.dropCount,
+                      ],
+                    },
+                  ],
+                }}
+                width={screenWidth}
+                height={280}
+                chartConfig={chartConfig}
+                verticalLabelRotation={0}
+                fromZero
+                showValuesOnTopOfBars
+              />
+            </View>
+          </ScrollView>
+        )}
+      </View>
+    </React.Fragment>
   );
 };
 

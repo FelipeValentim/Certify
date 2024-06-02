@@ -7,7 +7,7 @@ import {
   screenHeight,
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   View,
   Text,
@@ -18,8 +18,9 @@ import {
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import { getCurrentDateFormatted } from "@/helper/date";
+import Header from "@/components/Header";
 
-function Guest({ route }) {
+function Guest({ route, navigation }) {
   const [guest, setGuest] = useState(route.params?.guest);
   const { updateCheckin, updateUncheckin } = route.params;
   const [loading, setLoading] = useState(false);
@@ -68,51 +69,54 @@ function Guest({ route }) {
     }
   };
   return (
-    <View style={styles.container}>
-      {!guest ? (
-        <Loading color={primaryColor} size={36} />
-      ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-          <View style={styles.card}>
-            <Image
-              style={styles.photo}
-              source={{
-                uri: guest.photo,
-              }}
-            />
-            <Text style={styles.name}>{guest.name}</Text>
-            {guest.checkin && (
-              <Text style={styles.checkin}>Checkin: {guest.checkin}</Text>
-            )}
-            <View style={styles.qrCode}>
-              <QRCode
-                value={guest.id}
-                size={200}
-                logo={require("@/assets/images/icon.png")}
+    <Fragment>
+      <Header route={route} navigation={navigation} />
+      <View style={styles.container}>
+        {!guest ? (
+          <Loading color={primaryColor} size={36} />
+        ) : (
+          <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+            <View style={styles.card}>
+              <Image
+                style={styles.photo}
+                source={{
+                  uri: guest.photo,
+                }}
               />
-            </View>
+              <Text style={styles.name}>{guest.name}</Text>
+              {guest.checkin && (
+                <Text style={styles.checkin}>Checkin: {guest.checkin}</Text>
+              )}
+              <View style={styles.qrCode}>
+                <QRCode
+                  value={guest.id}
+                  size={200}
+                  logo={require("@/assets/images/icon.png")}
+                />
+              </View>
 
-            {!guest.checkin ? (
-              <ButtonLoading
-                onPress={() => checkin(guest.id)}
-                loading={loading}
-                style={styles.button}
-              >
-                Checkin
-              </ButtonLoading>
-            ) : (
-              <ButtonLoading
-                onPress={() => uncheckin(guest.id)}
-                loading={loading}
-                style={styles.button}
-              >
-                Desfazer checkin
-              </ButtonLoading>
-            )}
-          </View>
-        </ScrollView>
-      )}
-    </View>
+              {!guest.checkin ? (
+                <ButtonLoading
+                  onPress={() => checkin(guest.id)}
+                  loading={loading}
+                  style={styles.button}
+                >
+                  Checkin
+                </ButtonLoading>
+              ) : (
+                <ButtonLoading
+                  onPress={() => uncheckin(guest.id)}
+                  loading={loading}
+                  style={styles.button}
+                >
+                  Desfazer checkin
+                </ButtonLoading>
+              )}
+            </View>
+          </ScrollView>
+        )}
+      </View>
+    </Fragment>
   );
 }
 

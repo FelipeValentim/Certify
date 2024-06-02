@@ -57,5 +57,24 @@ namespace event_checkin_api.Database
                 return guest;
             }).ToList();
         }
+
+
+        public void Checkin(string[] ids)
+        {
+            Guests = Guests.Select(guest =>
+            {
+                if (ids.Any(x => guest.Id == x)) guest.DateCheckin = DateTime.Now;
+                return guest;
+            }).ToList();
+        }
+
+        public void Uncheckin(string[] ids)
+        {
+            Guests = Guests.Select(guest =>
+            {
+                if (ids.Any(x => guest.Id == x)) guest.DateCheckin = null;
+                return guest;
+            }).ToList();
+        }
     }
 }

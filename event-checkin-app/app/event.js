@@ -78,7 +78,7 @@ export default function EventScreen({ route, navigation }) {
             );
           },
         }}
-        name="Início"
+        name="Evento"
       >
         {(props) => <EventInfoTab {...props} info={info} />}
       </Tab.Screen>

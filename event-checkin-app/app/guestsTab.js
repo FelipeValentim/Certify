@@ -1,3 +1,4 @@
+import BounceLoading from "@/components/BounceLoading";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import {
@@ -12,7 +13,13 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 
-const SelectionHeader = ({ selectedItems, setSelectedItems }) => {
+const SelectionHeader = ({
+  selectedItems,
+  setSelectedItems,
+  checkins,
+  uncheckins,
+  loading,
+}) => {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: primaryColor,
@@ -49,8 +56,11 @@ const SelectionHeader = ({ selectedItems, setSelectedItems }) => {
         />
 
         <View style={styles.options}>
+          {loading && <BounceLoading color={"#FFF"} size={12} />}
+
           {selectedItems.filter((x) => x.checkin).length > 0 && (
             <Ionicons
+              onPress={uncheckins}
               style={styles.option}
               name="arrow-undo"
               color={"#FFF"}
@@ -59,6 +69,7 @@ const SelectionHeader = ({ selectedItems, setSelectedItems }) => {
           )}
           {selectedItems.filter((x) => !x.checkin).length > 0 && (
             <Ionicons
+              onPress={checkins}
               style={styles.option}
               name="checkmark-done"
               color={"#FFF"}
@@ -91,6 +102,52 @@ function GuestsTab({
     }
   };
 
+  const checkins = async () => {
+    const ids = selectedItems.map((x) => x.id);
+
+    try {
+      if (!loading) {
+        setLoading(true);
+        await GuestAPI.checkins(ids);
+        setSelectedItems([]);
+        updateCheckin(ids);
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status == httpStatus.conflict) {
+          updateCheckin(ids);
+        } else {
+          console.log(response.data);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const uncheckins = async () => {
+    const ids = selectedItems.map((x) => x.id);
+
+    try {
+      if (!loading) {
+        setLoading(true);
+        await GuestAPI.uncheckins(ids);
+        setSelectedItems([]);
+        updateUncheckin(ids);
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status == httpStatus.conflict) {
+          updateUncheckin(ids);
+        } else {
+          console.log(response.data);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const uncheckin = async (id) => {
     try {
       if (!loading) {
@@ -119,6 +176,9 @@ function GuestsTab({
         component={
           selectedItems.length > 0 && (
             <SelectionHeader
+              checkins={checkins}
+              uncheckins={uncheckins}
+              loading={loading}
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
             />

@@ -49,10 +49,15 @@ function BounceLoading({ color, size = 10 }) {
 
   const styles = StyleSheet.create({
     container: {
-      position: "relative",
+      width: size + size * 4,
+      display: "flex",
+      flexDirection: "row",
+      gap: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      flex: 1,
     },
     loading: {
-      position: "absolute",
       backgroundColor: color,
       width: size,
       height: size,
@@ -63,20 +68,26 @@ function BounceLoading({ color, size = 10 }) {
   return (
     <View style={styles.container}>
       <Animated.View
-        style={[styles.loading, { bottom: bounce1 }]}
-      ></Animated.View>
-      <Animated.View
         style={[
           styles.loading,
-          { transform: [{ translateX: size * 2 }], bottom: bounce2 },
+          {
+            transform: [{ translateY: bounce1 }],
+          },
         ]}
       ></Animated.View>
       <Animated.View
         style={[
           styles.loading,
           {
-            transform: [{ translateX: size * -2 }],
-            bottom: bounce3,
+            transform: [{ translateY: bounce2 }],
+          },
+        ]}
+      ></Animated.View>
+      <Animated.View
+        style={[
+          styles.loading,
+          {
+            transform: [{ translateY: bounce3 }],
           },
         ]}
       ></Animated.View>

@@ -63,7 +63,7 @@ namespace event_checkin_api.Database
         {
             Guests = Guests.Select(guest =>
             {
-                if (ids.Any(x => guest.Id == x)) guest.DateCheckin = DateTime.Now;
+                if (ids.Any(x => guest.Id == x && !guest.DateCheckin.HasValue)) guest.DateCheckin = DateTime.Now;
                 return guest;
             }).ToList();
         }

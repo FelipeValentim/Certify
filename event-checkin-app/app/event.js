@@ -25,16 +25,18 @@ export default function EventScreen({ route, navigation }) {
     getData();
   }, []);
 
-  const checkin = async (id) => {
+  const checkin = async (ids) => {
     const newGuests = guests.map((guest) =>
-      guest.id === id ? { ...guest, checkin: getCurrentDateFormatted() } : guest
+      ids.includes(guest.id)
+        ? { ...guest, checkin: getCurrentDateFormatted() }
+        : guest
     );
     setGuests(newGuests);
   };
 
-  const updateUncheckin = async (id) => {
+  const updateUncheckin = async (ids) => {
     const newGuests = guests.map((guest) =>
-      guest.id === id ? { ...guest, checkin: null } : guest
+      ids.includes(guest.id) ? { ...guest, checkin: null } : guest
     );
     setGuests(newGuests);
   };

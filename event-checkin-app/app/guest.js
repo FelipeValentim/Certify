@@ -31,13 +31,13 @@ function Guest({ route, navigation }) {
         setLoading(true);
         await GuestAPI.checkin(id);
         setGuest({ ...guest, checkin: getCurrentDateFormatted() });
-        updateCheckin(id);
+        updateCheckin([id]);
       }
     } catch (error) {
       if (error.response) {
         if (error.response.status == httpStatus.conflict) {
           setGuest({ ...guest, checkin: getCurrentDateFormatted() });
-          updateCheckin(id);
+          updateCheckin([id]);
         } else {
           console.log(response.data);
         }
@@ -53,13 +53,13 @@ function Guest({ route, navigation }) {
         setLoading(true);
         await GuestAPI.uncheckin(id);
         setGuest({ ...guest, checkin: null });
-        updateUncheckin(id);
+        updateUncheckin([id]);
       }
     } catch (error) {
       if (error.response) {
         if (error.response.status == httpStatus.conflict) {
           setGuest({ ...guest, checkin: null });
-          updateUncheckin(id);
+          updateUncheckin([id]);
         } else {
           console.log(response.data);
         }

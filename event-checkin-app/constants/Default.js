@@ -10,7 +10,7 @@ export const primaryColor = "#7B55E0";
 export const backgroundColor = "#F5F0FF";
 export const redColor = "#EE4E4E";
 
-export const baseURL = "https://6921-187-111-4-76.ngrok-free.app";
+export const baseURL = "https://5503-187-111-4-76.ngrok-free.app";
 
 export const screenHeight = Dimensions.get("window").height;
 export const screenWidth = Dimensions.get("window").width;

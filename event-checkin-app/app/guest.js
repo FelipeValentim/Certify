@@ -45,7 +45,7 @@ function Guest({ route, navigation }) {
       <Header route={route} navigation={navigation} />
       <View style={styles.container}>
         {!guest ? (
-          <Loading color={primaryColor} size={36} />
+          <Loading color={primaryColor} size={24} />
         ) : (
           <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
             <View style={styles.card}>

@@ -35,7 +35,7 @@ export default function HomeScreen({ navigation, route }) {
 
       <View style={styles.container}>
         {!events ? (
-          <Loading color={primaryColor} size={36} />
+          <Loading color={primaryColor} size={24} />
         ) : (
           <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
             {events.map((event) => (

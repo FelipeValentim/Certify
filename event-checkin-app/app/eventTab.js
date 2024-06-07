@@ -20,7 +20,7 @@ const EventTab = ({ navigation, route, info, title }) => {
       <Header route={route} navigation={navigation} />
       <View style={styles.container}>
         {!info ? (
-          <Loading color={primaryColor} size={36} />
+          <Loading color={primaryColor} size={24} />
         ) : (
           <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
             <View style={styles.event}>

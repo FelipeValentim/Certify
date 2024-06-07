@@ -2,7 +2,7 @@ import { primaryColor } from "@/constants/Default";
 import React, { useEffect, useRef } from "react";
 import { Pressable, Text, StyleSheet, Animated } from "react-native";
 
-function ButtonLoading({ children, onPress, loading, style = {} }) {
+function ButtonLoading({ children, onPress, loading, style = [] }) {
   const bounce1 = useRef(new Animated.Value(15)).current;
   const bounce2 = useRef(new Animated.Value(15)).current;
   const bounce3 = useRef(new Animated.Value(15)).current;
@@ -74,7 +74,7 @@ function ButtonLoading({ children, onPress, loading, style = {} }) {
   });
 
   return (
-    <Pressable style={[styles.button, { ...style }]} onPress={onPress}>
+    <Pressable style={[styles.button, ...style]} onPress={onPress}>
       {loading ? (
         <>
           <Animated.View

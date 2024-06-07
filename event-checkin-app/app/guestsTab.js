@@ -12,13 +12,14 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
-
+import ConfirmAlert from "../components/ConfirmAlert";
 const SelectionHeader = ({
   selectedItems,
   setSelectedItems,
   checkins,
   uncheckins,
   loading,
+  setConfirmAlert,
 }) => {
   const styles = StyleSheet.create({
     container: {
@@ -56,11 +57,18 @@ const SelectionHeader = ({
         />
 
         <View style={styles.options}>
-          {loading && <BounceLoading color={"#FFF"} size={12} />}
+          {/* {loading && <BounceLoading color={"#FFF"} size={12} />} */}
 
           {selectedItems.filter((x) => x.checkin).length > 0 && (
             <Ionicons
-              onPress={uncheckins}
+              onPress={() =>
+                setConfirmAlert({
+                  open: true,
+                  title: "Tem certeza?",
+                  message: `Confirmar uncheckin de ${selectedItems.length} convidados?`,
+                  onConfirm: () => uncheckins(),
+                })
+              }
               style={styles.option}
               name="arrow-undo"
               color={"#FFF"}
@@ -69,7 +77,14 @@ const SelectionHeader = ({
           )}
           {selectedItems.filter((x) => !x.checkin).length > 0 && (
             <Ionicons
-              onPress={checkins}
+              onPress={() =>
+                setConfirmAlert({
+                  open: true,
+                  title: "Tem certeza?",
+                  message: `Confirmar checkin de ${selectedItems.length} convidados?`,
+                  onConfirm: () => checkins(),
+                })
+              }
               style={styles.option}
               name="checkmark-done"
               color={"#FFF"}
@@ -91,6 +106,8 @@ function GuestsTab({
 }) {
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [confirmAlert, setConfirmAlert] = useState({});
+
   const selectItem = (item) => {
     if (selectedItems.some((x) => x.id == item.id)) {
       setSelectedItems(selectedItems.filter((x) => x.id !== item.id));
@@ -181,6 +198,7 @@ function GuestsTab({
               loading={loading}
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
+              setConfirmAlert={setConfirmAlert}
             />
           )
         }
@@ -237,7 +255,14 @@ function GuestsTab({
               item.checkin &&
               selectedItems.length === 0 && (
                 <Pressable
-                  onPress={() => uncheckin(item.id)}
+                  onPress={() =>
+                    setConfirmAlert({
+                      open: true,
+                      title: "Tem certeza?",
+                      message: `Confirmar uncheckin de ${item.name}?`,
+                      onConfirm: () => uncheckin(item.id),
+                    })
+                  }
                   style={styles.swipeHiddenContainer}
                 >
                   <View style={styles.swipeHiddenItem}>
@@ -251,6 +276,16 @@ function GuestsTab({
           />
         </View>
       )}
+      <ConfirmAlert
+        open={confirmAlert.open}
+        toggle={() =>
+          setConfirmAlert({ ...confirmAlert, open: !confirmAlert.open })
+        }
+        title={confirmAlert.title}
+        message={confirmAlert.message}
+        onConfirm={confirmAlert.onConfirm}
+        loading={loading}
+      />
     </React.Fragment>
   );
 }

@@ -8,14 +8,7 @@ import {
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
 import React, { Fragment, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Pressable,
-  Image,
-} from "react-native";
+import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import { getCurrentDateFormatted } from "@/helper/date";
 import Header from "@/components/Header";
@@ -47,27 +40,6 @@ function Guest({ route, navigation }) {
     }
   };
 
-  const uncheckin = async (id) => {
-    try {
-      if (!loading) {
-        setLoading(true);
-        await GuestAPI.uncheckin(id);
-        setGuest({ ...guest, checkin: null });
-        updateUncheckin([id]);
-      }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status == httpStatus.conflict) {
-          setGuest({ ...guest, checkin: null });
-          updateUncheckin([id]);
-        } else {
-          console.log(response.data);
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
@@ -95,21 +67,13 @@ function Guest({ route, navigation }) {
                 />
               </View>
 
-              {!guest.checkin ? (
+              {!guest.checkin && (
                 <ButtonLoading
                   onPress={() => checkin(guest.id)}
                   loading={loading}
-                  style={styles.button}
+                  style={[styles.button]}
                 >
                   Checkin
-                </ButtonLoading>
-              ) : (
-                <ButtonLoading
-                  onPress={() => uncheckin(guest.id)}
-                  loading={loading}
-                  style={styles.button}
-                >
-                  Desfazer checkin
                 </ButtonLoading>
               )}
             </View>

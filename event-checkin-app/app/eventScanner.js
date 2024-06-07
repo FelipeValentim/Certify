@@ -8,15 +8,15 @@ import {
   screenWidth,
 } from "@/constants/Default";
 import { LinearGradient } from "expo-linear-gradient";
-
-const FLASH_MODE = {
-  on: 2,
-  off: 1,
-};
+import { Button, Snackbar } from "react-native-paper";
 
 function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
   const [hasPermission, setHasPermission] = useState(null);
+  const [visible, setVisible] = React.useState(false);
 
+  const onToggleSnackBar = () => setVisible(!visible);
+
+  const onDismissSnackBar = () => setVisible(false);
   const scannerAnim = useRef(new Animated.Value(0)).current;
 
   const sequence = Animated.sequence([
@@ -48,11 +48,16 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     const guest = guests.find((x) => x.id == data);
-    navigation.navigate(routes.guest, {
-      guest,
-      updateCheckin,
-      updateUncheckin,
-    });
+    if (guest) {
+      // Se o guest existir, navega para a tela de detalhes do guest
+      navigation.navigate(routes.guest, {
+        guest,
+        updateCheckin,
+        updateUncheckin,
+      });
+    } else {
+      setVisible(true);
+    }
   };
 
   if (hasPermission === null) {
@@ -94,6 +99,14 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
           </View>
         </>
       ) : null}
+      <Snackbar
+        style={{ bottom: screenHeight / 8 }}
+        visible={visible}
+        duration={5000}
+        onDismiss={onDismissSnackBar}
+      >
+        QRCode inválido para este evento
+      </Snackbar>
     </View>
   );
 }

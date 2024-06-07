@@ -204,7 +204,7 @@ function GuestsTab({
         }
       />
       {!guests ? (
-        <Loading color={primaryColor} size={36} />
+        <Loading color={primaryColor} size={24} />
       ) : (
         <View style={styles.container}>
           <SwipeListView

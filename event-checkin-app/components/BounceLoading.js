@@ -9,7 +9,7 @@ function BounceLoading({ color, size = 10 }) {
   // Configurando a sequência de animações
   const sequence = Animated.sequence([
     Animated.timing(bounce1, {
-      toValue: size,
+      toValue: -size,
       duration: 150,
       useNativeDriver: false,
     }),
@@ -19,7 +19,7 @@ function BounceLoading({ color, size = 10 }) {
       useNativeDriver: false,
     }),
     Animated.timing(bounce2, {
-      toValue: size,
+      toValue: -size,
       duration: 150,
       useNativeDriver: false,
     }),
@@ -29,7 +29,7 @@ function BounceLoading({ color, size = 10 }) {
       useNativeDriver: false,
     }),
     Animated.timing(bounce3, {
-      toValue: size,
+      toValue: -size,
       duration: 150,
       useNativeDriver: false,
     }),
@@ -52,7 +52,7 @@ function BounceLoading({ color, size = 10 }) {
       width: size + size * 4,
       display: "flex",
       flexDirection: "row",
-      gap: 10,
+      gap: size,
       alignItems: "center",
       justifyContent: "center",
       flex: 1,

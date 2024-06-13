@@ -17,6 +17,9 @@ namespace event_checkin_api.Models
 
             [JsonPropertyName("checkin")]
             public string Checkin { get; set; }
+
+            [JsonPropertyName("event")]
+            public string Event { get; set; }
         }
     }
 }

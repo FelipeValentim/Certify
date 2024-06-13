@@ -12,7 +12,7 @@ namespace event_checkin_api.Database
 
         public User Login(string email, string password)
         {
-            var user = Users.FirstOrDefault(x => x.Email == email);
+            var user = Users.FirstOrDefault(x => String.Equals(x.Email, email, StringComparison.CurrentCultureIgnoreCase));
 
             if (user != null)
             {

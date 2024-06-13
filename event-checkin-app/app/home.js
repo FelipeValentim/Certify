@@ -14,7 +14,6 @@ import {
   Pressable,
 } from "react-native";
 import { EventAPI } from "@/services/EventAPI";
-import { useSelector } from "react-redux";
 import Loading from "@/components/Loading";
 import Header from "@/components/Header";
 

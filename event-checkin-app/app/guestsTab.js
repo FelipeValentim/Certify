@@ -13,6 +13,8 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import ConfirmAlert from "../components/ConfirmAlert";
+import NewGuestButton from "../components/NewGuestButton";
+
 const SelectionHeader = ({
   selectedItems,
   setSelectedItems,
@@ -207,6 +209,8 @@ function GuestsTab({
         <Loading color={primaryColor} size={24} />
       ) : (
         <View style={styles.container}>
+          <NewGuestButton />
+
           <SwipeListView
             contentContainerStyle={{ paddingBottom: 50 }}
             data={guests}
@@ -296,6 +300,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     margin: 10,
     borderRadius: 20,
+    position: "relative",
   },
   selectedItem: {
     backgroundColor: "#C3B1E1",

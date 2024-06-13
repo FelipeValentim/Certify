@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static event_checkin_api.Models.DatabaseModels;
+using static event_checkin_api.Models.GuestModels;
 
 namespace event_checkin_api.Controllers
 {
@@ -93,6 +94,24 @@ namespace event_checkin_api.Controllers
             return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
         }
 
+
+        [HttpPost("Guest")]
+        public async Task<IActionResult> Post(GuestItem model)
+        {
+            await Task.Delay(200);
+
+            var guest = new Guest()
+            {
+                Name = model.Name,
+                DateCheckin = null,
+                Photo = model.Photo,
+                EventId = model.Event
+            };
+
+            _guestRepository.AddGuest(guest);
+
+            return StatusCode(StatusCodes.Status200OK, guest;
+        }
 
     }
 }

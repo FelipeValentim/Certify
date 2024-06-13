@@ -8,7 +8,7 @@ import {
   screenWidth,
 } from "@/constants/Default";
 import { LinearGradient } from "expo-linear-gradient";
-import { Button, Snackbar } from "react-native-paper";
+import { Snackbar } from "react-native-paper";
 
 function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
   const [hasPermission, setHasPermission] = useState(null);

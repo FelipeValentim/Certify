@@ -58,8 +58,8 @@ namespace event_checkin_api.Models
             [JsonPropertyName("dateCheckin")]
             public DateTime? DateCheckin { get; set; }
 
-            [JsonPropertyName("event")]
-            public Event Event { get; set; }
+            [JsonPropertyName("eventId")]
+            public string EventId { get; set; }
 
             public Guest()
             {

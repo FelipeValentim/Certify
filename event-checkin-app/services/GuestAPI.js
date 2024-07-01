@@ -2,6 +2,16 @@ import api from "./configs/AxiosConfig";
 import { defineCancelApiObject } from "./configs/AxiosUtils";
 
 export const GuestAPI = {
+  newGuest: async function (guest, cancel = false) {
+    return api.request({
+      url: `/Guest/NewGuest`,
+      method: "POST",
+      data: { ...guest },
+      signal: cancel
+        ? cancelApiObject[this.post.name].handleRequestCancellation().signal
+        : undefined,
+    });
+  },
   getAll: async function (eventoId, cancel = false) {
     return api.request({
       url: `/Guest/GetGuests/${eventoId}`,

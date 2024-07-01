@@ -95,7 +95,7 @@ namespace event_checkin_api.Controllers
         }
 
 
-        [HttpPost("Guest")]
+        [HttpPost("NewGuest")]
         public async Task<IActionResult> Post(GuestItem model)
         {
             await Task.Delay(200);
@@ -110,7 +110,7 @@ namespace event_checkin_api.Controllers
 
             _guestRepository.AddGuest(guest);
 
-            return StatusCode(StatusCodes.Status200OK, guest;
+            return StatusCode(StatusCodes.Status200OK, guest);
         }
 
     }

@@ -209,10 +209,17 @@ function GuestsTab({
         <Loading color={primaryColor} size={24} />
       ) : (
         <View style={styles.container}>
-          <NewGuestButton />
+          <NewGuestButton
+            onPress={() =>
+              navigation.navigate(routes.newGuest, {
+                eventId: route.params.eventId,
+                addGuest: route.params.addGuest,
+              })
+            }
+          />
 
           <SwipeListView
-            contentContainerStyle={{ paddingBottom: 50 }}
+            contentContainerStyle={{ paddingBottom: 150 }}
             data={guests}
             renderItem={({ item }, rowMap) => (
               <Pressable

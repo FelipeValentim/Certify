@@ -5,22 +5,12 @@ import Input from "@/components/Input";
 import InputPassword from "@/components/InputPassword";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";
-import {
-  Animated,
-  StyleSheet,
-  View,
-  TextInput,
-  Text,
-  Dimensions,
-  Pressable,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, View, Text, ImageBackground } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AccountAPI } from "@/services/AccountAPI";
 import { setToken } from "@/storage/AsyncStorage";
 
 import { useDispatch } from "react-redux";
-import DismissKeyboard from "@/components/DismissKeyboard";
 import ButtonLoading from "@/components/ButtonLoading";
 import { signIn } from "@/redux/token";
 
@@ -100,6 +90,8 @@ export default function LoginScreen() {
           <View>
             <H1 style={styles.h1}>Bem-vindo</H1>
             <H3 style={styles.h2}>Entre na sua conta</H3>
+            <H3 style={styles.h2}>Usuário: teste@teste.com</H3>
+            <H3 style={styles.h2}>Senha: teste</H3>
           </View>
 
           <View>

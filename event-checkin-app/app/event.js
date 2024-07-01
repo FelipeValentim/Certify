@@ -51,6 +51,11 @@ export default function EventScreen({ route, navigation }) {
     }
   }, [guests]);
 
+  const addGuest = (guest) => {
+    setGuests([...guests, { ...guest }]);
+    console.log(guest, guests);
+  };
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -118,6 +123,7 @@ export default function EventScreen({ route, navigation }) {
           },
         }}
         name="Convidados"
+        initialParams={{ eventId, addGuest }}
       >
         {(props) => (
           <EventGuestsTab

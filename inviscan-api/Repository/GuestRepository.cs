@@ -16,7 +16,7 @@ namespace Repository
             return GetAll(x => x.EventId == eventId);
         }
 
-        public void Checkin(int[] ids)
+        public void Checkin(Guid[] ids)
         {
             foreach (var id in ids)
             {
@@ -31,7 +31,7 @@ namespace Repository
             }
         }
 
-        public void Checkin(int id)
+        public void Checkin(Guid id)
         {
             var guest = GetByID(id);
 
@@ -44,7 +44,7 @@ namespace Repository
         }
 
 
-        public void Uncheckin(int[] ids)
+        public void Uncheckin(Guid[] ids)
         {
             foreach (var id in ids)
             {
@@ -59,7 +59,7 @@ namespace Repository
             }
         }
 
-        public void Uncheckin(int id)
+        public void Uncheckin(Guid id)
         {
             var guest = GetByID(id);
 

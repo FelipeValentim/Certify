@@ -103,6 +103,7 @@ function GuestsTab({
   updateUncheckin,
   updateCheckin,
   guests,
+  addGuest,
   navigation,
   route,
 }) {
@@ -213,7 +214,7 @@ function GuestsTab({
             onPress={() =>
               navigation.navigate(routes.newGuest, {
                 eventId: route.params.eventId,
-                addGuest: route.params.addGuest,
+                addGuest: addGuest,
               })
             }
           />

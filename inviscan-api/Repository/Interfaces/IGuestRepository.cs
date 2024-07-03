@@ -8,9 +8,14 @@ namespace Repository.Interfaces
     {
         IEnumerable<Guest> GetGuests(Guid eventId);
 
-        void Checkin(int id);
+        void Checkin(Guid id);
 
-        void Uncheckin(int id);
+        void Checkin(Guid[] id);
+
+
+        void Uncheckin(Guid id);
+
+        void Uncheckin(Guid[] id);
 
     }
 }

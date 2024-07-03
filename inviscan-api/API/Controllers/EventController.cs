@@ -5,6 +5,7 @@ using static API.Models.EventModels;
 using static API.Models.GuestModels;
 using Infrastructure.Helpers;
 using System.Security.Claims;
+using Repository.Interfaces;
 
 namespace API.Controllers
 {
@@ -14,9 +15,9 @@ namespace API.Controllers
     public class EventController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly EventRepository _eventRepository;
-        private readonly GuestRepository _guestRepository;
-        public EventController(IHttpContextAccessor httpContextAccessor, EventRepository eventRepository, GuestRepository guestRepository)
+        private readonly IEventRepository _eventRepository;
+        private readonly IGuestRepository _guestRepository;
+        public EventController(IHttpContextAccessor httpContextAccessor, IEventRepository eventRepository, IGuestRepository guestRepository)
         {
             _eventRepository = eventRepository;
             _httpContextAccessor = httpContextAccessor;
@@ -26,25 +27,31 @@ namespace API.Controllers
         [HttpGet("GetEvents")]
         public async Task<IActionResult> GetEvents() 
         {
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(CustomClaimTypes.Id);
 
             var events = _eventRepository.GetEvents(userId);
 
-            return StatusCode(StatusCodes.Status200OK, events);
+            var items = events.Select(e => new EventItem
+            {
+                Id = e.Id,
+                Date = e.Date.ToString("dd/MM/yyyy"),
+                Name = e.Name,
+                Photo = e.Photo,
+            });
+
+            return StatusCode(StatusCodes.Status200OK, items);
         }
 
         [HttpGet("GetEvent/{id}")]
-        public async Task<IActionResult> GetEvent(int id)
+        public async Task<IActionResult> GetEvent(Guid id)
         {
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             EventItem item;
 
-            var eventItem = _eventRepository.GetByID(id);
-
-            var guestsItems = _guestRepository.GetGuests(eventItem.Id);
+            var eventItem = _eventRepository.GetEventWithGuests(id);
 
             item = new EventItem
             {
@@ -52,7 +59,7 @@ namespace API.Controllers
                 Date = eventItem.Date.ToString(),
                 Name = eventItem.Name,
                 Photo = eventItem.Photo,
-                Guests = guestsItems.Select(x  => new GuestItem
+                Guests = eventItem.Guests.Select(x  => new GuestItem
                 {
                     Id = x.Id,
                     Name = x.Name,

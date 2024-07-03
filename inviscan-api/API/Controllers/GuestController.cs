@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Repository;
+using Repository.Interfaces;
 using static API.Models.GuestModels;
 
 namespace API.Controllers
@@ -12,8 +12,8 @@ namespace API.Controllers
     public class GuestController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly GuestRepository _guestRepository;
-        public GuestController(IHttpContextAccessor httpContextAccessor, GuestRepository guestRepository)
+        private readonly IGuestRepository _guestRepository;
+        public GuestController(IHttpContextAccessor httpContextAccessor, IGuestRepository guestRepository)
         {
             _guestRepository = guestRepository;
             _httpContextAccessor = httpContextAccessor;
@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPut("Checkin/{id}")]
-        public async Task<IActionResult> Checkin(int id)
+        public async Task<IActionResult> Checkin(Guid id)
         {
             await Task.Delay(200);
 
@@ -52,7 +52,7 @@ namespace API.Controllers
         }
 
         [HttpPut("Uncheckin/{id}")]
-        public async Task<IActionResult> Uncheckin(int id)
+        public async Task<IActionResult> Uncheckin(Guid id)
         {
             await Task.Delay(200);
 
@@ -74,7 +74,7 @@ namespace API.Controllers
         }
 
         [HttpPut("Checkin")]
-        public async Task<IActionResult> Checkin(int[] ids)
+        public async Task<IActionResult> Checkin(Guid[] ids)
         {
             await Task.Delay(200);
 
@@ -85,7 +85,7 @@ namespace API.Controllers
 
 
         [HttpPut("Uncheckin")]
-        public async Task<IActionResult> Uncheckin(int[] ids)
+        public async Task<IActionResult> Uncheckin(Guid[] ids)
         {
             await Task.Delay(200);
 
@@ -104,7 +104,7 @@ namespace API.Controllers
             {
                 Name = model.Name,
                 DateCheckin = null,
-                Photo = model.Photo,
+                //Photo = model.Photo,
                 EventId = model.Event
             };
 

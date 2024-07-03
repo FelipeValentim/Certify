@@ -7,5 +7,8 @@ namespace Repository.Interfaces
     public interface IEventRepository : IRepositoryBase<Event>
     {
         IEnumerable<Event> GetEvents(string userId);
+
+        Event GetEventWithGuests(Guid eventId);
+
     }
 }

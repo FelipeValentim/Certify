@@ -53,7 +53,6 @@ export default function EventScreen({ route, navigation }) {
 
   const addGuest = (guest) => {
     setGuests([...guests, { ...guest }]);
-    console.log(guest, guests);
   };
 
   return (
@@ -85,7 +84,7 @@ export default function EventScreen({ route, navigation }) {
             );
           },
         }}
-        name="Evento"
+        name="Informações"
       >
         {(props) => <EventInfoTab {...props} info={info} />}
       </Tab.Screen>
@@ -123,7 +122,7 @@ export default function EventScreen({ route, navigation }) {
           },
         }}
         name="Convidados"
-        initialParams={{ eventId, addGuest }}
+        initialParams={{ eventId }}
       >
         {(props) => (
           <EventGuestsTab
@@ -131,6 +130,7 @@ export default function EventScreen({ route, navigation }) {
             guests={guests}
             updateUncheckin={updateUncheckin}
             updateCheckin={checkin}
+            addGuest={addGuest}
           />
         )}
       </Tab.Screen>

@@ -53,7 +53,7 @@ export default function HomeScreen({ navigation, route }) {
                       }}
                     />
                     <Text style={styles.name}>{event.name}</Text>
-                    <Text style={styles.date}>{event.dateEvent}</Text>
+                    <Text style={styles.date}>{event.date}</Text>
                   </View>
                 </View>
               </Pressable>

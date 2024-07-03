@@ -1,0 +1,107 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1046{\fonttbl{\f0\fnil Consolas;}{\f1\fnil\fcharset0 Consolas;}{\f2\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue255;\red0\green0\blue0;\red128\green128\blue128;\red255\green0\blue255;\red0\green128\blue0;\red255\green0\blue0;}
+{\*\generator Riched20 10.0.22621}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\f0\fs19\lang9 CREATE\cf2  \cf1 TABLE\cf2  [dbo]\cf3 .\cf2 [User]\cf1  \cf3 (\cf2\par
+    Id \cf1 UNIQUEIDENTIFIER\cf2  \cf1 PRIMARY\cf2  \cf1 KEY\cf3 ,\cf2\par
+    Email \cf1 NVARCHAR\cf3 (\cf2 256\cf3 )\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    PasswordHash \cf1 NVARCHAR\cf3 (\cf2 100\cf3 )\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    \cf1 Name\cf2  \cf1 NVARCHAR\cf3 (\cf2 256\cf3 )\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    Photo \cf1 NVARCHAR\cf3 (\cf2 2048\cf3 ),\cf2\par
+    ConcurrencyStamp \cf1 UNIQUEIDENTIFIER\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    SecurityStamp \cf1 UNIQUEIDENTIFIER\cf2  \cf3 NOT\cf2  \cf3 NULL\cf2\par
+\cf3 );\cf2\par
+\par
+\cf1 CREATE\cf2  \cf1 TABLE\cf2  [dbo]\cf3 .\cf2 [Event]\cf1  \cf3 (\cf2\par
+    Id \cf1 UNIQUEIDENTIFIER\cf2  \cf1 PRIMARY\cf2  \cf1 KEY\cf3 ,\cf2\par
+    \cf1 Name\cf2  \cf1 VARCHAR\cf3 (\cf2 256\cf3 )\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    \cf1 Description\cf2  \cf1 NVARCHAR\cf3 (\cf4 MAX\cf3 ),\cf2\par
+    Photo \cf1 NVARCHAR\cf3 (\cf2 2048\cf3 ),\cf2\par
+    UserId \cf1 UNIQUEIDENTIFIER\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    \cf1 Date\cf2  \cf1 DATETIME\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    \cf1 CONSTRAINT\cf2  FK_Event_User \cf1 FOREIGN\cf2  \cf1 KEY \cf3 (\cf2 UserId\cf3 )\cf2  \cf1 REFERENCES\cf2  [dbo]\cf3 .\cf2 [User]\cf3 (\cf2 Id\cf3 )\cf2\par
+\cf3 );\cf2\par
+\par
+\cf1 CREATE\cf2  \cf1 TABLE\cf2  [dbo]\cf3 .\cf2 [Guest]\cf1  \cf3 (\cf2\par
+    Id \cf1 UNIQUEIDENTIFIER\cf2  \cf1 PRIMARY\cf2  \cf1 KEY\cf3 ,\cf2\par
+    \cf1 Name\cf2  \cf1 NVARCHAR\cf3 (\cf2 256\cf3 )\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    Photo \cf1 NVARCHAR\cf3 (\cf2 2048\cf3 ),\cf2\par
+    DateCheckin \cf1 DATETIME\cf3 ,\cf2\par
+    EventId \cf1 UNIQUEIDENTIFIER\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+    GuestId \cf1 UNIQUEIDENTIFIER\cf3 ,\cf2\par
+    \cf1 CONSTRAINT\cf2  FK_Guest_Event \cf1 FOREIGN\cf2  \cf1 KEY \cf3 (\cf2 EventId\cf3 )\cf2  \cf1 REFERENCES\cf2  [dbo]\cf3 .\cf2 [Event]\cf3 (\cf2 Id\cf3 ),\cf2\par
+    \cf1 CONSTRAINT\cf2  FK_Guest_Guest \cf1 FOREIGN\cf2  \cf1 KEY \cf3 (\cf2 GuestId\cf3 )\cf2  \cf1 REFERENCES\cf2  [dbo]\cf3 .\cf2 [Guest]\cf3 (\cf2 Id\cf3 )\cf2\par
+\cf3 );\cf2\par
+\par
+\par
+\cf5 -- INSERT\cf2\par
+\cf1 INSERT\cf2  \cf1 INTO\cf2  [dbo]\cf3 .\cf2 [User]\cf1  \cf3 (\cf2 Id\cf3 ,\cf2  Email\cf3 ,\cf2  PasswordHash\cf3 ,\cf2  \cf1 Name\cf3 ,\cf2  Photo\cf3 ,\cf2  ConcurrencyStamp\cf3 ,\cf2  SecurityStamp\cf3 )\cf2\par
+\cf1 VALUES \cf3 (\cf2\par
+    \cf4 NEWID\cf3 (),\cf2   \par
+    \cf6 'teste@teste.com'\cf3 ,\cf2  \par
+    \cf6 '46070d4bf934fb0d4b06d9e2c46e346944e322444900a435d7d9a95e6d7435f5'\cf3 ,\cf2  \par
+    \cf6 'Teste'\cf3 ,\cf2  \par
+    \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/81.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/81.jpg\ul0\cf0}}}}\f0\fs19 '\cf3 ,\cf2   \par
+    \cf4 NEWID\cf3 (),\cf2   \par
+    \cf4 NEWID\cf3 ()\cf2    \par
+\cf3 );\cf2\par
+\par
+\cf5 -- 1. Obter o Id do usu\f1\'e1rio\cf2\par
+\cf1 DECLARE\cf2  @UserId \cf1 UNIQUEIDENTIFIER\cf3 ;\cf2\par
+\cf1 SELECT\cf2  @UserId \cf3 =\cf2  Id \cf1 FROM\cf2  [dbo]\cf3 .\cf2 [User] \cf1 WHERE\cf2  Email \cf3 =\cf2  \cf6 'teste@teste.com'\cf3 ;\cf2\par
+\par
+\cf5 -- 2. Inserir os eventos\cf2\par
+\cf1 INSERT\cf2  \cf1 INTO\cf2  [dbo]\cf3 .\cf2 [Event]\cf1  \cf3 (\cf2 Id\cf3 ,\cf2  \cf1 Name\cf3 ,\cf2  \cf1 Description\cf3 ,\cf2  Photo\cf3 ,\cf2  UserId\cf3 ,\cf2  \cf1 Date\cf3 )\cf2\par
+\cf1 VALUES\cf2\par
+\cf3 (\cf2\par
+    \cf4 NEWID\cf3 (),\cf2   \par
+    \cf6 'Anivers\'e1rio'\cf3 ,\cf2  \par
+    \cf3 NULL,\cf2   \cf5 -- Valor NULL para Description, j\'e1 que n\'e3o foi especificado\cf2\par
+    \cf6 '{{\field{\*\fldinst{HYPERLINK https://cangurunews.com.br/wp-content/uploads/2017/09/festaaniversario.jpg }}{\fldrslt{https://cangurunews.com.br/wp-content/uploads/2017/09/festaaniversario.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  \par
+    @UserId\cf3 ,\cf2\par
+    \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-30 22:00:00'\cf3 ,\cf2  120\cf3 )\cf2\par
+\cf3 ),\cf2\par
+\cf3 (\cf2\par
+    \cf4 NEWID\cf3 (),\cf2   \par
+    \cf6 'Formatura'\cf3 ,\cf2  \par
+    \cf3 NULL,\cf2   \cf5 -- Valor NULL para Description, j\'e1 que n\'e3o foi especificado\cf2\par
+    \cf6 '{{\field{\*\fldinst{HYPERLINK https://extra.globo.com/incoming/25655547-e96-d7d/w976h550-PROP/formatura.jpg }}{\fldrslt{https://extra.globo.com/incoming/25655547-e96-d7d/w976h550-PROP/formatura.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  \par
+    @UserId\cf3 ,\cf2\par
+    \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-22 22:00:00'\cf3 ,\cf2  120\cf3 )\cf2\par
+\cf3 );\cf2\par
+\par
+\par
+\cf5 -- 1. Obter os Ids dos eventos\cf2\par
+\cf1 DECLARE\cf2  @EventAniversarioId \cf1 UNIQUEIDENTIFIER\cf3 ;\cf2\par
+\cf1 DECLARE\cf2  @EventFormaturaId \cf1 UNIQUEIDENTIFIER\cf3 ;\cf2\par
+\par
+\cf1 SELECT\cf2  @EventAniversarioId \cf3 =\cf2  Id \cf1 FROM\cf2  [dbo]\cf3 .\cf2 [Event] \cf1 WHERE\cf2  \cf1 Name\cf2  \cf3 =\cf2  \cf6 'Anivers\'e1rio'\cf3 ;\cf2\par
+\cf1 SELECT\cf2  @EventFormaturaId \cf3 =\cf2  Id \cf1 FROM\cf2  [dbo]\cf3 .\cf2 [Event] \cf1 WHERE\cf2  \cf1 Name\cf2  \cf3 =\cf2  \cf6 'Formatura'\cf3 ;\cf2\par
+\par
+\cf5 -- 2. Inserir convidados para o evento "Anivers\'e1rio"\cf2\par
+\cf1 INSERT\cf2  \cf1 INTO\cf2  [dbo]\cf3 .\cf2 [Guest]\cf1  \cf3 (\cf2 Id\cf3 ,\cf2  \cf1 Name\cf3 ,\cf2  DateCheckin\cf3 ,\cf2  Photo\cf3 ,\cf2  EventId\cf3 ,\cf2  GuestId\cf3 )\cf2\par
+\cf1 VALUES\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a1'\cf3 ,\cf2  \cf6 'Pedro Azevedo'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-30 22:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/1.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/1.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a2'\cf3 ,\cf2  \cf6 'Carlos Silva'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-29 18:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/2.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/2.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a3'\cf3 ,\cf2  \cf6 'Mariana Souza'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/1.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/1.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a4'\cf3 ,\cf2  \cf6 'Jo\'e3o Pereira'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/3.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/3.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a5'\cf3 ,\cf2  \cf6 'Ana Costa'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-28 20:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/2.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/2.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a6'\cf3 ,\cf2  \cf6 'Lucas Oliveira'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/4.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/4.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a7'\cf3 ,\cf2  \cf6 'Beatriz Lima'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-29 21:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/3.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/3.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890b0'\cf3 ,\cf2  \cf6 'S\'e9rgio Nogueira'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/9.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/9.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890b1'\cf3 ,\cf2  \cf6 'Marta Ribeiro'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-29 18:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/8.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/8.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventAniversarioId\cf3 ,\cf2  \cf3 NULL);\cf2\par
+\par
+\cf5 -- 3. Inserir convidados para o evento "Formatura"\cf2\par
+\cf1 INSERT\cf2  \cf1 INTO\cf2  [dbo]\cf3 .\cf2 [Guest]\cf1  \cf3 (\cf2 Id\cf3 ,\cf2  \cf1 Name\cf3 ,\cf2  DateCheckin\cf3 ,\cf2  Photo\cf3 ,\cf2  EventId\cf3 ,\cf2  GuestId\cf3 )\cf2\par
+\cf1 VALUES\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a8'\cf3 ,\cf2  \cf6 'Ricardo Martins'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/5.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/5.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890a9'\cf3 ,\cf2  \cf6 'Patr\'edcia Ferreira'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-30 20:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/4.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/4.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890aa'\cf3 ,\cf2  \cf6 'Gabriel Rocha'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/6.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/6.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890ab'\cf3 ,\cf2  \cf6 'Juliana Azevedo'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-29 22:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/5.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/5.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890ac'\cf3 ,\cf2  \cf6 'Fernando Almeida'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/7.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/7.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890ad'\cf3 ,\cf2  \cf6 'Daniela Mendes'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-30 21:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/6.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/6.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890ae'\cf3 ,\cf2  \cf6 'Rafael Santos'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/8.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/8.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890af'\cf3 ,\cf2  \cf6 'Fernanda Carvalho'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-28 19:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/7.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/7.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890b2'\cf3 ,\cf2  \cf6 'Renato Barros'\cf3 ,\cf2  \cf3 NULL,\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/men/10.jpg }}{\fldrslt{https://randomuser.me/api/portraits/men/10.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL),\cf2\par
+\cf3 (\cf6 '12345678-1234-1234-1234-1234567890b3'\cf3 ,\cf2  \cf6 'Aline Cunha'\cf3 ,\cf2  \cf4 CONVERT\cf3 (\cf1 datetime\cf3 ,\cf2  \cf6 '2024-05-30 19:00:00'\cf3 ,\cf2  120\cf3 ),\cf2  \cf6 '{{\field{\*\fldinst{HYPERLINK https://randomuser.me/api/portraits/women/9.jpg }}{\fldrslt{https://randomuser.me/api/portraits/women/9.jpg\ul0\cf0}}}}\f1\fs19 '\cf3 ,\cf2  @EventFormaturaId\cf3 ,\cf2  \cf3 NULL);\cf0\f2\fs22\par
+}
+ 

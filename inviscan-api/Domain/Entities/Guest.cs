@@ -8,7 +8,7 @@ namespace Domain.Entities
 {
     public class Guest
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 
@@ -16,12 +16,17 @@ namespace Domain.Entities
 
         public DateTime? DateCheckin { get; set; }
 
-        public int EventId { get; set; }
+        public Guid EventId { get; set; }
         public Event Event { get; set; }
 
-        public int GuestId { get; set; }
+        public Guid? GuestId { get; set; }
         public ICollection<Guest> Guests { get; set; }
         public Guest GuestParent { get; set; }
+
+        public Guest()
+        {
+            Id = Guid.NewGuid();
+        }
 
     }
 }

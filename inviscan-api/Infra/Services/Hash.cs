@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using Konscious.Security.Cryptography;
 
 namespace Infrastructure.Services
 {
@@ -7,25 +8,59 @@ namespace Infrastructure.Services
     {
         public static string HashPassword(string password)
         {
-            using (SHA256 sha256Hash = SHA256.Create())
+            // Generate a salt
+            var salt = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
             {
-                // ComputeHash - returns byte array
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                // Convert byte array to a string
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
+                rng.GetBytes(salt);
             }
+
+            // Configure the Argon2id hasher
+            var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
+            {
+                Salt = salt,
+                DegreeOfParallelism = 8, // Number of threads to use
+                Iterations = 4,          // Number of iterations
+                MemorySize = 1024 * 64   // Memory size in KB
+            };
+
+            // Compute the hash
+            byte[] hash = argon2.GetBytes(16);
+
+            // Combine salt and hash and convert to Base64 for storage
+            byte[] result = new byte[salt.Length + hash.Length];
+            Buffer.BlockCopy(salt, 0, result, 0, salt.Length);
+            Buffer.BlockCopy(hash, 0, result, salt.Length, hash.Length);
+
+            return Convert.ToBase64String(result);
         }
 
-        public static bool VerifyPassword(string enteredPassword, string storedHash)
+        public static bool VerifyPassword(string password, string hashedPassword)
         {
-            string hashOfEnteredPassword = HashPassword(enteredPassword);
-            return hashOfEnteredPassword.Equals(storedHash, StringComparison.OrdinalIgnoreCase);
+            // Decode the Base64 encoded salt+hash
+            byte[] decoded = Convert.FromBase64String(hashedPassword);
+
+            // Extract the salt from the decoded value
+            byte[] salt = new byte[16];
+            Buffer.BlockCopy(decoded, 0, salt, 0, salt.Length);
+
+            // Extract the hash from the decoded value
+            byte[] originalHash = new byte[decoded.Length - salt.Length];
+            Buffer.BlockCopy(decoded, salt.Length, originalHash, 0, originalHash.Length);
+
+            // Hash the input password using the same salt
+            var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
+            {
+                Salt = salt,
+                DegreeOfParallelism = 8, // Number of threads to use
+                Iterations = 4,          // Number of iterations
+                MemorySize = 1024 * 64   // Memory size in KB
+            };
+
+            byte[] hash = argon2.GetBytes(16);
+
+            // Compare the computed hash with the original hash
+            return hash.SequenceEqual(originalHash);
         }
     }
 }

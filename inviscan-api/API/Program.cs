@@ -1,5 +1,7 @@
+using Infrastructure.Context;
 using Infrastructure.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Repository;
 using Repository.Interfaces;
@@ -27,6 +29,7 @@ builder.Services.AddTransient<IEventRepository, EventRepository>();
 builder.Services.AddTransient<IGuestRepository, GuestRepository>();
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddDbContext<InviScanDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("InviScan")));
 
 builder.Services.AddAuthentication(x =>
 {

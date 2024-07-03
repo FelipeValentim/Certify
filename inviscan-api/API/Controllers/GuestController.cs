@@ -20,7 +20,7 @@ namespace API.Controllers
         }
 
         [HttpGet("GetGuests/{eventId}")]
-        public async Task<IActionResult> GetGuests(int eventId) 
+        public async Task<IActionResult> GetGuests(Guid eventId) 
         {
             await Task.Delay(200);
 

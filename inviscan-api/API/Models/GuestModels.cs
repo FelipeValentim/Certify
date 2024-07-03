@@ -7,7 +7,7 @@ namespace API.Models
         public class GuestItem
         {
             [JsonPropertyName("id")]
-            public int Id { get; set; }
+            public Guid Id { get; set; }
 
             [JsonPropertyName("name")]
             public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace API.Models
             public string Checkin { get; set; }
 
             [JsonPropertyName("event")]
-            public int Event { get; set; }
+            public Guid Event { get; set; }
         }
     }
 }

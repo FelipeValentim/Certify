@@ -11,7 +11,7 @@ namespace Repository
         {
         }
 
-        public IEnumerable<Guest> GetGuests(int eventId)
+        public IEnumerable<Guest> GetGuests(Guid eventId)
         {
             return GetAll(x => x.EventId == eventId);
         }

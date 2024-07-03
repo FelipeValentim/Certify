@@ -8,7 +8,7 @@ namespace API.Models
         public class EventItem
         {
             [JsonPropertyName("id")]
-            public int Id { get; set; }
+            public Guid Id { get; set; }
 
             [JsonPropertyName("name")]
             public string Name { get; set; }

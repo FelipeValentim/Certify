@@ -25,6 +25,7 @@ function NewGuest({ route, navigation }) {
   const [errors, setErrors] = React.useState({
     name: undefined,
   });
+  const { addGuest } = route.params;
 
   const save = async () => {
     if (!loading) {
@@ -40,8 +41,7 @@ function NewGuest({ route, navigation }) {
           const response = await GuestAPI.newGuest(guest);
 
           const { data } = response;
-          // route.params.addGuest(data);
-
+          addGuest(data);
           navigation.goBack();
         } catch (error) {
           setErrors((prevErrors) => ({

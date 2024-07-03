@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
-using Repository;
+using Repository.Interfaces;
 using static API.Models.AccountModels;
 
 namespace API.Controllers
@@ -9,8 +9,8 @@ namespace API.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly UserRepository _userRepository;
-        public AccountController(UserRepository userRepository) 
+        private readonly IUserRepository _userRepository;
+        public AccountController(IUserRepository userRepository) 
         { 
             _userRepository = userRepository;    
         }

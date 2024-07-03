@@ -14,7 +14,7 @@ namespace Repository
 
         public User Login(string email, string password)
         {
-            User user = Get(x => string.Equals(email, x.Email, StringComparison.OrdinalIgnoreCase));
+            User user = Get(x => x.Email.ToUpper() == email.ToUpper());
 
             if (user != null)
             {

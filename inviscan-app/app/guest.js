@@ -15,7 +15,7 @@ import Header from "@/components/Header";
 
 function Guest({ route, navigation }) {
   const [guest, setGuest] = useState(route.params?.guest);
-  const { updateCheckin, updateUncheckin } = route.params;
+  const { updateCheckin } = route.params;
   const [loading, setLoading] = useState(false);
 
   const checkin = async (id) => {
@@ -39,7 +39,6 @@ function Guest({ route, navigation }) {
       setLoading(false);
     }
   };
-
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />

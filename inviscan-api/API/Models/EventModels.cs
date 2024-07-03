@@ -30,6 +30,11 @@ namespace API.Models
 
             [JsonPropertyName("guests")]
             public ICollection<GuestItem> Guests { get; set; }
+
+            public EventItem()
+            {
+                Guests = new List<GuestItem>();
+            }
         }
     }
 }

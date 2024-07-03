@@ -2,6 +2,7 @@
 using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Repository.Interfaces;
+using System;
 
 namespace Repository
 {
@@ -16,6 +17,11 @@ namespace Repository
             var guid = new Guid(userId);
 
             return GetAll(x => x.UserId == guid);
+        }
+
+        public Event GetEventWithGuests(Guid eventId)
+        {
+            return Get(x => x.Id == eventId, includeProperties: "Guests");
         }
     }
 }

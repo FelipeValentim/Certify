@@ -73,6 +73,7 @@ namespace Infrastructure.Repositories
         public virtual void Insert(TEntity entity)
         {
             dbSet.Add(entity);
+            context.SaveChanges();
         }
 
         public virtual void Delete(object id)
@@ -94,6 +95,7 @@ namespace Infrastructure.Repositories
         {
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
+            context.SaveChanges();
         }
     }
 }

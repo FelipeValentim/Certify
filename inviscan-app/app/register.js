@@ -40,7 +40,7 @@ export default function RegisterScreen() {
           ></InputPassword>
         </View>
 
-        <Pressable style={styles.button} onPress={() => console.log("clicou")}>
+        <Pressable style={styles.button}>
           <Text style={styles.textButton}>Login</Text>
         </Pressable>
       </View>

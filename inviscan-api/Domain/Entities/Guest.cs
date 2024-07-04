@@ -23,11 +23,15 @@ namespace Domain.Entities
         public ICollection<Guest> Guests { get; set; }
         public Guest GuestParent { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public Guest()
         {
             Id = Guid.NewGuid();
 
             Photo = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+
+            IsDeleted = false;
         }
 
     }

@@ -14,8 +14,6 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [visible, setVisible] = React.useState(false);
 
-  const onToggleSnackBar = () => setVisible(!visible);
-
   const onDismissSnackBar = () => setVisible(false);
   const scannerAnim = useRef(new Animated.Value(0)).current;
 

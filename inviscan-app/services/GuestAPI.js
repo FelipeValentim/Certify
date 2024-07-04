@@ -30,6 +30,17 @@ export const GuestAPI = {
         : undefined,
     });
   },
+  uncheckins: async function (ids, cancel = false) {
+    return api.request({
+      url: `/Guest/Uncheckin`,
+      method: "PUT",
+      data: ids,
+      signal: cancel
+        ? cancelApiObject[this.uncheckins.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
   uncheckin: async function (id, cancel = false) {
     return api.request({
       url: `/Guest/Uncheckin/${id}`,
@@ -50,13 +61,23 @@ export const GuestAPI = {
         : undefined,
     });
   },
-  uncheckins: async function (ids, cancel = false) {
+  deleteGuests: async function (ids, cancel = false) {
     return api.request({
-      url: `/Guest/Uncheckin`,
-      method: "PUT",
+      url: `/Guest/Delete`,
+      method: "DELETE",
       data: ids,
       signal: cancel
-        ? cancelApiObject[this.uncheckin.name].handleRequestCancellation()
+        ? cancelApiObject[this.deleteGuests.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
+  deleteGuest: async function (id, cancel = false) {
+    return api.request({
+      url: `/Guest/Delete/${id}`,
+      method: "DELETE",
+      signal: cancel
+        ? cancelApiObject[this.deleteGuest.name].handleRequestCancellation()
             .signal
         : undefined,
     });

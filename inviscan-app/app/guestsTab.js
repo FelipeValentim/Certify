@@ -21,6 +21,7 @@ const SelectionHeader = ({
   checkins,
   uncheckins,
   loading,
+  deleteGuests,
   setConfirmAlert,
 }) => {
   const styles = StyleSheet.create({
@@ -60,6 +61,21 @@ const SelectionHeader = ({
 
         <View style={styles.options}>
           {/* {loading && <BounceLoading color={"#FFF"} size={12} />} */}
+
+          <Ionicons
+            onPress={() =>
+              setConfirmAlert({
+                open: true,
+                title: "Tem certeza?",
+                message: `Confirmar deleção de ${selectedItems.length} convidados?`,
+                onConfirm: () => deleteGuests(),
+              })
+            }
+            style={styles.option}
+            name="trash-bin"
+            color={"#FFF"}
+            size={30}
+          />
 
           {selectedItems.filter((x) => x.checkin).length > 0 && (
             <Ionicons
@@ -102,6 +118,7 @@ const SelectionHeader = ({
 function GuestsTab({
   updateUncheckin,
   updateCheckin,
+  updateDeleted,
   guests,
   addGuest,
   navigation,
@@ -168,6 +185,29 @@ function GuestsTab({
     }
   };
 
+  const deleteGuests = async () => {
+    const ids = selectedItems.map((x) => x.id);
+    try {
+      if (!loading) {
+        setLoading(true);
+        await GuestAPI.deleteGuests(ids);
+        setSelectedItems([]);
+        console.log(ids);
+        updateDeleted(ids);
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status == httpStatus.conflict) {
+          updateDeleted(ids);
+        } else {
+          console.log(response.data);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const uncheckin = async (id) => {
     try {
       if (!loading) {
@@ -198,6 +238,7 @@ function GuestsTab({
             <SelectionHeader
               checkins={checkins}
               uncheckins={uncheckins}
+              deleteGuests={deleteGuests}
               loading={loading}
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}

@@ -38,6 +38,12 @@ export default function EventScreen({ route, navigation }) {
     const newGuests = guests.map((guest) =>
       ids.includes(guest.id) ? { ...guest, checkin: null } : guest
     );
+
+    setGuests(newGuests);
+  };
+
+  const updateDeleted = async (ids) => {
+    const newGuests = guests.filter((guest) => !ids.includes(guest.id));
     setGuests(newGuests);
   };
 
@@ -130,6 +136,7 @@ export default function EventScreen({ route, navigation }) {
             guests={guests}
             updateUncheckin={updateUncheckin}
             updateCheckin={checkin}
+            updateDeleted={updateDeleted}
             addGuest={addGuest}
           />
         )}

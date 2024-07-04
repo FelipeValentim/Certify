@@ -5,6 +5,7 @@ import { baseURL, httpStatus } from "../../constants/Default";
 import store from "@/redux/configureStore";
 import { signOut } from "@/redux/token";
 import { removeToken } from "@/storage/AsyncStorage";
+import { toast } from "@/redux/snackBar";
 store.subscribe(listener);
 
 // initializing the axios instance with custom configs
@@ -18,6 +19,8 @@ const errorHandler = async (error) => {
   if (statusCode && statusCode !== httpStatus.unauthorized) {
     if (typeof error.response?.data === "string") {
       const message = error.response?.data;
+
+      store.dispatch(toast(message));
     }
   } else if (statusCode && statusCode === httpStatus.unauthorized) {
     await removeToken();

@@ -10,8 +10,8 @@ namespace Infrastructure.Repositories
 {
     public class RepositoryBase<TContext, TEntity> : IRepositoryBase<TEntity> where TContext : DbContext where TEntity : class
     {
-        internal TContext context;
-        internal DbSet<TEntity> dbSet;
+        public TContext context;
+        public DbSet<TEntity> dbSet;
 
         public RepositoryBase(TContext context)
         {

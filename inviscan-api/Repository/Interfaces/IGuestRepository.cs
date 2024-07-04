@@ -17,5 +17,9 @@ namespace Repository.Interfaces
 
         void Uncheckin(Guid[] id);
 
+
+        void DeleteGuest(Guid id);
+        void DeleteGuests(Guid[] ids);
+
     }
 }

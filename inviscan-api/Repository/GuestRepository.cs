@@ -70,5 +70,34 @@ namespace Repository
                 Update(guest);
             }
         }
+
+        public void DeleteGuest(Guid id)
+        {
+            var guest = GetByID(id);
+
+            if (guest != null)
+            {
+                guest.IsDeleted = true;
+
+                Update(guest);
+            }
+        }
+
+        public void DeleteGuests(Guid[] ids)
+        {
+            foreach (var id in ids)
+            {
+                var guest = GetByID(id);
+
+                if (guest != null)
+                {
+                    guest.IsDeleted = true;
+
+                    Update(guest);
+                }
+            }
+        }
+
+
     }
 }

@@ -1,5 +1,6 @@
 using Infrastructure.Context;
 using Infrastructure.Helpers;
+using InviScan.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +28,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IEventRepository, EventRepository>();
 builder.Services.AddTransient<IGuestRepository, GuestRepository>();
+builder.Services.AddTransient<IGoogleDriveService, GoogleDriveService>();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<InviScanDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("InviScan")));

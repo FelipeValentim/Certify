@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using InviScan.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Interfaces;
@@ -13,85 +14,159 @@ namespace API.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IGuestRepository _guestRepository;
-        public GuestController(IHttpContextAccessor httpContextAccessor, IGuestRepository guestRepository)
+        private readonly IGoogleDriveService _googleDriveService;
+
+        public GuestController(IHttpContextAccessor httpContextAccessor, IGuestRepository guestRepository, IGoogleDriveService googleDriveService)
         {
             _guestRepository = guestRepository;
             _httpContextAccessor = httpContextAccessor;
+            _googleDriveService = googleDriveService;
         }
 
         [HttpGet("GetGuests/{eventId}")]
-        public async Task<IActionResult> GetGuests(Guid eventId) 
+        public async Task<IActionResult> GetGuests(Guid eventId)
         {
-            await Task.Delay(200);
+            try
+            {
+                await Task.Delay(200);
 
-            var guests = _guestRepository.GetGuests(eventId);
+                var guests = _guestRepository.GetGuests(eventId);
 
-            return StatusCode(StatusCodes.Status200OK, guests);
+                return StatusCode(StatusCodes.Status200OK, guests);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPut("Checkin/{id}")]
         public async Task<IActionResult> Checkin(Guid id)
         {
-            await Task.Delay(200);
-
-            var guest = _guestRepository.GetByID(id);
-
-            if (guest == null)
+            try
             {
-                return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
-            }
 
-            if (guest.DateCheckin.HasValue)
+
+                await Task.Delay(200);
+
+                var guest = _guestRepository.GetByID(id);
+
+                if (guest == null)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
+                }
+
+                if (guest.DateCheckin.HasValue)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, "Já foi realizado checkin para este convidado.");
+                }
+
+                _guestRepository.Checkin(id);
+
+                return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
+            }
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status409Conflict, "Já foi realizado checkin para este convidado.");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
-            _guestRepository.Checkin(id);
-
-            return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
         }
 
         [HttpPut("Uncheckin/{id}")]
         public async Task<IActionResult> Uncheckin(Guid id)
         {
-            await Task.Delay(200);
-
-            var guest = _guestRepository.GetByID(id);
-
-            if (guest == null)
+            try
             {
-                return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
-            }
+                await Task.Delay(200);
 
-            if (!guest.DateCheckin.HasValue)
+                var guest = _guestRepository.GetByID(id);
+
+                if (guest == null)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
+                }
+
+                if (!guest.DateCheckin.HasValue)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, "Já foi desfeito o checkin para este convidado.");
+                }
+
+                _guestRepository.Uncheckin(id);
+
+                return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
+            }
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status409Conflict, "Já foi desfeito o checkin para este convidado.");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
-            _guestRepository.Uncheckin(id);
-
-            return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
         }
 
         [HttpPut("Checkin")]
         public async Task<IActionResult> Checkin(Guid[] ids)
         {
-            await Task.Delay(200);
+            try
+            {
+                await Task.Delay(200);
 
-            _guestRepository.Checkin(ids);
+                _guestRepository.Checkin(ids);
 
-            return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
+                return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
 
         [HttpPut("Uncheckin")]
         public async Task<IActionResult> Uncheckin(Guid[] ids)
         {
-            await Task.Delay(200);
+            try
+            {
+                await Task.Delay(200);
 
-            _guestRepository.Uncheckin(ids);
+                _guestRepository.Uncheckin(ids);
 
-            return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
+                return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await Task.Delay(200);
+
+                _guestRepository.DeleteGuest(id);
+
+                return StatusCode(StatusCodes.Status200OK, "Deleção realizada com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete(Guid[] ids)
+        {
+            try
+            {
+                await Task.Delay(200);
+
+                _guestRepository.DeleteGuests(ids);
+
+                return StatusCode(StatusCodes.Status200OK, "Deleção realizada com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
 
@@ -100,17 +175,28 @@ namespace API.Controllers
         {
             await Task.Delay(200);
 
-            var guest = new Guest()
+            try
             {
-                Name = model.Name,
-                DateCheckin = null,
-                //Photo = model.Photo,
-                EventId = model.Event
-            };
+                var photo = _googleDriveService.UploadBase64Image(model.Photo.Split(',')[1]);
 
-            _guestRepository.Insert(guest);
+                var guest = new Guest()
+                {
+                    Name = model.Name,
+                    DateCheckin = null,
+                    Photo = photo,
+                    EventId = model.Event
+                };
 
-            return StatusCode(StatusCodes.Status200OK, guest);
+                _guestRepository.Insert(guest);
+
+                return StatusCode(StatusCodes.Status200OK, guest);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
         }
 
     }

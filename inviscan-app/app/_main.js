@@ -16,11 +16,13 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "@/redux/token";
+import { close } from "@/redux/snackBar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Header from "@/components/Header";
 import { routes } from "@/constants/Default";
 import api from "@/services/configs/AxiosConfig";
+import { Snackbar } from "react-native-paper";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -29,6 +31,11 @@ const Main = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const dispatch = useDispatch();
   const isSignedIn = useSelector((state) => state.token);
+  const snackBar = useSelector((state) => state.snackBar);
+
+  const onDismiss = () => {
+    dispatch(close());
+  };
 
   useEffect(() => {
     async function prepare() {
@@ -123,6 +130,13 @@ const Main = () => {
             )}
           </Stack.Navigator>
         </NavigationContainer>
+        <Snackbar
+          visible={snackBar.visible}
+          duration={5000}
+          onDismiss={onDismiss}
+        >
+          {snackBar.text}
+        </Snackbar>
       </SafeAreaView>
     </SafeAreaProvider>
   );

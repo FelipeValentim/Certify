@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import token from "./token";
+import snackBar from "./snackBar";
 
 const reducer = combineReducers({
   token,
+  snackBar,
 });
 
 // export const store = configureStore({

@@ -25,50 +25,64 @@ namespace API.Controllers
         }
 
         [HttpGet("GetEvents")]
-        public async Task<IActionResult> GetEvents() 
+        public async Task<IActionResult> GetEvents()
         {
-            await Task.Delay(200);
-
-            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(CustomClaimTypes.Id);
-
-            var events = _eventRepository.GetEvents(userId);
-
-            var items = events.Select(e => new EventItem
+            try
             {
-                Id = e.Id,
-                Date = e.Date.ToString("dd/MM/yyyy"),
-                Name = e.Name,
-                Photo = e.Photo,
-            });
+                await Task.Delay(200);
 
-            return StatusCode(StatusCodes.Status200OK, items);
+                var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(CustomClaimTypes.Id);
+
+                var events = _eventRepository.GetEvents(userId);
+
+                var items = events.Select(e => new EventItem
+                {
+                    Id = e.Id,
+                    Date = e.Date.ToString("dd/MM/yyyy"),
+                    Name = e.Name,
+                    Photo = e.Photo,
+                });
+
+                return StatusCode(StatusCodes.Status200OK, items);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpGet("GetEvent/{id}")]
         public async Task<IActionResult> GetEvent(Guid id)
         {
-            await Task.Delay(200);
-
-            EventItem item;
-
-            var eventItem = _eventRepository.GetEventWithGuests(id);
-
-            item = new EventItem
+            try
             {
-                Id = eventItem.Id,
-                Date = eventItem.Date.ToString(),
-                Name = eventItem.Name,
-                Photo = eventItem.Photo,
-                Guests = eventItem.Guests.Select(x  => new GuestItem
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Photo = x.Photo,
-                    Checkin = x.DateCheckin?.ToString("dd/MM/yyyy"),
-                }).ToList(),
-            }; 
+                await Task.Delay(200);
 
-            return StatusCode(StatusCodes.Status200OK, item);
+                EventItem item;
+
+                var eventItem = _eventRepository.GetEventWithGuests(id);
+
+                item = new EventItem
+                {
+                    Id = eventItem.Id,
+                    Date = eventItem.Date.ToString(),
+                    Name = eventItem.Name,
+                    Photo = eventItem.Photo,
+                    Guests = eventItem.Guests.Where(x => !x.IsDeleted).Select(x => new GuestItem
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Photo = x.Photo,
+                        Checkin = x.DateCheckin?.ToString("dd/MM/yyyy"),
+                    }).ToList(),
+                };
+
+                return StatusCode(StatusCodes.Status200OK, item);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
     }

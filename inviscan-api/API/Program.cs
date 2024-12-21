@@ -25,7 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddTransient<IEventRepository, EventRepository>();
 builder.Services.AddTransient<IGuestRepository, GuestRepository>();
 builder.Services.AddTransient<IGoogleDriveService, GoogleDriveService>();
@@ -64,6 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseCors("CorsPolicy");
 

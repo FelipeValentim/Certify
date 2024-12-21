@@ -9,7 +9,7 @@ namespace Infrastructure.Services
 {
     public class TokenService
     {
-        public static string GenerateToken(User user)
+        public static string GenerateToken(UserProfile user)
         {
             var key = Encoding.UTF8.GetBytes(Settings.SecretKey);
 

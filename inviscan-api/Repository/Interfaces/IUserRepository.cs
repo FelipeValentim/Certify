@@ -4,8 +4,8 @@ using Infrastructure.Repositories;
 
 namespace Repository.Interfaces
 {
-    public interface IUserRepository : IRepositoryBase<User>
+    public interface IUserProfileRepository : IRepositoryBase<UserProfile>
     {
-        User Login(string email, string password);
+        UserProfile Login(string email, string password);
     }
 }

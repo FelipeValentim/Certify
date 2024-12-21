@@ -2,6 +2,7 @@
 using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
+using Google.Apis.Upload;
 using Google.Apis.Util.Store;
 
 namespace InviScan.Services
@@ -44,8 +45,9 @@ namespace InviScan.Services
             {
                 // Upload file
                 var request = service.Files.Create(fileMetadata, streamContent, "image/jpeg");
+                request.ChunkSize = ResumableUpload.MinimumChunkSize * 4;
 
-                request.Upload();
+                var result = request.Upload();
 
                 var permission = new Permission
                 {

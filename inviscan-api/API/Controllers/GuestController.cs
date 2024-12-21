@@ -177,15 +177,18 @@ namespace API.Controllers
 
             try
             {
-                var photo = _googleDriveService.UploadBase64Image(model.Photo.Split(',')[1]);
 
                 var guest = new Guest()
                 {
                     Name = model.Name,
                     DateCheckin = null,
-                    Photo = photo,
                     EventId = model.Event
                 };
+
+                if (!string.IsNullOrEmpty(model.Photo))
+                {
+                    var photo = _googleDriveService.UploadBase64Image(model.Photo.Split(',')[1]);
+                }
 
                 _guestRepository.Insert(guest);
 

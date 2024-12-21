@@ -10,9 +10,9 @@ namespace API.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserProfileRepository _userRepository;
 
-        public AccountController(IUserRepository userRepository)
+        public AccountController(IUserProfileRepository userRepository)
         {
             _userRepository = userRepository;
         }

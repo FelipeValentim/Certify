@@ -344,7 +344,7 @@ function GuestsTab({
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: backgroundColor },
+  container: { backgroundColor: backgroundColor, flex: 1 },
   card: {
     backgroundColor: "#FFF",
     margin: 10,

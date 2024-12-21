@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class User
+    public class UserProfile
     {
         public Guid Id { get; set; }
 
@@ -23,7 +23,7 @@ namespace Domain.Entities
         public Guid SecurityStamp { get; set; }
 
 
-        public User()
+        public UserProfile()
         {
             Id = Guid.NewGuid();
 

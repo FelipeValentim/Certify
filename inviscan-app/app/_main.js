@@ -8,10 +8,7 @@ import NewGuestScreen from "./newGuest";
 import * as Font from "expo-font";
 import { getToken } from "@/storage/AsyncStorage";
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  createNativeStackNavigator,
-  TransitionPresets,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

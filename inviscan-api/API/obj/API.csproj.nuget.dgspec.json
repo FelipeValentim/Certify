@@ -44,13 +44,21 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "DocX": {
+              "target": "Package",
+              "version": "[3.0.1, )"
+            },
+            "FreeSpire.Doc": {
+              "target": "Package",
+              "version": "[12.2.0, )"
+            },
             "Google.Apis.Auth": {
               "target": "Package",
               "version": "[1.68.0, )"
             },
             "Google.Apis.Drive.v3": {
               "target": "Package",
-              "version": "[1.68.0.3428, )"
+              "version": "[1.68.0.3627, )"
             },
             "Google.Apis.Oauth2.v2": {
               "target": "Package",
@@ -71,6 +79,10 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[7.5.2, )"
+            },
+            "itext7": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             }
           },
           "imports": [

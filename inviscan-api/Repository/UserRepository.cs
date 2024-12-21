@@ -6,15 +6,15 @@ using Repository.Interfaces;
 
 namespace Repository
 {
-    public class UserRepository :  RepositoryBase<InviScanDbContext, User>, IUserRepository
+    public class UserProfileRepository :  RepositoryBase<InviScanDbContext, UserProfile>, IUserProfileRepository
     {
-        public UserRepository(InviScanDbContext context) : base(context)
+        public UserProfileRepository(InviScanDbContext context) : base(context)
         {
         }
 
-        public User Login(string email, string password)
+        public UserProfile Login(string email, string password)
         {
-            User user = Get(x => x.Email.ToUpper() == email.ToUpper());
+            UserProfile user = Get(x => x.Email.ToUpper() == email.ToUpper());
 
             if (user != null)
             {

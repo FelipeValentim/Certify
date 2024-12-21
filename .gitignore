@@ -9,6 +9,8 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+**/wwwroot/certificates/
+**/wwwroot/templates/
 
 # macOS
 .DS_Store
@@ -18,3 +20,5 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli
+/inviscan-api/API/wwwroot/certificates/0d6cf2ad1e004936a5291efbeb95bc77
+/inviscan-api/API/wwwroot/templates

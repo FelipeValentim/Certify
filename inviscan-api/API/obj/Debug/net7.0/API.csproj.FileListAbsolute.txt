@@ -114,3 +114,5 @@ C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\runtimes\win-x86\nat
 C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\Microsoft.Bcl.TimeProvider.dll
 C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\Services.dll
 C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\Services.pdb
+C:\Projects\event-checkin\inviscan-api\API\obj\Debug\net7.0\API.RazorAssemblyInfo.cache
+C:\Projects\event-checkin\inviscan-api\API\obj\Debug\net7.0\API.RazorAssemblyInfo.cs

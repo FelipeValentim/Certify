@@ -3,6 +3,7 @@ import {
   routes,
   screenHeight,
   screenWidth,
+  backgroundColor,
 } from "@/constants/Default";
 import React, { Fragment, useEffect, useState } from "react";
 import {
@@ -67,7 +68,7 @@ export default function HomeScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5F0FF",
+    backgroundColor: backgroundColor,
     height: screenHeight,
   },
   card: {

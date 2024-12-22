@@ -92,28 +92,28 @@ const Main = () => {
                 <Stack.Screen
                   name={routes.home}
                   options={{
-                    title: "Início",
+                    title: routes.home,
                   }}
                   component={HomeScreen}
                 />
                 <Stack.Screen
                   name={routes.event}
                   options={{
-                    title: "Evento",
+                    title: routes.event,
                   }}
                   component={EventScreen}
                 />
                 <Stack.Screen
                   name={routes.guest}
                   options={{
-                    title: "Convidado",
+                    title: routes.guest,
                   }}
                   component={GuestScreen}
                 />
                 <Stack.Screen
                   name={routes.newGuest}
                   options={{
-                    title: "Novo Convidado",
+                    title: routes.newGuest,
                   }}
                   component={NewGuestScreen}
                 />
@@ -121,7 +121,7 @@ const Main = () => {
             ) : (
               <Stack.Screen
                 name={routes.login}
-                options={{ title: "login" }}
+                options={{ title: routes.login }}
                 component={LoginScreen}
               />
             )}

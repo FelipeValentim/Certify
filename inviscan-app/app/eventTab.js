@@ -1,6 +1,11 @@
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
-import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
+import {
+  primaryColor,
+  screenHeight,
+  screenWidth,
+  backgroundColor,
+} from "@/constants/Default";
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 
@@ -64,7 +69,7 @@ const EventTab = ({ navigation, route, info, title }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5F0FF",
+    backgroundColor: backgroundColor,
     height: screenHeight,
   },
   event: {
@@ -84,12 +89,11 @@ const styles = StyleSheet.create({
   },
   date: {
     fontFamily: "PoppinsRegular",
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 16,
     color: "#fff",
     backgroundColor: primaryColor,
-    borderRadius: 20,
-    padding: 10,
+    padding: 12,
+    borderRadius: 6,
   },
 });
 

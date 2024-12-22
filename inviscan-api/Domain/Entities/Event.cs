@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Event
+    public class Event : EntityBase
     {
-        public Guid Id { get; set; }
-        
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -24,9 +22,8 @@ namespace Domain.Entities
 
         public ICollection<Guest> Guests { get; set; }
 
-        public Event()
+        public Event() : base()
         {
-            Id = Guid.NewGuid();
         }
     }
 }

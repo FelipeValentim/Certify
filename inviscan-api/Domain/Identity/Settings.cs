@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Helpers
+﻿namespace Domain.Identity
 {
     public class Settings
     {

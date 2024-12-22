@@ -1,11 +1,13 @@
+using Domain.Identity;
+using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 using Infrastructure.Context;
-using Infrastructure.Helpers;
 using InviScan.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Repository;
-using Repository.Interfaces;
+using Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +31,11 @@ builder.Services.AddTransient<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddTransient<IEventRepository, EventRepository>();
 builder.Services.AddTransient<IGuestRepository, GuestRepository>();
 builder.Services.AddTransient<IGoogleDriveService, GoogleDriveService>();
+builder.Services.AddTransient<IDocumentService, DocumentService>();
+builder.Services.AddTransient<IHashService, HashService>();
+builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<IUserService, UserService>();
+
 
 builder.Services.AddHttpContextAccessor();
 

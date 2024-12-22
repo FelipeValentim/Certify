@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class UserProfile
+    public class UserProfile : EntityBase
     {
-        public Guid Id { get; set; }
-
         public string Email { get; set; }
 
         public string PasswordHash { get; set; }
@@ -23,10 +21,8 @@ namespace Domain.Entities
         public Guid SecurityStamp { get; set; }
 
 
-        public UserProfile()
+        public UserProfile() : base()
         {
-            Id = Guid.NewGuid();
-
             ConcurrencyStamp = Guid.NewGuid();
 
             SecurityStamp = Guid.NewGuid();

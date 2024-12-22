@@ -17,6 +17,13 @@ namespace Infrastructure.Context
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Ignore<EntityBase>();
+        }
+
         public DbSet<UserProfile> UserProfile { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<Guest> Guest { get; set; }

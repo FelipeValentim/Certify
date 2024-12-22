@@ -1,8 +1,7 @@
 ﻿using Domain.Entities;
-using Infrastructure.Repositories;
 
 
-namespace Repository.Interfaces
+namespace Domain.Interfaces.Repositories
 {
     public interface IEventRepository : IRepositoryBase<Event>
     {

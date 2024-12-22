@@ -1,10 +1,11 @@
-﻿using Spire.Doc;
+﻿using Domain.Interfaces.Services;
+using Spire.Doc;
 
-namespace InviScan
+namespace Services
 {
-    public static class  DocumentService
+    public class  DocumentService : IDocumentService
     {
-        public static void ConvertDocxToPdf(string docxFilePath, string pdfFilePath)
+        public void ConvertDocxToPdf(string docxFilePath, string pdfFilePath)
         {
             Document document = new Document();
             document.LoadFromFile(docxFilePath);

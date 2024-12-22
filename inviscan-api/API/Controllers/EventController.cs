@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using Repository;
 using static API.Models.EventModels;
 using static API.Models.GuestModels;
-using Infrastructure.Helpers;
 using System.Security.Claims;
-using Repository.Interfaces;
 using InviScan;
 using Xceed.Words.NET;
 using Microsoft.Extensions.Logging;
 using Xceed.Document.NET;
 using System.Text.RegularExpressions;
+using Domain.Interfaces.Services;
+using Domain.Identity;
+using Domain.Interfaces.Repositories;
 
 namespace API.Controllers
 {
@@ -23,12 +24,14 @@ namespace API.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEventRepository _eventRepository;
         private readonly IGuestRepository _guestRepository;
-        public EventController(IHttpContextAccessor httpContextAccessor,  IEventRepository eventRepository, IGuestRepository guestRepository, IWebHostEnvironment webHostEnvironment)
+        private readonly IDocumentService _documentService;
+        public EventController(IHttpContextAccessor httpContextAccessor,  IEventRepository eventRepository, IGuestRepository guestRepository, IWebHostEnvironment webHostEnvironment, IDocumentService documentService)
         {
             _eventRepository = eventRepository;
             _httpContextAccessor = httpContextAccessor;
             _guestRepository = guestRepository;
             _webHostEnvironment = webHostEnvironment;
+            _documentService = documentService;
         }
 
         [HttpGet("GetEvents")]
@@ -101,8 +104,8 @@ namespace API.Controllers
 
             var guests = _guestRepository.GetAll(x => x.EventId == id && x.DateCheckin.HasValue && !x.IsDeleted);
 
-            string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "templates", "template.docx");
-            string certificatesPath = Path.Combine(_webHostEnvironment.WebRootPath, "certificates");
+            string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "templates", "Documento.docx");
+            string certificatesPath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "certificates");
 
             if (!Directory.Exists(certificatesPath))
                 Directory.CreateDirectory(certificatesPath);
@@ -149,7 +152,7 @@ namespace API.Controllers
                     string pdfPath = Path.Combine(eventDirectory, $"{guest.Name.Replace(" ", "")}_{guest.Id.ToString("N").Substring(0, 8)}.pdf");
 
                     // Passo 4: Converter o documento DOCX para PDF
-                    DocumentService.ConvertDocxToPdf(tempDocxPath, pdfPath);
+                    _documentService.ConvertDocxToPdf(tempDocxPath, pdfPath);
                 }
             }
 

@@ -1,7 +1,6 @@
-﻿using Infrastructure.Services;
-using InviScan.Services;
+﻿using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using Repository.Interfaces;
 using static API.Models.AccountModels;
 
 namespace API.Controllers
@@ -10,11 +9,13 @@ namespace API.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly IUserProfileRepository _userRepository;
+        private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public AccountController(IUserProfileRepository userRepository)
+        public AccountController(IUserService userService, ITokenService tokenService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
+            _tokenService = tokenService;
         }
 
         [HttpPost("Login")]
@@ -22,14 +23,14 @@ namespace API.Controllers
         {
             try
             { 
-                var user = _userRepository.Login(model.Email, model.Password);
+                var user = _userService.Login(model.Email, model.Password);
 
                 if (user == null)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest, "Usuário ou senha incorreto.");
                 }
 
-                var token = TokenService.GenerateToken(user);
+                var token = _tokenService.GenerateToken(user);
 
                 return StatusCode(StatusCodes.Status200OK, token);
             }

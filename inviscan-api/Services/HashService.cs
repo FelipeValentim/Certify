@@ -1,12 +1,13 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using Domain.Interfaces.Services;
 using Konscious.Security.Cryptography;
 
-namespace Infrastructure.Services
+namespace Services
 {
-    public static class Hash
+    public class HashService : IHashService
     {
-        public static string HashPassword(string password)
+        public string HashPassword(string password)
         {
         
             // Generate a salt
@@ -36,7 +37,7 @@ namespace Infrastructure.Services
             return Convert.ToBase64String(result);
         }
 
-        public static bool VerifyPassword(string password, string hashedPassword)
+        public bool VerifyPassword(string password, string hashedPassword)
         {
             // Decode the Base64 encoded salt+hash
             byte[] decoded = Convert.FromBase64String(hashedPassword);

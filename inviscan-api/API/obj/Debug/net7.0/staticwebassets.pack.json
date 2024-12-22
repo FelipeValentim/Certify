@@ -1,8 +1,36 @@
 {
   "Files": [
     {
-      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\templates\\template.docx",
-      "PackagePath": "staticwebassets\\templates\\template.docx"
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\AnaCosta_12345678.pdf",
+      "PackagePath": "staticwebassets\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\AnaCosta_12345678.pdf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\CarlosSilva_12345678.pdf",
+      "PackagePath": "staticwebassets\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\CarlosSilva_12345678.pdf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\MartaRibeiro_12345678.pdf",
+      "PackagePath": "staticwebassets\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\MartaRibeiro_12345678.pdf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\PedroAzevedo_12345678.pdf",
+      "PackagePath": "staticwebassets\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\PedroAzevedo_12345678.pdf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\Documento.docx",
+      "PackagePath": "staticwebassets\\storage\\templates\\Documento.docx"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\Documento.odt",
+      "PackagePath": "staticwebassets\\storage\\templates\\Documento.odt"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\Documento.rtf",
+      "PackagePath": "staticwebassets\\storage\\templates\\Documento.rtf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\template.odf",
+      "PackagePath": "staticwebassets\\storage\\templates\\template.odf"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.API.Microsoft.AspNetCore.StaticWebAssets.props",

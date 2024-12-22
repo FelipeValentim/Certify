@@ -54,22 +54,25 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     marginHorizontal: 20,
   },
   title: {
     color: "#FFF",
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "PoppinsRegular",
-    fontWeight: "bold",
     flex: 1,
-    textAlign: "center",
+    alignItems: "center",
   },
   signOutButton: {
     padding: 15,
+    flex: 1,
+    alignItems: "flex-end",
   },
   goBackButton: {
     padding: 15,
+    flex: 1,
+    alignItems: "flex-start",
   },
 });
 

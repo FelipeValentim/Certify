@@ -1,7 +1,7 @@
-﻿using Domain.Interfaces.Repositories;
+﻿using API.Models;
+using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using static API.Models.AccountModels;
 
 namespace API.Controllers
 {
@@ -19,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Login(AccountUser model)
+        public IActionResult Login(AccountViewModel model)
         {
             try
             { 

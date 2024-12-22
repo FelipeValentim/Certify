@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
+﻿using API.Models;
+using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using InviScan.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static API.Models.GuestModels;
 
 namespace API.Controllers
 {
@@ -169,9 +169,9 @@ namespace API.Controllers
             }
         }
 
-
+        [AllowAnonymous]
         [HttpPost("NewGuest")]
-        public async Task<IActionResult> Post(GuestItem model)
+        public async Task<IActionResult> Post(GuestViewModel model)
         {
             await Task.Delay(200);
 
@@ -179,7 +179,7 @@ namespace API.Controllers
             {
                 if (string.IsNullOrEmpty(model.Name))
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Nome é obrigatório.");
+                    return StatusCode(StatusCodes.Status400BadRequest, "Nome e obrigatorio.");
                 }
 
                 var guest = new Guest()

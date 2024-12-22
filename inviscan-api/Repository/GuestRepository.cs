@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
-using Repository.Interfaces;
 
 namespace Repository
 {

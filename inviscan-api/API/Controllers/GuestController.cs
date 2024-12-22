@@ -1,8 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces.Repositories;
 using InviScan.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Repository.Interfaces;
 using static API.Models.GuestModels;
 
 namespace API.Controllers
@@ -177,6 +177,10 @@ namespace API.Controllers
 
             try
             {
+                if (string.IsNullOrEmpty(model.Name))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, "Nome é obrigatório.");
+                }
 
                 var guest = new Guest()
                 {

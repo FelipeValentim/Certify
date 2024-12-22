@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useEffect, useState } from "react";
 import EventInfoTab from "./eventTab";
 import EventGuestsTab from "./guestsTab";
+import EventTemplateTab from "./templateTab";
 import EventScannerTab from "./eventScanner";
 import { Ionicons } from "@expo/vector-icons";
 import { EventAPI } from "@/services/EventAPI";
@@ -140,6 +141,22 @@ export default function EventScreen({ route, navigation }) {
             addGuest={addGuest}
           />
         )}
+      </Tab.Screen>
+      <Tab.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => {
+            return focused ? (
+              <Ionicons name="book" size={size} color={color} />
+            ) : (
+              <Ionicons name="book-outline" size={size} color={color} />
+            );
+          },
+        }}
+        name="Template"
+        initialParams={{ eventId }}
+      >
+        {(props) => <EventTemplateTab {...props} />}
       </Tab.Screen>
     </Tab.Navigator>
   );

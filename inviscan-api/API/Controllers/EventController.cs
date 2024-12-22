@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository;
-using static API.Models.EventModels;
-using static API.Models.GuestModels;
 using System.Security.Claims;
 using InviScan;
 using Xceed.Words.NET;
@@ -12,6 +10,7 @@ using System.Text.RegularExpressions;
 using Domain.Interfaces.Services;
 using Domain.Identity;
 using Domain.Interfaces.Repositories;
+using API.Models;
 
 namespace API.Controllers
 {
@@ -45,7 +44,7 @@ namespace API.Controllers
 
                 var events = _eventRepository.GetEvents(userId);
 
-                var items = events.Select(e => new EventItem
+                var items = events.Select(e => new EventViewModel
                 {
                     Id = e.Id,
                     Date = e.Date.ToString("dd/MM/yyyy"),
@@ -68,18 +67,18 @@ namespace API.Controllers
             {
                 await Task.Delay(200);
 
-                EventItem item;
+				EventViewModel item;
 
                 var eventItem = _eventRepository.GetEventWithGuests(id);
 
-                item = new EventItem
-                {
+                item = new EventViewModel
+				{
                     Id = eventItem.Id,
                     Date = eventItem.Date.ToString(),
                     Name = eventItem.Name,
                     Photo = eventItem.Photo,
-                    Guests = eventItem.Guests.Where(x => !x.IsDeleted).Select(x => new GuestItem
-                    {
+                    Guests = eventItem.Guests.Where(x => !x.IsDeleted).Select(x => new GuestViewModel
+					{
                         Id = x.Id,
                         Name = x.Name,
                         Photo = x.Photo,
@@ -158,5 +157,8 @@ namespace API.Controllers
 
             return StatusCode(StatusCodes.Status200OK, "Certificados gerados com sucesso.");
         }
+
+
+       
     }
 }

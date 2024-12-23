@@ -79,6 +79,11 @@ namespace API.Controllers
 					return StatusCode(StatusCodes.Status400BadRequest, "Data é obrigatório.");
 				}
 
+				if (model.EventTypeId == 0)
+				{
+					return StatusCode(StatusCodes.Status400BadRequest, "Tipo de evento é obrigatório.");
+				}
+
 				var guest = new Event()
 				{
 					Name = model.Name,

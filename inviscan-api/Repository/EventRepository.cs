@@ -15,7 +15,7 @@ namespace Repository
         {
             var guid = new Guid(userId);
 
-            return GetAll(x => x.UserId == guid);
+            return GetAll(x => x.UserId == guid, includeProperties: "EventType");
         }
 
         public Event GetEventWithGuests(Guid eventId)

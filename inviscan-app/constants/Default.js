@@ -20,5 +20,6 @@ export const routes = {
   event: "Evento",
   guest: "Convidado",
   newGuest: "Novo Convidado",
+  newEvent: "Novo Evento",
   login: "Login",
 };

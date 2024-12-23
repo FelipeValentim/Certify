@@ -16,7 +16,7 @@ import {
 import Header from "@/components/Header";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-import Input from "@/components/Input";
+import { Input } from "@/components/CustomInput";
 import { GuestAPI } from "@/services/GuestAPI";
 
 function NewGuest({ route, navigation }) {

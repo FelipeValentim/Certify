@@ -22,7 +22,7 @@ const Header = ({ navigation, title, route, component }) => {
   ) : (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        {navigation.canGoBack() && (
+        {navigation.canGoBack() ? (
           <Pressable style={styles.goBackButton} onPress={goBack}>
             <MaterialCommunityIcons
               name="chevron-left"
@@ -30,6 +30,9 @@ const Header = ({ navigation, title, route, component }) => {
               color={"#FFF"}
             />
           </Pressable>
+        ) : (
+          // PLACEHOLDER - SIDEBAR
+          <View style={styles.goBackButton}></View>
         )}
         <Text style={styles.title}>{title ?? route.name}</Text>
         <Pressable style={styles.signOutButton} onPress={logout}>
@@ -51,28 +54,26 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     marginHorizontal: 20,
   },
   title: {
     color: "#FFF",
     fontSize: 16,
     fontFamily: "PoppinsRegular",
+    textAlign: "center",
     flex: 1,
-    alignItems: "center",
   },
   signOutButton: {
     padding: 15,
-    flex: 1,
     alignItems: "flex-end",
+    width: 56,
   },
   goBackButton: {
     padding: 15,
-    flex: 1,
     alignItems: "flex-start",
+    width: 56,
   },
 });
 

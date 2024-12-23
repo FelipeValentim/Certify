@@ -2,7 +2,7 @@
 
 namespace API.Models
 {
-	public class AccountViewModel
+	public class AccountViewModel : ViewModelBase
 	{
 		[JsonPropertyName("email")]
 		public string Email { get; set; }

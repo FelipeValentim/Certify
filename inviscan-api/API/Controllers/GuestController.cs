@@ -179,7 +179,7 @@ namespace API.Controllers
             {
                 if (string.IsNullOrEmpty(model.Name))
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Nome e obrigatorio.");
+                    return StatusCode(StatusCodes.Status400BadRequest, "Nome é obrigatório.");
                 }
 
                 var guest = new Guest()

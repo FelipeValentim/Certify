@@ -2,10 +2,10 @@
 
 namespace API.Models
 {
-	public class UserViewModel : ViewModelBase
+
+	public class EventTypeViewModel : ViewModelBase
 	{
 		[JsonPropertyName("name")]
 		public string Name { get; set; }
-
 	}
 }

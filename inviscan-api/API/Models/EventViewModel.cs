@@ -13,6 +13,12 @@ namespace API.Models
 		[JsonPropertyName("date")]
 		public string Date { get; set; }
 
+		[JsonPropertyName("eventTypeId")]
+		public int EventTypeId { get; set; }
+
+		[JsonPropertyName("eventType")]
+		public EventTypeViewModel EventType { get; set; }
+
 		[JsonPropertyName("guestsCount")]
 		public int GuestsCount => Guests.Count;
 

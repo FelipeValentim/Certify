@@ -13,6 +13,7 @@ import {
   Image,
   ScrollView,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import { EventAPI } from "@/services/EventAPI";
 import Loading from "@/components/Loading";
@@ -80,6 +81,13 @@ export default function HomeScreen({ navigation, route }) {
             ))}
           </ScrollView>
         )}
+        <TouchableOpacity
+          style={styles.floatingButton}
+          onPress={() => navigation.navigate(routes.newEvent)}
+        >
+          <Ionicons name="add" color={"#FFF"} size={34} />
+        </TouchableOpacity>
+        <View></View>
       </View>
     </Fragment>
   );
@@ -88,8 +96,9 @@ export default function HomeScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFF",
-    height: screenHeight,
     fontFamily: "PoppinsRegular",
+    position: "relative",
+    flex: 1,
   },
   card: {
     backgroundColor: "transparent",
@@ -121,5 +130,24 @@ const styles = StyleSheet.create({
   },
   arrow: {
     width: 20,
+  },
+  floatingButton: {
+    backgroundColor: primaryColor,
+    width: 60,
+    height: 60,
+    borderRadius: 20,
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
+
+    // Sombra para iOS
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    // Sombra para Android
+    elevation: 5,
   },
 });

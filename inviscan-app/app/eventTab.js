@@ -8,7 +8,6 @@ import {
 } from "@/constants/Default";
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
-
 import { BarChart } from "react-native-chart-kit";
 
 const chartConfig = {
@@ -36,7 +35,9 @@ const EventTab = ({ navigation, route, info, title }) => {
                 }}
               />
               <Text style={styles.name}>{info.name}</Text>
-              <Text style={styles.date}>{info.date}</Text>
+              <Text style={styles.date}>
+                {info.date} {info.startTime} {info.endTime}
+              </Text>
 
               <BarChart
                 withInnerLines={false}

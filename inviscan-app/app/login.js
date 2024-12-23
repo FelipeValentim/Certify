@@ -1,8 +1,7 @@
 import H1 from "@/components/H1";
 import H2 from "@/components/H2";
 import H3 from "@/components/H3";
-import Input from "@/components/Input";
-import InputPassword from "@/components/InputPassword";
+import { Input, InputPassword } from "@/components/CustomInput";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";
 import { StyleSheet, View, Text, ImageBackground } from "react-native";

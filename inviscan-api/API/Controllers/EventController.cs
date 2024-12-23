@@ -11,6 +11,7 @@ using Domain.Interfaces.Services;
 using Domain.Identity;
 using Domain.Interfaces.Repositories;
 using API.Models;
+using Domain.Entities;
 
 namespace API.Controllers
 {
@@ -60,7 +61,48 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("GetEvent/{id}")]
+
+		[HttpGet("NewEvent")]
+		public IActionResult NewEvent(EventViewModel model)
+		{
+			try
+			{
+				var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(CustomClaimTypes.Id);
+
+                if (string.IsNullOrEmpty(model.Name))
+                {
+					return StatusCode(StatusCodes.Status400BadRequest, "Nome é obrigatório.");
+				}
+
+				if (string.IsNullOrEmpty(model.Date))
+				{
+					return StatusCode(StatusCodes.Status400BadRequest, "Data é obrigatório.");
+				}
+
+				var guest = new Event()
+				{
+					Name = model.Name,
+				};
+
+				var events = _eventRepository.GetEvents(userId);
+
+				var items = events.Select(e => new EventViewModel
+				{
+					Id = e.Id,
+					Date = e.Date.ToString("dd/MM/yyyy"),
+					Name = e.Name,
+					Photo = e.Photo,
+				});
+
+				return StatusCode(StatusCodes.Status200OK, items);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+			}
+		}
+
+		[HttpGet("GetEvent/{id}")]
         public async Task<IActionResult> GetEvent(Guid id)
         {
             try

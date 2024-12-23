@@ -2,11 +2,8 @@
 
 namespace API.Models
 {
-	public class EventViewModel
+	public class EventViewModel : ViewModelBase
 	{
-		[JsonPropertyName("id")]
-		public Guid Id { get; set; }
-
 		[JsonPropertyName("name")]
 		public string Name { get; set; }
 

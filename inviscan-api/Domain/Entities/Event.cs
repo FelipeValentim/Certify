@@ -13,14 +13,17 @@ namespace Domain.Entities
         public string Description { get; set; }
 
         public string Photo { get; set; }
+		public DateTime Date { get; set; }
 
-        public Guid UserId { get; set; }
+		public Guid UserId { get; set; }
 
         public UserProfile User { get; set; }
 
-        public DateTime Date { get; set; }
+		public int EventTypeId { get; set; }
 
-        public ICollection<Guest> Guests { get; set; }
+		public EventType EventType { get; set; }
+
+		public ICollection<Guest> Guests { get; set; }
 
         public Event() : base()
         {

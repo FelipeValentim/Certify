@@ -51,6 +51,10 @@ namespace API.Controllers
                     Date = e.Date.ToString("dd/MM/yyyy"),
                     Name = e.Name,
                     Photo = e.Photo,
+                    EventType = new EventTypeViewModel
+                    {
+                        Name = e.EventType.Name,
+                    }
                 });
 
                 return StatusCode(StatusCodes.Status200OK, items);

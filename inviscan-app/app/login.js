@@ -111,7 +111,7 @@ export default function LoginScreen() {
             Login
           </ButtonLoading>
 
-          <H3 style={styles.h3}>
+          {/* <H3 style={styles.h3}>
             Não tem conta?{" "}
             <Text
               style={styles.register}
@@ -119,7 +119,7 @@ export default function LoginScreen() {
             >
               Faça uma!
             </Text>
-          </H3>
+          </H3> */}
         </View>
       </ImageBackground>
     </View>

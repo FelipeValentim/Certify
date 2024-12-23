@@ -26,7 +26,7 @@ const Header = ({ navigation, title, route, component }) => {
           <Pressable style={styles.goBackButton} onPress={goBack}>
             <MaterialCommunityIcons
               name="chevron-left"
-              size={30}
+              size={26}
               color={"#FFF"}
             />
           </Pressable>
@@ -35,7 +35,7 @@ const Header = ({ navigation, title, route, component }) => {
         <Pressable style={styles.signOutButton} onPress={logout}>
           <MaterialCommunityIcons
             name="power-standby"
-            size={30}
+            size={26}
             color={"#FFF"}
           />
         </Pressable>
@@ -47,7 +47,7 @@ const Header = ({ navigation, title, route, component }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: primaryColor,
-    height: 60,
+    height: 50,
   },
   innerContainer: {
     flex: 1,

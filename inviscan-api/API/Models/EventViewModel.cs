@@ -13,6 +13,12 @@ namespace API.Models
 		[JsonPropertyName("date")]
 		public string Date { get; set; }
 
+		[JsonPropertyName("startTime")]
+		public string StartTime { get; set; }
+
+		[JsonPropertyName("endTime")]
+		public string EndTime { get; set; }
+
 		[JsonPropertyName("eventTypeId")]
 		public int EventTypeId { get; set; }
 

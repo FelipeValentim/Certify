@@ -4,6 +4,7 @@ import HomeScreen from "./home";
 import EventScreen from "./event";
 import GuestScreen from "./guest";
 import NewGuestScreen from "./newGuest";
+import NewEventScreen from "./newEvent";
 
 import * as Font from "expo-font";
 import { getToken } from "@/storage/AsyncStorage";
@@ -116,6 +117,13 @@ const Main = () => {
                     title: routes.newGuest,
                   }}
                   component={NewGuestScreen}
+                />
+                <Stack.Screen
+                  name={routes.newEvent}
+                  options={{
+                    title: routes.newEvent,
+                  }}
+                  component={NewEventScreen}
                 />
               </>
             ) : (

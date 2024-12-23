@@ -125,8 +125,10 @@ namespace API.Controllers
                 item = new EventViewModel
 				{
                     Id = eventItem.Id,
-                    Date = eventItem.Date.ToString(),
-                    Name = eventItem.Name,
+                    Date = eventItem.Date.ToString("dd/MM/yyyy"),
+					StartTime = eventItem.StartTime.ToString(@"hh\:mm"),
+					EndTime = eventItem.EndTime.ToString(@"hh\:mm"),
+					Name = eventItem.Name,
                     Photo = eventItem.Photo,
                     Guests = eventItem.Guests.Where(x => !x.IsDeleted).Select(x => new GuestViewModel
 					{

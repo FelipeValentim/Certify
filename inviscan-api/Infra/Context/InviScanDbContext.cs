@@ -27,6 +27,7 @@ namespace Infrastructure.Context
         public DbSet<UserProfile> UserProfile { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<Guest> Guest { get; set; }
+		public DbSet<EventType> EventType { get; set; }
 
-    }
+	}
 }

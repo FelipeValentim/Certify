@@ -19,7 +19,7 @@ namespace Domain.Entities
 
         public UserProfile User { get; set; }
 
-		public int EventTypeId { get; set; }
+		public Guid EventTypeId { get; set; }
 
 		public EventType EventType { get; set; }
 

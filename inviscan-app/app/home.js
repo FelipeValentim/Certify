@@ -17,6 +17,9 @@ import {
 import { EventAPI } from "@/services/EventAPI";
 import Loading from "@/components/Loading";
 import Header from "@/components/Header";
+import Separator from "@/components/Separator";
+import CustomText from "@/components/CustomText";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen({ navigation, route }) {
   const [events, setEvents] = useState();
@@ -39,25 +42,41 @@ export default function HomeScreen({ navigation, route }) {
         ) : (
           <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
             {events.map((event) => (
-              <Pressable
-                key={event.id}
-                onPress={() =>
-                  navigation.navigate(routes.event, { eventId: event.id })
-                }
-              >
-                <View style={styles.card}>
-                  <View style={styles.event}>
-                    <Image
-                      style={styles.photo}
-                      source={{
-                        uri: event.photo,
-                      }}
-                    />
-                    <Text style={styles.name}>{event.name}</Text>
-                    <Text style={styles.date}>{event.date}</Text>
+              <>
+                <Pressable
+                  key={event.id}
+                  onPress={() =>
+                    navigation.navigate(routes.event, { eventId: event.id })
+                  }
+                >
+                  <View style={styles.card}>
+                    <View style={styles.event}>
+                      <Image
+                        style={styles.photo}
+                        source={{
+                          uri: event.photo,
+                        }}
+                      />
+                      <View style={styles.info}>
+                        <CustomText style={styles.name}>
+                          {event.name}
+                        </CustomText>
+                        <CustomText style={styles.eventType}>
+                          {event.eventType.name} - {event.date}
+                        </CustomText>
+                      </View>
+                      <View style={styles.arrow}>
+                        <Ionicons
+                          name="chevron-forward"
+                          color={"#000"}
+                          size={20}
+                        />
+                      </View>
+                    </View>
                   </View>
-                </View>
-              </Pressable>
+                </Pressable>
+                <Separator />
+              </>
             ))}
           </ScrollView>
         )}
@@ -68,38 +87,39 @@ export default function HomeScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: backgroundColor,
+    backgroundColor: "#FFF",
     height: screenHeight,
+    fontFamily: "PoppinsRegular",
   },
   card: {
-    backgroundColor: "#FFF",
+    backgroundColor: "transparent",
     margin: 10,
-    borderRadius: 20,
   },
   event: {
-    padding: 20,
-    display: "flex",
+    padding: 10,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
+    flex: 1,
   },
   name: {
     fontSize: 16,
-    fontFamily: "PoppinsRegular",
     fontWeight: "bold",
-    flex: 1,
+  },
+  eventType: {
+    fontSize: 12,
+    borderRadius: 10,
+    color: "#555",
   },
   photo: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 15,
   },
-  date: {
-    fontSize: 12,
-    fontFamily: "PoppinsRegular",
-    backgroundColor: primaryColor,
-    padding: 5,
-    borderRadius: 10,
-    color: "#FFF",
+  info: {
+    flex: 1,
+  },
+  arrow: {
+    width: 20,
   },
 });

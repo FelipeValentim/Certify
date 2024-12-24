@@ -13,6 +13,9 @@ namespace API.Models
 		[JsonPropertyName("date")]
 		public string Date { get; set; }
 
+		[JsonPropertyName("pax")]
+		public int Pax { get; set; }
+
 		[JsonPropertyName("startTime")]
 		public string StartTime { get; set; }
 

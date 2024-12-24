@@ -10,8 +10,11 @@ export const primaryColor = "#7B55E0";
 export const backgroundColor = "#F5F0FF";
 export const redColor = "#EE4E4E";
 
-export const ngrokURL = null;
-export const baseURL = ngrokURL ? ngrokURL : "https://localhost:7093";
+export const remote = {
+  active: true,
+  url: "https://simply-novel-shiner.ngrok-free.app",
+};
+export const baseURL = remote.active ? remote.url : "https://localhost:7093";
 
 export const screenHeight = Dimensions.get("window").height;
 export const screenWidth = Dimensions.get("window").width;

@@ -1,10 +1,5 @@
 import ButtonLoading from "@/components/ButtonLoading";
-import {
-  backgroundColor,
-  primaryColor,
-  screenHeight,
-  screenWidth,
-} from "@/constants/Default";
+
 import React, { Fragment, useState } from "react";
 import {
   View,
@@ -18,10 +13,20 @@ import Header from "@/components/Header";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { GuestAPI } from "@/services/GuestAPI";
-import { InputNumber, Input, InputDate } from "@/components/CustomInput";
+import {
+  InputNumber,
+  Input,
+  InputDate,
+  InputTime,
+} from "@/components/CustomInput";
+import { Container } from "@/components/CustomElements";
 
 function NewEvent({ route, navigation }) {
-  const [event, setEvent] = useState({ date: new Date() });
+  const [event, setEvent] = useState({
+    date: null,
+    startTime: null,
+    endTime: null,
+  });
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = React.useState({
@@ -100,8 +105,8 @@ function NewEvent({ route, navigation }) {
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+      <Container>
+        <ScrollView>
           <View style={styles.content}>
             <Pressable style={styles.preview} onPress={pickImage}>
               {event.photo ? (
@@ -112,13 +117,11 @@ function NewEvent({ route, navigation }) {
                   }}
                 />
               ) : (
-                <View>
-                  <Ionicons name="image-outline" size={48} />
-                </View>
+                <Ionicons name="image-outline" size={48} />
               )}
             </Pressable>
 
-            <Text style={styles.name}>{event.name}</Text>
+            {/* <Text style={styles.name}>{event.name}</Text> */}
             <View style={styles.inputs}>
               <Input
                 value={event.name}
@@ -139,6 +142,20 @@ function NewEvent({ route, navigation }) {
                 placeholder="Data"
                 value={event.date}
               />
+              <InputTime
+                onChange={(value) => {
+                  setEvent({ ...event, startTime: new Date(value) });
+                }}
+                placeholder="Horário inicial"
+                value={event.startTime}
+              />
+              <InputTime
+                onChange={(value) => {
+                  setEvent({ ...event, endTime: new Date(value) });
+                }}
+                placeholder="Horário final"
+                value={event.endTime}
+              />
             </View>
             <ButtonLoading
               loading={loading}
@@ -149,44 +166,34 @@ function NewEvent({ route, navigation }) {
             </ButtonLoading>
           </View>
         </ScrollView>
-      </View>
+      </Container>
     </Fragment>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#FFF",
-    height: screenHeight,
-  },
   content: {
-    margin: 10,
     alignItems: "center",
     flex: 1,
-    gap: 20,
+    gap: 10,
   },
   name: {
     fontSize: 28,
     fontFamily: "PoppinsRegular",
     fontWeight: "bold",
   },
-  photo: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-  },
+
   inputs: {
-    width: "90%",
+    width: "100%",
     gap: 10,
   },
   preview: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#00000030",
+    backgroundColor: "#00000010",
   },
 
   button: {

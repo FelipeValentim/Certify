@@ -1,6 +1,4 @@
-import H1 from "@/components/H1";
-import H2 from "@/components/H2";
-import H3 from "@/components/H3";
+import { H1, H3 } from "@/components/CustomElements";
 import { Input, InputPassword } from "@/components/CustomInput";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";

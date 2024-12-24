@@ -8,9 +8,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
-import H3 from "@/components/H3";
-import H4 from "@/components/H4";
-import H2 from "@/components/H2";
+import { H2, H3, H4 } from "@/components/CustomElements";
 
 const TemplateTab = ({ navigation, route, title }) => {
   return (

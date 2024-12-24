@@ -50,7 +50,7 @@ const Header = ({ navigation, title, route, component }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: primaryColor,
-    height: 50,
+    height: 60,
   },
   innerContainer: {
     flex: 1,

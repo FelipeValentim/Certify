@@ -11,7 +11,7 @@ import {
   View,
   Text,
   Image,
-  ScrollView,
+  FlatList,
   Pressable,
   TouchableOpacity,
 } from "react-native";
@@ -33,6 +33,36 @@ export default function HomeScreen({ navigation, route }) {
     getEvents();
   }, []);
 
+  const renderEvent = ({ item: event }) => (
+    <>
+      <Pressable
+        key={event.id}
+        onPress={() => navigation.navigate(routes.event, { eventId: event.id })}
+      >
+        <View style={styles.card}>
+          <View style={styles.event}>
+            <Image
+              style={styles.photo}
+              source={{
+                uri: event.photo,
+              }}
+            />
+            <View style={styles.info}>
+              <CustomText style={styles.name}>{event.name}</CustomText>
+              <CustomText style={styles.eventType}>
+                {event.eventType.name} - {event.date}
+              </CustomText>
+            </View>
+            <View style={styles.arrow}>
+              <Ionicons name="chevron-forward" color={"#000"} size={20} />
+            </View>
+          </View>
+        </View>
+      </Pressable>
+      <Separator />
+    </>
+  );
+
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
@@ -41,45 +71,12 @@ export default function HomeScreen({ navigation, route }) {
         {!events ? (
           <Loading color={primaryColor} size={24} />
         ) : (
-          <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-            {events.map((event) => (
-              <>
-                <Pressable
-                  key={event.id}
-                  onPress={() =>
-                    navigation.navigate(routes.event, { eventId: event.id })
-                  }
-                >
-                  <View style={styles.card}>
-                    <View style={styles.event}>
-                      <Image
-                        style={styles.photo}
-                        source={{
-                          uri: event.photo,
-                        }}
-                      />
-                      <View style={styles.info}>
-                        <CustomText style={styles.name}>
-                          {event.name}
-                        </CustomText>
-                        <CustomText style={styles.eventType}>
-                          {event.eventType.name} - {event.date}
-                        </CustomText>
-                      </View>
-                      <View style={styles.arrow}>
-                        <Ionicons
-                          name="chevron-forward"
-                          color={"#000"}
-                          size={20}
-                        />
-                      </View>
-                    </View>
-                  </View>
-                </Pressable>
-                <Separator />
-              </>
-            ))}
-          </ScrollView>
+          <FlatList
+            data={events}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderEvent}
+            contentContainerStyle={{ paddingBottom: 50 }}
+          />
         )}
         <TouchableOpacity
           style={styles.floatingButton}

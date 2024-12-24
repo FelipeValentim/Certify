@@ -13,6 +13,7 @@ namespace Domain.Entities
         public string Description { get; set; }
 
         public string Photo { get; set; }
+		public int? Pax { get; set; }
 		public DateTime Date { get; set; }
 		public TimeSpan StartTime { get; set; }
 		public TimeSpan EndTime { get; set; }

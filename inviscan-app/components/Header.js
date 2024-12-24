@@ -3,7 +3,13 @@ import { signOut } from "@/redux/token";
 import { removeToken } from "@/storage/AsyncStorage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { useDispatch } from "react-redux";
 
 const Header = ({ navigation, title, route, component }) => {
@@ -23,25 +29,25 @@ const Header = ({ navigation, title, route, component }) => {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         {navigation.canGoBack() ? (
-          <Pressable style={styles.goBackButton} onPress={goBack}>
+          <TouchableOpacity style={styles.goBackButton} onPress={goBack}>
             <MaterialCommunityIcons
               name="chevron-left"
               size={26}
               color={"#FFF"}
             />
-          </Pressable>
+          </TouchableOpacity>
         ) : (
           // PLACEHOLDER - SIDEBAR
           <View style={styles.goBackButton}></View>
         )}
         <Text style={styles.title}>{title ?? route.name}</Text>
-        <Pressable style={styles.signOutButton} onPress={logout}>
+        <TouchableOpacity style={styles.signOutButton} onPress={logout}>
           <MaterialCommunityIcons
             name="power-standby"
             size={26}
             color={"#FFF"}
           />
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

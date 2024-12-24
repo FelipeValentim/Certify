@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Animated,
   StyleSheet,
@@ -10,6 +10,9 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { format, set, setDate } from "date-fns";
+
+const now = new Date();
 
 const useAnimatedStyles = (value) => {
   const { width } = Dimensions.get("window");
@@ -42,7 +45,7 @@ const useAnimatedStyles = (value) => {
         useNativeDriver: false,
       }).start();
     }
-  }, [focus]);
+  }, [focus, value]);
 
   return { focus, setFocus, placeholderAnim, lineAnim };
 };
@@ -160,7 +163,7 @@ export const InputDate = ({
         }}
       >
         <InputBase
-          value={value.toLocaleDateString("pt-BR")}
+          value={value?.toLocaleDateString("pt-BR") ?? ""}
           placeholder={placeholder}
           error={error}
           editable={false}
@@ -169,8 +172,55 @@ export const InputDate = ({
 
       {show && (
         <DateTimePicker
-          value={value}
+          value={value ?? new Date()}
           mode={"date"}
+          display="default"
+          onChange={(e, selectedDate) => {
+            togglePicker();
+            if (e.type === "set") {
+              onChange(selectedDate);
+            }
+          }}
+          {...props}
+        />
+      )}
+    </>
+  );
+};
+
+export const InputTime = ({
+  value,
+  onChange,
+  placeholder,
+  error,
+  ...props
+}) => {
+  const [show, setShow] = useState(false);
+  const [date, setDate] = useState(false);
+
+  const togglePicker = () => {
+    setShow(!show);
+  };
+
+  return (
+    <>
+      <Pressable
+        onPress={() => {
+          togglePicker();
+        }}
+      >
+        <InputBase
+          value={value ? format(value, "HH:mm") : ""}
+          placeholder={placeholder}
+          error={error}
+          editable={false}
+        />
+      </Pressable>
+
+      {show && (
+        <DateTimePicker
+          value={value ?? new Date(now.setHours(18, 0, 0, 0))}
+          mode={"time"}
           display="default"
           onChange={(e, selectedDate) => {
             togglePicker();

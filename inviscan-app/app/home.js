@@ -33,9 +33,13 @@ export default function HomeScreen({ navigation, route }) {
     getEvents();
   }, []);
 
+  const addEvent = (event) => {
+    setEvents([...events, event]);
+  };
+
   const renderEvent = ({ item: event }) => (
     <>
-      <Pressable
+      <TouchableOpacity
         key={event.id}
         onPress={() => navigation.navigate(routes.event, { eventId: event.id })}
       >
@@ -58,7 +62,7 @@ export default function HomeScreen({ navigation, route }) {
             </View>
           </View>
         </View>
-      </Pressable>
+      </TouchableOpacity>
       <Separator />
     </>
   );

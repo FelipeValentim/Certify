@@ -3,6 +3,7 @@ import {
   backgroundColor,
   primaryColor,
   screenHeight,
+  screenWidth,
 } from "@/constants/Default";
 import React, { Fragment, useState } from "react";
 import {
@@ -17,10 +18,10 @@ import Header from "@/components/Header";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { GuestAPI } from "@/services/GuestAPI";
-import { InputNumber, Input } from "@/components/CustomInput";
+import { InputNumber, Input, InputDate } from "@/components/CustomInput";
 
 function NewEvent({ route, navigation }) {
-  const [event, setEvent] = useState({});
+  const [event, setEvent] = useState({ date: new Date() });
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = React.useState({
@@ -101,7 +102,7 @@ function NewEvent({ route, navigation }) {
       <Header route={route} navigation={navigation} />
       <View style={styles.container}>
         <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-          <View style={styles.card}>
+          <View style={styles.content}>
             <Pressable style={styles.preview} onPress={pickImage}>
               {event.photo ? (
                 <Image
@@ -118,7 +119,7 @@ function NewEvent({ route, navigation }) {
             </Pressable>
 
             <Text style={styles.name}>{event.name}</Text>
-            <View>
+            <View style={styles.inputs}>
               <Input
                 value={event.name}
                 onChangeText={(text) => setName(text)}
@@ -130,6 +131,13 @@ function NewEvent({ route, navigation }) {
                 placeholder="Convidados"
                 value={event.pax}
                 maxLength={10}
+              />
+              <InputDate
+                onChange={(value) => {
+                  setEvent({ ...event, date: new Date(value) });
+                }}
+                placeholder="Data"
+                value={event.date}
               />
             </View>
             <ButtonLoading
@@ -148,17 +156,14 @@ function NewEvent({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: backgroundColor,
+    backgroundColor: "#FFF",
     height: screenHeight,
   },
-  card: {
-    backgroundColor: "#FFF",
+  content: {
     margin: 10,
-    borderRadius: 20,
-    padding: 30,
-    display: "flex",
     alignItems: "center",
-    gap: 50,
+    flex: 1,
+    gap: 20,
   },
   name: {
     fontSize: 28,
@@ -170,6 +175,10 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
   },
+  inputs: {
+    width: "90%",
+    gap: 10,
+  },
   preview: {
     width: 150,
     height: 150,
@@ -179,20 +188,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#00000030",
   },
-  qrCode: {
-    borderWidth: 3,
-    borderColor: backgroundColor,
-    padding: 10,
-    borderRadius: 20,
-  },
-  checkin: {
-    fontSize: 14,
-    fontFamily: "PoppinsRegular",
-    backgroundColor: primaryColor,
-    padding: 10,
-    borderRadius: 10,
-    color: "#FFF",
-  },
+
   button: {
     width: 200,
   },

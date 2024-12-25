@@ -13,7 +13,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { format, set, setDate } from "date-fns";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 
 const now = new Date();
 
@@ -96,9 +100,9 @@ const InputBase = ({
           />
           {toggleSecureTextEntry && (
             <Pressable style={styles.security} onPress={toggleSecureTextEntry}>
-              <Ionicons
-                name={secureTextEntry ? "eye" : "eye-off"}
-                size={24}
+              <FontAwesomeIcon
+                icon={secureTextEntry ? faEye : faEyeSlash}
+                size={22}
                 color="black"
               />
             </Pressable>
@@ -254,7 +258,6 @@ export const SelectPicker = ({
   };
 
   useEffect(() => {
-    console.log(selectedValue);
     const pickerItem = items.find((x) => x.value === selectedValue);
     setSelected(pickerItem);
   }, [selectedValue]);

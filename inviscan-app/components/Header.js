@@ -1,15 +1,10 @@
 import { primaryColor } from "@/constants/Default";
 import { signOut } from "@/redux/token";
 import { removeToken } from "@/storage/AsyncStorage";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { faChevronLeft, faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 
 const Header = ({ navigation, title, route, component }) => {
@@ -30,11 +25,7 @@ const Header = ({ navigation, title, route, component }) => {
       <View style={styles.innerContainer}>
         {navigation.canGoBack() ? (
           <TouchableOpacity style={styles.goBackButton} onPress={goBack}>
-            <MaterialCommunityIcons
-              name="chevron-left"
-              size={26}
-              color={"#FFF"}
-            />
+            <FontAwesomeIcon icon={faChevronLeft} size={18} color={"#FFF"} />
           </TouchableOpacity>
         ) : (
           // PLACEHOLDER - SIDEBAR
@@ -42,11 +33,7 @@ const Header = ({ navigation, title, route, component }) => {
         )}
         <Text style={styles.title}>{title ?? route.name}</Text>
         <TouchableOpacity style={styles.signOutButton} onPress={logout}>
-          <MaterialCommunityIcons
-            name="power-standby"
-            size={26}
-            color={"#FFF"}
-          />
+          <FontAwesomeIcon icon={faPowerOff} size={18} color={"#FFF"} />
         </TouchableOpacity>
       </View>
     </View>
@@ -72,14 +59,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   signOutButton: {
-    padding: 15,
-    alignItems: "flex-end",
-    width: 56,
+    padding: 30,
+    alignItems: "center",
+    width: 18,
   },
   goBackButton: {
-    padding: 15,
-    alignItems: "flex-start",
-    width: 56,
+    padding: 30,
+    alignItems: "center",
+    width: 18,
   },
 });
 

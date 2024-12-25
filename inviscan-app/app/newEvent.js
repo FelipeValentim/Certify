@@ -1,34 +1,22 @@
 import ButtonLoading from "@/components/ButtonLoading";
 
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Image,
-  Pressable,
-} from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
 import Header from "@/components/Header";
-import * as ImagePicker from "expo-image-picker";
-import { Ionicons } from "@expo/vector-icons";
-import { GuestAPI } from "@/services/GuestAPI";
 import {
   InputNumber,
   Input,
   InputDate,
   InputTime,
   SelectPicker,
+  ImagePicker,
 } from "@/components/CustomInput";
 import { Container } from "@/components/CustomElements";
 import { EventTypeAPI } from "@/services/EventTypeAPI";
 import Loading from "@/components/Loading";
 import { primaryColor } from "@/constants/Default";
-import { Picker } from "@react-native-picker/picker";
 import { toast } from "@/redux/snackBar";
 import { useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faImages } from "@fortawesome/free-regular-svg-icons";
 
 function NewEvent({ route, navigation }) {
   const dispatch = useDispatch();
@@ -98,27 +86,6 @@ function NewEvent({ route, navigation }) {
     }
   };
 
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
-      return;
-    }
-
-    // No permissions request is necessary for launching the image library
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-
-    if (!result.canceled) {
-    }
-  };
-
   const setField = (field, value, errorMessage) => {
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -133,24 +100,16 @@ function NewEvent({ route, navigation }) {
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
-      <ScrollView>
-        <Container>
-          {!eventTypes ? (
-            <Loading color={primaryColor} size={24} />
-          ) : (
+      {!eventTypes ? (
+        <Loading color={primaryColor} size={24} />
+      ) : (
+        <ScrollView>
+          <Container>
             <View style={styles.content}>
-              <Pressable style={styles.preview} onPress={pickImage}>
-                {event.photo ? (
-                  <Image
-                    style={styles.preview}
-                    source={{
-                      uri: event.photo,
-                    }}
-                  />
-                ) : (
-                  <FontAwesomeIcon icon={faImages} size={48} />
-                )}
-              </Pressable>
+              <ImagePicker
+                photo={event.photo}
+                onPicker={(base64) => setEvent({ ...event, photo: base64 })}
+              />
 
               {/* <Text style={styles.name}>{event.name}</Text> */}
               <View style={styles.inputs}>
@@ -213,9 +172,9 @@ function NewEvent({ route, navigation }) {
                 Salvar
               </ButtonLoading>
             </View>
-          )}
-        </Container>
-      </ScrollView>
+          </Container>
+        </ScrollView>
+      )}
     </Fragment>
   );
 }
@@ -247,6 +206,7 @@ const styles = StyleSheet.create({
 
   button: {
     width: 200,
+    marginTop: 40,
   },
 });
 

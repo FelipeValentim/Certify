@@ -6,11 +6,11 @@ import {
   TextInput,
   Dimensions,
   Pressable,
+  Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { format, set, setDate } from "date-fns";
+import { format } from "date-fns";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -18,6 +18,8 @@ import {
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
+import { faImages } from "@fortawesome/free-regular-svg-icons";
+import * as SelectImage from "expo-image-picker";
 
 const now = new Date();
 
@@ -65,11 +67,11 @@ const InputBase = ({
   error,
   secureTextEntry,
   toggleSecureTextEntry,
+  inputRef,
   inputGroupStyle = {},
   ...inputProps
 }) => {
   const { setFocus, placeholderAnim, lineAnim } = useAnimatedStyles(value);
-
   return (
     <View style={{ ...styles.inputGroup, ...inputGroupStyle }}>
       <View style={styles.formControl}>
@@ -118,15 +120,17 @@ const InputBase = ({
   );
 };
 
-export const InputNumber = ({ value, onChangeText, placeholder, error }) => (
-  <InputBase
-    value={value}
-    onChangeText={(text) => onChangeText(text.replace(/[^0-9]/g, ""))}
-    placeholder={placeholder}
-    keyboardType="numeric"
-    error={error}
-  />
-);
+export const InputNumber = ({ value, onChangeText, placeholder, error }) => {
+  return (
+    <InputBase
+      value={value}
+      onChangeText={(text) => onChangeText(text?.replace(/[^0-9]/g, ""))}
+      placeholder={placeholder}
+      keyboardType="numeric"
+      error={error}
+    />
+  );
+};
 
 export const Input = ({ value, onChangeText, placeholder, error }) => (
   <InputBase
@@ -292,6 +296,47 @@ export const SelectPicker = ({
   );
 };
 
+export const ImagePicker = ({ onPicker, photo }) => {
+  const pickImage = async () => {
+    const permissionResult = await SelectImage.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    // No permissions request is necessary for launching the image library
+    const result = await SelectImage.launchImageLibraryAsync({
+      mediaTypes: SelectImage.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      onPicker(`data:image/png;base64,${result.assets[0].base64}`);
+    }
+  };
+
+  return (
+    <Pressable style={styles.preview} onPress={pickImage}>
+      {photo ? (
+        <Image
+          style={styles.preview}
+          source={{
+            uri: photo,
+          }}
+        />
+      ) : (
+        <View>
+          <FontAwesomeIcon icon={faImages} size={48} />
+        </View>
+      )}
+    </Pressable>
+  );
+};
+
 const styles = StyleSheet.create({
   inputGroup: {
     backgroundColor: "#FFF",
@@ -345,5 +390,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 20,
     bottom: 15,
+  },
+  preview: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#00000010",
   },
 });

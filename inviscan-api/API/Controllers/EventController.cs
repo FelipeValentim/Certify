@@ -12,6 +12,7 @@ using Domain.Identity;
 using Domain.Interfaces.Repositories;
 using API.Models;
 using Domain.Entities;
+using InviScan.Services;
 
 namespace API.Controllers
 {
@@ -20,15 +21,15 @@ namespace API.Controllers
     [Route("[controller]")]
     public class EventController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserContextService _userContextService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEventRepository _eventRepository;
         private readonly IGuestRepository _guestRepository;
         private readonly IDocumentService _documentService;
-        public EventController(IHttpContextAccessor httpContextAccessor,  IEventRepository eventRepository, IGuestRepository guestRepository, IWebHostEnvironment webHostEnvironment, IDocumentService documentService)
+        public EventController(IUserContextService userContextService,  IEventRepository eventRepository, IGuestRepository guestRepository, IWebHostEnvironment webHostEnvironment, IDocumentService documentService)
         {
             _eventRepository = eventRepository;
-            _httpContextAccessor = httpContextAccessor;
+			_userContextService = userContextService;
             _guestRepository = guestRepository;
             _webHostEnvironment = webHostEnvironment;
             _documentService = documentService;
@@ -41,14 +42,15 @@ namespace API.Controllers
             {
                 await Task.Delay(200);
 
-                var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(CustomClaimTypes.Id);
+                var userId = _userContextService.UserId;
 
-                var events = _eventRepository.GetEvents(userId);
+
+				var events = _eventRepository.GetEvents(userId);
 
                 var items = events.Select(e => new EventViewModel
                 {
                     Id = e.Id,
-                    Date = e.Date.ToString("dd/MM/yyyy"),
+                    Date = e.Date,
                     Name = e.Name,
                     Photo = e.Photo,
                     EventType = new EventTypeViewModel
@@ -66,31 +68,26 @@ namespace API.Controllers
         }
 
 
-		[HttpGet("NewEvent")]
+		[HttpPost("NewEvent")]
 		public IActionResult NewEvent(EventViewModel model)
 		{
 			try
 			{
-				var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(CustomClaimTypes.Id);
+				var userId = _userContextService.UserId;
 
-                if (string.IsNullOrEmpty(model.Name))
+				if (string.IsNullOrEmpty(model.Name))
                 {
 					return StatusCode(StatusCodes.Status400BadRequest, "Nome é obrigatório.");
 				}
 
-				if (string.IsNullOrEmpty(model.Date))
+				if (model.Date.Date < DateTime.Now.Date)
 				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Data é obrigatório.");
+					return StatusCode(StatusCodes.Status400BadRequest, "Data inválida.");
 				}
 
-				if (string.IsNullOrEmpty(model.StartTime))
+				if (model.StartTime >= model.EndTime)
 				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Horário inicial é obrigatório.");
-				}
-
-				if (string.IsNullOrEmpty(model.EndTime))
-				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Horário final é obrigatório.");
+					return StatusCode(StatusCodes.Status400BadRequest, "Horário inicial não pode ser maior que horário final.");
 				}
 
 				if (model.EventTypeId == Guid.Empty)
@@ -100,7 +97,7 @@ namespace API.Controllers
 
 				Event newEvent = new Event
 				{
-					Date = DateTime.Parse(model.Date),
+					Date = model.Date,
 					Name = model.Name,
 					Photo = model.Photo,
                     EventTypeId = model.EventTypeId,
@@ -131,9 +128,9 @@ namespace API.Controllers
                 item = new EventViewModel
 				{
                     Id = eventItem.Id,
-                    Date = eventItem.Date.ToString("dd/MM/yyyy"),
-					StartTime = eventItem.StartTime.ToString(@"hh\:mm"),
-					EndTime = eventItem.EndTime.ToString(@"hh\:mm"),
+                    Date = eventItem.Date,
+					StartTime = eventItem.StartTime,
+					EndTime = eventItem.EndTime,
 					Name = eventItem.Name,
                     Photo = eventItem.Photo,
                     Guests = eventItem.Guests.Where(x => !x.IsDeleted).Select(x => new GuestViewModel

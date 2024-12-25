@@ -42,6 +42,7 @@ builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEventTypeService, EventTypeService>();
+builder.Services.AddTransient<IUserContextService, UserContextService>();
 
 
 builder.Services.AddHttpContextAccessor();

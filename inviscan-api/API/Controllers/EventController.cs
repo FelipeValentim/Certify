@@ -83,6 +83,16 @@ namespace API.Controllers
 					return StatusCode(StatusCodes.Status400BadRequest, "Data é obrigatório.");
 				}
 
+				if (string.IsNullOrEmpty(model.StartTime))
+				{
+					return StatusCode(StatusCodes.Status400BadRequest, "Horário inicial é obrigatório.");
+				}
+
+				if (string.IsNullOrEmpty(model.EndTime))
+				{
+					return StatusCode(StatusCodes.Status400BadRequest, "Horário final é obrigatório.");
+				}
+
 				if (model.EventTypeId == 0)
 				{
 					return StatusCode(StatusCodes.Status400BadRequest, "Tipo de evento é obrigatório.");
@@ -150,7 +160,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetCertificates/{id}")]
-        public async Task<IActionResult> GetCertificates(Guid id)
+        public IActionResult GetCertificates(Guid id)
         {
             var eventItem = _eventRepository.GetByID(id);
 

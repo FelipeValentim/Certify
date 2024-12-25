@@ -11,16 +11,18 @@ namespace API.Models
 		public string Photo { get; set; }
 
 		[JsonPropertyName("date")]
-		public string Date { get; set; }
+		public DateTime Date { get; set; }
+
+		[JsonPropertyName("startTime")]
+		public TimeSpan StartTime { get; set; }
+
+		[JsonPropertyName("endTime")]
+		public TimeSpan EndTime { get; set; }
 
 		[JsonPropertyName("pax")]
 		public int Pax { get; set; }
 
-		[JsonPropertyName("startTime")]
-		public string StartTime { get; set; }
 
-		[JsonPropertyName("endTime")]
-		public string EndTime { get; set; }
 
 		[JsonPropertyName("eventTypeId")]
 		public Guid EventTypeId { get; set; }

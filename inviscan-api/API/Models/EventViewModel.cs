@@ -23,7 +23,7 @@ namespace API.Models
 		public string EndTime { get; set; }
 
 		[JsonPropertyName("eventTypeId")]
-		public int EventTypeId { get; set; }
+		public Guid EventTypeId { get; set; }
 
 		[JsonPropertyName("eventType")]
 		public EventTypeViewModel EventType { get; set; }

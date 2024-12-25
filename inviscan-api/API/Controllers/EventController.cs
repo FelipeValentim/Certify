@@ -93,27 +93,23 @@ namespace API.Controllers
 					return StatusCode(StatusCodes.Status400BadRequest, "Horário final é obrigatório.");
 				}
 
-				if (model.EventTypeId == 0)
+				if (model.EventTypeId == Guid.Empty)
 				{
 					return StatusCode(StatusCodes.Status400BadRequest, "Tipo de evento é obrigatório.");
 				}
 
-				var guest = new Event()
+				Event newEvent = new Event
 				{
+					Date = DateTime.Parse(model.Date),
 					Name = model.Name,
+					Photo = model.Photo,
+                    EventTypeId = model.EventTypeId,
+                    UserId = new Guid(userId),
 				};
 
-				var events = _eventRepository.GetEvents(userId);
+                _eventRepository.Insert(newEvent);
 
-				var items = events.Select(e => new EventViewModel
-				{
-					Id = e.Id,
-					Date = e.Date.ToString("dd/MM/yyyy"),
-					Name = e.Name,
-					Photo = e.Photo,
-				});
-
-				return StatusCode(StatusCodes.Status200OK, items);
+				return StatusCode(StatusCodes.Status200OK, newEvent.Id);
 			}
 			catch (Exception ex)
 			{

@@ -44,7 +44,6 @@ namespace API.Controllers
 
                 var userId = _userContextService.UserId;
 
-
 				var events = _eventRepository.GetEvents(userId);
 
                 var items = events.Select(e => new EventViewModel

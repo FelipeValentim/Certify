@@ -1,4 +1,4 @@
-import { primaryColor } from "@/constants/Default";
+import { primaryColor, routes } from "@/constants/Default";
 import { signOut } from "@/redux/token";
 import { removeToken } from "@/storage/AsyncStorage";
 import { faChevronLeft, faPowerOff } from "@fortawesome/free-solid-svg-icons";
@@ -17,7 +17,6 @@ const Header = ({ navigation, title, route, component }) => {
   const goBack = async () => {
     navigation.goBack();
   };
-
   return component ? (
     component
   ) : (
@@ -32,9 +31,13 @@ const Header = ({ navigation, title, route, component }) => {
           <View style={styles.goBackButton}></View>
         )}
         <Text style={styles.title}>{title ?? route.name}</Text>
-        <TouchableOpacity style={styles.signOutButton} onPress={logout}>
-          <FontAwesomeIcon icon={faPowerOff} size={18} color={"#FFF"} />
-        </TouchableOpacity>
+        {route.name == routes.home ? (
+          <TouchableOpacity style={styles.signOutButton} onPress={logout}>
+            <FontAwesomeIcon icon={faPowerOff} size={18} color={"#FFF"} />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.signOutButton}></View>
+        )}
       </View>
     </View>
   );

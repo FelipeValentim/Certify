@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const defaultValue = {
   visible: false,
   duration: 5000,
-  text: "Algum problema aconteceu",
 };
 
 const slice = createSlice({

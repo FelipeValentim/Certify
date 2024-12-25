@@ -1,18 +1,10 @@
-import {
-  primaryColor,
-  routes,
-  screenHeight,
-  screenWidth,
-  backgroundColor,
-} from "@/constants/Default";
+import { primaryColor, routes } from "@/constants/Default";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
-  Text,
   Image,
   FlatList,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
 import { EventAPI } from "@/services/EventAPI";
@@ -20,14 +12,15 @@ import Loading from "@/components/Loading";
 import Header from "@/components/Header";
 import Separator from "@/components/Separator";
 import CustomText from "@/components/CustomText";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faAdd, faChevronRight } from "@fortawesome/free-solid-svg-icons/";
 
 export default function HomeScreen({ navigation, route }) {
   const [events, setEvents] = useState();
 
   useEffect(() => {
     const getEvents = async () => {
-      const response = await EventAPI.getAll("/event/getevents");
+      const response = await EventAPI.getAll(true);
       setEvents(response.data);
     };
     getEvents();
@@ -58,7 +51,11 @@ export default function HomeScreen({ navigation, route }) {
               </CustomText>
             </View>
             <View style={styles.arrow}>
-              <Ionicons name="chevron-forward" color={"#000"} size={20} />
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                color={"#606060"}
+                size={15}
+              />
             </View>
           </View>
         </View>
@@ -86,7 +83,7 @@ export default function HomeScreen({ navigation, route }) {
           style={styles.floatingButton}
           onPress={() => navigation.navigate(routes.newEvent)}
         >
-          <Ionicons name="add" color={"#FFF"} size={34} />
+          <FontAwesomeIcon icon={faAdd} color={"#FFF"} size={26} />
         </TouchableOpacity>
         <View></View>
       </View>
@@ -130,7 +127,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   arrow: {
-    width: 20,
+    width: 15,
   },
   floatingButton: {
     backgroundColor: primaryColor,

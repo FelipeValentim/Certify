@@ -1,6 +1,6 @@
 import ButtonLoading from "@/components/ButtonLoading";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -18,36 +18,71 @@ import {
   Input,
   InputDate,
   InputTime,
+  SelectPicker,
 } from "@/components/CustomInput";
 import { Container } from "@/components/CustomElements";
+import { EventTypeAPI } from "@/services/EventTypeAPI";
+import Loading from "@/components/Loading";
+import { primaryColor } from "@/constants/Default";
+import { Picker } from "@react-native-picker/picker";
+import { toast } from "@/redux/snackBar";
+import { useDispatch } from "react-redux";
 
 function NewEvent({ route, navigation }) {
+  const dispatch = useDispatch();
   const [event, setEvent] = useState({
     date: null,
     startTime: null,
     endTime: null,
+    eventTypeId: null,
   });
+  const [eventTypes, setEventTypes] = useState();
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = React.useState({
     name: undefined,
   });
 
+  useEffect(() => {
+    const getEventTypes = async () => {
+      const { data } = await EventTypeAPI.getAll();
+      setEventTypes(
+        data.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }))
+      );
+    };
+    getEventTypes();
+  }, []);
+
   const save = async () => {
     if (!loading) {
-      if (!event.name) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
+      if (
+        !event.name ||
+        !event.pax ||
+        !event.date ||
+        !event.startTime ||
+        !event.endTime ||
+        !event.eventTypeId
+      ) {
+        const newErrors = {
           name: !event.name ? "Nome é obrigatório" : undefined,
-        }));
+          pax: !event.pax ? "Convidados é obrigatório" : undefined,
+          date: !event.date ? "Data é obrigatório" : undefined,
+          startTime: !event.startTime
+            ? "Horário final é obrigatório"
+            : undefined,
+          endTime: !event.endTime ? "Horário inicial é obrigatório" : undefined,
+          eventTypeId: !event.eventTypeId
+            ? "Tipo de evento é obrigatório"
+            : undefined,
+        };
+        setErrors(newErrors);
+        dispatch(toast(Object.values(newErrors).find((error) => error)));
       } else {
         try {
           setLoading(true);
-
-          const response = await GuestAPI.newGuest(guest);
-
-          const { data } = response;
-          addGuest(data);
           navigation.goBack();
         } catch (error) {
           setErrors((prevErrors) => ({
@@ -82,90 +117,102 @@ function NewEvent({ route, navigation }) {
     }
   };
 
-  const setName = (value) => {
-    if (value) {
-      setErrors({ ...errors, name: undefined });
-      setEvent({ ...event, name: value });
-    } else {
-      setErrors({ ...errors, name: "Nome inválido" });
-      setEvent({ ...event, name: "" });
-    }
-  };
-
-  const setPax = (value) => {
-    if (value) {
-      setErrors({ ...errors, pax: undefined });
-      setEvent({ ...event, pax: value });
-    } else {
-      setErrors({ ...errors, pax: "Número de convidados inválido" });
-      setEvent({ ...event, pax: "" });
-    }
+  const setField = (field, value, errorMessage) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: value ? undefined : errorMessage,
+    }));
+    setEvent((prevEvent) => ({
+      ...prevEvent,
+      [field]: value || "",
+    }));
   };
 
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
       <Container>
-        <ScrollView>
-          <View style={styles.content}>
-            <Pressable style={styles.preview} onPress={pickImage}>
-              {event.photo ? (
-                <Image
-                  style={styles.preview}
-                  source={{
-                    uri: event.photo,
-                  }}
-                />
-              ) : (
-                <Ionicons name="image-outline" size={48} />
-              )}
-            </Pressable>
+        {!eventTypes ? (
+          <Loading color={primaryColor} size={24} />
+        ) : (
+          <ScrollView>
+            <View style={styles.content}>
+              <Pressable style={styles.preview} onPress={pickImage}>
+                {event.photo ? (
+                  <Image
+                    style={styles.preview}
+                    source={{
+                      uri: event.photo,
+                    }}
+                  />
+                ) : (
+                  <Ionicons name="image-outline" size={48} />
+                )}
+              </Pressable>
 
-            {/* <Text style={styles.name}>{event.name}</Text> */}
-            <View style={styles.inputs}>
-              <Input
-                value={event.name}
-                onChangeText={(text) => setName(text)}
-                placeholder="Nome"
-                error={errors.name}
-              ></Input>
-              <InputNumber
-                onChangeText={(text) => setPax(text)}
-                placeholder="Convidados"
-                value={event.pax}
-                maxLength={10}
-              />
-              <InputDate
-                onChange={(value) => {
-                  setEvent({ ...event, date: new Date(value) });
-                }}
-                placeholder="Data"
-                value={event.date}
-              />
-              <InputTime
-                onChange={(value) => {
-                  setEvent({ ...event, startTime: new Date(value) });
-                }}
-                placeholder="Horário inicial"
-                value={event.startTime}
-              />
-              <InputTime
-                onChange={(value) => {
-                  setEvent({ ...event, endTime: new Date(value) });
-                }}
-                placeholder="Horário final"
-                value={event.endTime}
-              />
+              {/* <Text style={styles.name}>{event.name}</Text> */}
+              <View style={styles.inputs}>
+                <Input
+                  value={event.name}
+                  onChangeText={(text) =>
+                    setField("name", text, "Nome é obrigatório")
+                  }
+                  placeholder="Nome"
+                  error={errors.name}
+                ></Input>
+                <InputNumber
+                  onChangeText={(text) =>
+                    setField("pax", text, "Convidados é obrigatório")
+                  }
+                  placeholder="Convidados"
+                  value={event.pax}
+                  maxLength={10}
+                  error={errors.pax}
+                />
+                <InputDate
+                  onChange={(value) => {
+                    setEvent({ ...event, date: new Date(value) });
+                  }}
+                  placeholder="Data"
+                  value={event.date}
+                  error={errors.date}
+                />
+                <InputTime
+                  onChange={(value) => {
+                    setEvent({ ...event, startTime: new Date(value) });
+                  }}
+                  placeholder="Horário inicial"
+                  value={event.startTime}
+                  error={errors.startTime}
+                />
+                <InputTime
+                  onChange={(value) => {
+                    setEvent({ ...event, endTime: new Date(value) });
+                  }}
+                  placeholder="Horário final"
+                  value={event.endTime}
+                  error={errors.endTime}
+                />
+                <SelectPicker
+                  placeholder={"Tipo de evento"}
+                  selectedValue={event.eventTypeId}
+                  items={eventTypes}
+                  onChange={(selectedValue) =>
+                    setEvent({ ...event, eventTypeId: selectedValue })
+                  }
+                  error={errors.eventTypeId}
+                />
+              </View>
+              <ButtonLoading
+                loading={loading}
+                onPress={save}
+                style={[styles.button]}
+              >
+                Salvar
+              </ButtonLoading>
             </View>
-            <ButtonLoading
-              loading={loading}
-              onPress={save}
-              style={[styles.button]}
-            >
-              Salvar
-            </ButtonLoading>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        )}
       </Container>
     </Fragment>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   StyleSheet,
@@ -11,6 +11,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format, set, setDate } from "date-fns";
+import { Picker } from "@react-native-picker/picker";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 const now = new Date();
 
@@ -58,12 +61,13 @@ const InputBase = ({
   error,
   secureTextEntry,
   toggleSecureTextEntry,
+  inputGroupStyle = {},
   ...inputProps
 }) => {
   const { setFocus, placeholderAnim, lineAnim } = useAnimatedStyles(value);
 
   return (
-    <View style={styles.inputGroup}>
+    <View style={{ ...styles.inputGroup, ...inputGroupStyle }}>
       <View style={styles.formControl}>
         <View style={styles.field}>
           <View
@@ -235,6 +239,56 @@ export const InputTime = ({
   );
 };
 
+export const SelectPicker = ({
+  selectedValue,
+  onChange,
+  placeholder,
+  error,
+  items,
+  ...props
+}) => {
+  const pickerRef = useRef();
+  const [selected, setSelected] = useState();
+  const open = () => {
+    pickerRef.current.focus();
+  };
+
+  useEffect(() => {
+    console.log(selectedValue);
+    const pickerItem = items.find((x) => x.value === selectedValue);
+    setSelected(pickerItem);
+  }, [selectedValue]);
+
+  return (
+    <>
+      <Pressable
+        style={styles.formControl}
+        onPress={() => {
+          open();
+        }}
+      >
+        <InputBase
+          value={selected?.label}
+          placeholder={placeholder}
+          error={error}
+          editable={false}
+        />
+        <FontAwesomeIcon style={styles.right} icon={faChevronDown} size={16} />
+      </Pressable>
+
+      <Picker
+        style={{ display: "none" }}
+        ref={pickerRef}
+        onValueChange={onChange}
+      >
+        {items.map((item) => (
+          <Picker.Item key={item.value} label={item.label} value={item.value} />
+        ))}
+      </Picker>
+    </>
+  );
+};
+
 const styles = StyleSheet.create({
   inputGroup: {
     backgroundColor: "#FFF",
@@ -283,5 +337,10 @@ const styles = StyleSheet.create({
     right: 10,
     padding: 10,
     bottom: 5,
+  },
+  right: {
+    position: "absolute",
+    right: 20,
+    bottom: 15,
   },
 });

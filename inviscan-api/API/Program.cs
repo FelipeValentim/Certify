@@ -29,14 +29,19 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Repositórios
 builder.Services.AddTransient<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddTransient<IEventRepository, EventRepository>();
 builder.Services.AddTransient<IGuestRepository, GuestRepository>();
+builder.Services.AddTransient<IEventTypeRepository, EventTypeRepository>();
+
+// Serviços
 builder.Services.AddTransient<IGoogleDriveService, GoogleDriveService>();
 builder.Services.AddTransient<IDocumentService, DocumentService>();
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IEventTypeService, EventTypeService>();
 
 
 builder.Services.AddHttpContextAccessor();

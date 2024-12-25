@@ -17,6 +17,8 @@ import Loading from "@/components/Loading";
 import { primaryColor } from "@/constants/Default";
 import { toast } from "@/redux/snackBar";
 import { useDispatch } from "react-redux";
+import { EventAPI } from "@/services/EventAPI";
+import { format } from "date-fns";
 
 function NewEvent({ route, navigation }) {
   const dispatch = useDispatch();
@@ -50,7 +52,6 @@ function NewEvent({ route, navigation }) {
     if (!loading) {
       if (
         !event.name ||
-        !event.pax ||
         !event.date ||
         !event.startTime ||
         !event.endTime ||
@@ -58,7 +59,6 @@ function NewEvent({ route, navigation }) {
       ) {
         const newErrors = {
           name: !event.name ? "Nome é obrigatório" : undefined,
-          pax: !event.pax ? "Convidados é obrigatório" : undefined,
           date: !event.date ? "Data é obrigatório" : undefined,
           startTime: !event.startTime
             ? "Horário final é obrigatório"
@@ -73,8 +73,12 @@ function NewEvent({ route, navigation }) {
       } else {
         try {
           setLoading(true);
+          console.log(event);
+          await EventAPI.newEvent(event);
+
           navigation.goBack();
         } catch (error) {
+          console.log(error.response);
           setErrors((prevErrors) => ({
             ...prevErrors,
             invalidCredentials: error.response?.data,
@@ -140,7 +144,7 @@ function NewEvent({ route, navigation }) {
                 />
                 <InputTime
                   onChange={(value) => {
-                    setEvent({ ...event, startTime: new Date(value) });
+                    setEvent({ ...event, startTime: value });
                   }}
                   placeholder="Horário inicial"
                   value={event.startTime}
@@ -148,7 +152,7 @@ function NewEvent({ route, navigation }) {
                 />
                 <InputTime
                   onChange={(value) => {
-                    setEvent({ ...event, endTime: new Date(value) });
+                    setEvent({ ...event, endTime: value });
                   }}
                   placeholder="Horário final"
                   value={event.endTime}

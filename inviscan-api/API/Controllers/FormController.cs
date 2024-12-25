@@ -31,7 +31,7 @@ namespace InviScan.Controllers
             var item = new EventViewModel
             {
                 Id = eventItem.Id,
-                Date = eventItem.Date.ToString("dd/MM/yyyy "),
+                Date = eventItem.Date,
                 Name = eventItem.Name,
                 Photo = eventItem.Photo,
                 User = new UserViewModel

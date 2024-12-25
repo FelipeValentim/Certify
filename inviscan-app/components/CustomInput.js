@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -208,11 +208,19 @@ export const InputTime = ({
   ...props
 }) => {
   const [show, setShow] = useState(false);
-  const [date, setDate] = useState(false);
+  const [date, setDate] = useState();
 
   const togglePicker = () => {
     setShow(!show);
   };
+
+  useEffect(() => {
+    if (value) {
+      setDate(format(parse(value, "HH:mm:ss", new Date()), "HH:mm"));
+    } else {
+      setDate("");
+    }
+  }, [value]);
 
   return (
     <>
@@ -222,7 +230,7 @@ export const InputTime = ({
         }}
       >
         <InputBase
-          value={value ? format(value, "HH:mm") : ""}
+          value={date}
           placeholder={placeholder}
           error={error}
           editable={false}
@@ -231,13 +239,17 @@ export const InputTime = ({
 
       {show && (
         <DateTimePicker
-          value={value ?? new Date(now.setHours(18, 0, 0, 0))}
+          value={
+            value
+              ? parse(value, "HH:mm:ss", new Date())
+              : new Date(now.setHours(18, 0, 0, 0))
+          }
           mode={"time"}
           display="default"
           onChange={(e, selectedDate) => {
             togglePicker();
             if (e.type === "set") {
-              onChange(selectedDate);
+              onChange(format(selectedDate, "HH:mm:ss"));
             }
           }}
           {...props}

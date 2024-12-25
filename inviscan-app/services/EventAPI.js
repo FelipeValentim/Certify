@@ -2,6 +2,16 @@ import api from "./configs/AxiosConfig";
 import { defineCancelApiObject } from "./configs/AxiosUtils";
 
 export const EventAPI = {
+  newEvent: async function (event, cancel = false) {
+    return api.request({
+      url: `/Event/NewEvent`,
+      method: "POST",
+      data: { ...event },
+      signal: cancel
+        ? cancelApiObject[this.newEvent.name].handleRequestCancellation().signal
+        : undefined,
+    });
+  },
   getAll: async function (cancel = false) {
     return api.request({
       url: `/Event/GetEvents`,

@@ -90,11 +90,14 @@ function NewEvent({ route, navigation }) {
     }
   };
 
-  const setField = (field, value, errorMessage) => {
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [field]: value ? undefined : errorMessage,
-    }));
+  const setField = (field, value, errorMessage, required = true) => {
+    if (required) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [field]: value ? undefined : errorMessage,
+      }));
+    }
+
     setEvent((prevEvent) => ({
       ...prevEvent,
       [field]: value || "",
@@ -127,7 +130,7 @@ function NewEvent({ route, navigation }) {
                 ></Input>
                 <InputNumber
                   onChangeText={(text) =>
-                    setField("pax", text, "Convidados é obrigatório")
+                    setField("pax", text, "Convidados é obrigatório", false)
                   }
                   placeholder="Convidados"
                   value={event.pax}

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1CHxg72kuok9REPWvTrd32sgxVKNCxHyEqzvKnh8HOODnj51HEIAoRjn76Cu38HtEUm6c7UCjVvnF6aEDW7TLA==",
+  "dgSpecHash": "iyL4Jr1Mo2gomrmyGaWPIayuoix9jfSbUwNdDPR90E5lDu6KH3sxXPLCc7YK1XmEoGuIckOEUWWgzNF98Tcfhw==",
   "success": true,
   "projectFilePath": "C:\\Projects\\event-checkin\\inviscan-api\\API\\API.csproj",
   "expectedPackageFiles": [
@@ -19,6 +19,8 @@
     "C:\\Users\\Sahrutar\\.nuget\\packages\\konscious.security.cryptography.argon2\\1.3.1\\konscious.security.cryptography.argon2.1.3.1.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\konscious.security.cryptography.blake2\\1.1.1\\konscious.security.cryptography.blake2.1.1.1.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.30\\microsoft.aspnetcore.authentication.jwtbearer.6.0.30.nupkg.sha512",
+    "C:\\Users\\Sahrutar\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
+    "C:\\Users\\Sahrutar\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\microsoft.bcl.timeprovider\\8.0.1\\microsoft.bcl.timeprovider.8.0.1.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.5\\microsoft.data.sqlclient.5.1.5.nupkg.sha512",

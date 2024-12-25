@@ -110,11 +110,13 @@ const InputBase = ({
             </Pressable>
           )}
         </View>
-        <Animated.Text
-          style={[styles.placeholder, { bottom: placeholderAnim }]}
-        >
-          {placeholder}
-        </Animated.Text>
+        <View pointerEvents="none">
+          <Animated.Text
+            style={[styles.placeholder, { bottom: placeholderAnim }]}
+          >
+            {placeholder}
+          </Animated.Text>
+        </View>
       </View>
     </View>
   );
@@ -368,7 +370,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 15,
     color: "#999",
-    pointerEvents: "none",
     fontFamily: "PoppinsRegular",
   },
   textInput: {

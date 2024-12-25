@@ -3,13 +3,14 @@ import { Input, InputPassword } from "@/components/CustomInput";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";
 import { StyleSheet, View, Text, ImageBackground } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AccountAPI } from "@/services/AccountAPI";
 import { setToken } from "@/storage/AsyncStorage";
 
 import { useDispatch } from "react-redux";
 import ButtonLoading from "@/components/ButtonLoading";
 import { signIn } from "@/redux/token";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faQrcode } from "@fortawesome/free-solid-svg-icons";
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
@@ -78,11 +79,11 @@ export default function LoginScreen() {
         style={styles.backgroundImage}
       >
         <View style={styles.container}>
-          <MaterialCommunityIcons
+          <FontAwesomeIcon
+            icon={faQrcode}
             style={styles.qrCode}
-            name="qrcode"
-            size={100}
-            color="black"
+            size={90}
+            color={"#000"}
           />
           <View>
             <H1 style={styles.h1}>Bem-vindo</H1>
@@ -107,16 +108,6 @@ export default function LoginScreen() {
           <ButtonLoading loading={loading} onPress={login}>
             Login
           </ButtonLoading>
-
-          {/* <H3 style={styles.h3}>
-            Não tem conta?{" "}
-            <Text
-              style={styles.register}
-              onPress={() => navigation.navigate("register")}
-            >
-              Faça uma!
-            </Text>
-          </H3> */}
         </View>
       </ImageBackground>
     </View>

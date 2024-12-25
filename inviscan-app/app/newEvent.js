@@ -27,6 +27,8 @@ import { primaryColor } from "@/constants/Default";
 import { Picker } from "@react-native-picker/picker";
 import { toast } from "@/redux/snackBar";
 import { useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faImages } from "@fortawesome/free-regular-svg-icons";
 
 function NewEvent({ route, navigation }) {
   const dispatch = useDispatch();
@@ -131,11 +133,11 @@ function NewEvent({ route, navigation }) {
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
-      <Container>
-        {!eventTypes ? (
-          <Loading color={primaryColor} size={24} />
-        ) : (
-          <ScrollView>
+      <ScrollView>
+        <Container>
+          {!eventTypes ? (
+            <Loading color={primaryColor} size={24} />
+          ) : (
             <View style={styles.content}>
               <Pressable style={styles.preview} onPress={pickImage}>
                 {event.photo ? (
@@ -146,7 +148,7 @@ function NewEvent({ route, navigation }) {
                     }}
                   />
                 ) : (
-                  <Ionicons name="image-outline" size={48} />
+                  <FontAwesomeIcon icon={faImages} size={48} />
                 )}
               </Pressable>
 
@@ -211,9 +213,9 @@ function NewEvent({ route, navigation }) {
                 Salvar
               </ButtonLoading>
             </View>
-          </ScrollView>
-        )}
-      </Container>
+          )}
+        </Container>
+      </ScrollView>
     </Fragment>
   );
 }

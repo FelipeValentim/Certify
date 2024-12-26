@@ -14,6 +14,7 @@ import Separator from "@/components/Separator";
 import CustomText from "@/components/CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAdd, faChevronRight } from "@fortawesome/free-solid-svg-icons/";
+import { format } from "date-fns";
 
 export default function HomeScreen({ navigation, route }) {
   const [events, setEvents] = useState();
@@ -47,7 +48,7 @@ export default function HomeScreen({ navigation, route }) {
             <View style={styles.info}>
               <CustomText style={styles.name}>{event.name}</CustomText>
               <CustomText style={styles.eventType}>
-                {event.eventType.name} - {event.date}
+                {event.eventType.name} - {format(event.date, "dd/MM/yyyy")}
               </CustomText>
             </View>
             <View style={styles.arrow}>
@@ -81,7 +82,11 @@ export default function HomeScreen({ navigation, route }) {
         )}
         <TouchableOpacity
           style={styles.floatingButton}
-          onPress={() => navigation.navigate(routes.newEvent)}
+          onPress={() =>
+            navigation.navigate(routes.newEvent, {
+              addEvent: addEvent,
+            })
+          }
         >
           <FontAwesomeIcon icon={faAdd} color={"#FFF"} size={26} />
         </TouchableOpacity>

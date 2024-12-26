@@ -18,11 +18,12 @@ import { primaryColor } from "@/constants/Default";
 import { toast } from "@/redux/snackBar";
 import { useDispatch } from "react-redux";
 import { EventAPI } from "@/services/EventAPI";
-import { format } from "date-fns";
 
 function NewEvent({ route, navigation }) {
   const dispatch = useDispatch();
   const [event, setEvent] = useState({
+    photo:
+      "https://cdn.prod.website-files.com/648285b892d25284328a8a37/66e45432593b00dd787a616e_Calendar.jpg",
     date: null,
     startTime: null,
     endTime: null,
@@ -78,7 +79,6 @@ function NewEvent({ route, navigation }) {
           const { data } = await EventAPI.newEvent(event);
 
           event.id = data;
-
           event.eventType = {
             name: eventTypes.find((x) => x.value === event.eventTypeId).label,
           };
@@ -87,7 +87,6 @@ function NewEvent({ route, navigation }) {
 
           navigation.goBack();
         } catch (error) {
-          console.log(error.response);
           setErrors((prevErrors) => ({
             ...prevErrors,
             invalidCredentials: error.response?.data,
@@ -120,7 +119,7 @@ function NewEvent({ route, navigation }) {
         <Loading color={primaryColor} size={24} />
       ) : (
         <ScrollView>
-          <Container>
+          <Container style={styles.container}>
             <View style={styles.content}>
               <ImagePicker
                 photo={event.photo}
@@ -196,6 +195,9 @@ function NewEvent({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
   content: {
     alignItems: "center",
     flex: 1,

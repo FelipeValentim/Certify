@@ -17,6 +17,7 @@ import {
   faChevronDown,
   faEye,
   faEyeSlash,
+  faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { faImages } from "@fortawesome/free-regular-svg-icons";
 import * as SelectImage from "expo-image-picker";
@@ -336,12 +337,25 @@ export const ImagePicker = ({ onPicker, photo }) => {
   return (
     <Pressable style={styles.preview} onPress={pickImage}>
       {photo ? (
-        <Image
-          style={styles.preview}
-          source={{
-            uri: photo,
-          }}
-        />
+        <>
+          <Image
+            style={styles.preview}
+            source={{
+              uri: photo,
+            }}
+          />
+          <View
+            style={{
+              position: "absolute",
+              backgroundColor: "#f9f9f9",
+              padding: 12,
+              borderRadius: 24,
+              opacity: 0.8,
+            }}
+          >
+            <FontAwesomeIcon icon={faPen} size={22} />
+          </View>
+        </>
       ) : (
         <View>
           <FontAwesomeIcon icon={faImages} size={48} />
@@ -411,5 +425,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#00000010",
+    position: "relative",
   },
 });

@@ -3,8 +3,11 @@ import "react-native-reanimated";
 import Main from "./app/_main";
 import { Provider } from "react-redux";
 import store from "@/redux/configureStore";
+import { LogBox } from "react-native";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
 
 export default function App() {
   return (

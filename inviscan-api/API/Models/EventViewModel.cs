@@ -20,7 +20,7 @@ namespace API.Models
 		public TimeSpan EndTime { get; set; }
 
 		[JsonPropertyName("pax")]
-		public int Pax { get; set; }
+		public int? Pax { get; set; }
 
 
 

@@ -72,7 +72,7 @@ namespace API.Controllers
 		{
 			try
 			{
-				var userId = _userContextService.UserId;
+				var userId = _userContextService.UserGuid;
 
 				if (string.IsNullOrEmpty(model.Name))
                 {
@@ -97,10 +97,13 @@ namespace API.Controllers
 				Event newEvent = new Event
 				{
 					Date = model.Date,
+                    StartTime = model.StartTime,
+                    EndTime = model.EndTime,
+                    Pax = model.Pax,
 					Name = model.Name,
 					Photo = model.Photo,
                     EventTypeId = model.EventTypeId,
-                    UserId = new Guid(userId),
+                    UserId = userId,
 				};
 
                 _eventRepository.Insert(newEvent);

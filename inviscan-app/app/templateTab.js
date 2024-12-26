@@ -1,10 +1,5 @@
 import Header from "@/components/Header";
-import Loading from "@/components/Loading";
-import {
-  primaryColor,
-  screenHeight,
-  backgroundColor,
-} from "@/constants/Default";
+import { primaryColor, screenHeight } from "@/constants/Default";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";

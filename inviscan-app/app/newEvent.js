@@ -28,6 +28,7 @@ function NewEvent({ route, navigation }) {
     startTime: null,
     endTime: null,
     eventTypeId: null,
+    eventStatus: 1,
   });
   const [eventTypes, setEventTypes] = useState();
   const { addEvent } = route.params;

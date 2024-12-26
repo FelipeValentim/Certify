@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Domain.Enum;
+using System.Text.Json.Serialization;
 
 namespace API.Models
 {
@@ -38,6 +39,27 @@ namespace API.Models
 
 		[JsonPropertyName("dropCount")]
 		public int DropCount => GuestsCount - CheckinCount;
+
+
+		[JsonPropertyName("eventStatus")]
+		public EventStatus EventStatus
+		{
+			get
+			{
+				var status = EventStatus.Finished;
+
+				if (DateTime.Now.Date <= Date.Date && DateTime.Now.TimeOfDay < StartTime)
+				{
+					status = EventStatus.Created;
+				}
+				else if (DateTime.Now.Date == Date.Date && DateTime.Now.TimeOfDay >= StartTime && DateTime.Now.TimeOfDay <= EndTime)
+				{
+					status = EventStatus.Helding;
+				}
+
+				return status;
+			}
+		}
 
 		[JsonPropertyName("guests")]
 		public ICollection<GuestViewModel> Guests { get; set; }

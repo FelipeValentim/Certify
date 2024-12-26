@@ -43,7 +43,7 @@ namespace API.Controllers
             {
                 await Task.Delay(200);
 
-                var userId = _userContextService.UserId;
+                var userId = _userContextService.UserGuid;
 
 				var events = _eventRepository.GetEvents(userId);
 
@@ -51,7 +51,9 @@ namespace API.Controllers
                 {
                     Id = e.Id,
                     Date = e.Date,
-                    Name = e.Name,
+					StartTime = e.StartTime,
+					EndTime = e.EndTime,
+					Name = e.Name,
                     Photo = e.Photo,
                     EventType = new EventTypeViewModel
                     {

@@ -11,11 +11,9 @@ namespace Repository
         {
         }
 
-        public IEnumerable<Event> GetEvents(string userId)
+        public IEnumerable<Event> GetEvents(Guid userId)
         {
-            var guid = new Guid(userId);
-
-            return GetAll(x => x.UserId == guid, includeProperties: "EventType");
+            return GetAll(x => x.UserId == userId, includeProperties: "EventType");
         }
 
         public Event GetEventWithGuests(Guid eventId)

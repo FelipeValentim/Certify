@@ -1,32 +1,39 @@
+import { Container } from "@/components/CustomElements";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
-import {
-  primaryColor,
-  screenHeight,
-  screenWidth,
-  backgroundColor,
-} from "@/constants/Default";
+import { primaryColor } from "@/constants/Default";
+import { format, parse } from "date-fns";
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
-import { BarChart } from "react-native-chart-kit";
-
-const chartConfig = {
-  // backgroundColor: "#e26a00",
-  decimalPlaces: 0, // optional, defaults to 2dp
-  backgroundGradientFromOpacity: 0,
-  backgroundGradientToOpacity: 0,
-  color: (opacity = 1) => `rgba(123, 85, 224, ${opacity})`, //123, 85, 224
-};
+import { BarChart } from "react-native-gifted-charts";
 
 const EventTab = ({ navigation, route, info, title }) => {
+  const barData = [
+    {
+      value: info?.guestsCount || 0,
+      label: "Convidados",
+      frontColor: "#187498",
+    },
+    {
+      value: info?.checkinCount || 0,
+      label: "Checkin",
+      frontColor: "#36AE7C",
+    },
+    {
+      value: info?.dropCount || 0,
+      label: "Quebra",
+      frontColor: "#EB5353",
+    },
+  ];
+
   return (
     <React.Fragment>
       <Header route={route} navigation={navigation} />
-      <View style={styles.container}>
-        {!info ? (
-          <Loading color={primaryColor} size={24} />
-        ) : (
-          <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+      {!info ? (
+        <Loading color={primaryColor} size={24} />
+      ) : (
+        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+          <Container style={styles.container}>
             <View style={styles.event}>
               <Image
                 style={styles.photo}
@@ -35,44 +42,34 @@ const EventTab = ({ navigation, route, info, title }) => {
                 }}
               />
               <Text style={styles.name}>{info.name}</Text>
-              <Text style={styles.date}>
-                {info.date} {info.startTime} {info.endTime}
+              <Text>{format(info.date, "dd/MM/yyyy")}</Text>
+              <Text>
+                {format(parse(info.startTime, "HH:mm:ss", new Date()), "HH:mm")}{" "}
+                até{" "}
+                {format(parse(info.endTime, "HH:mm:ss", new Date()), "HH:mm")}
               </Text>
-
               <BarChart
-                withInnerLines={false}
-                data={{
-                  labels: ["Convidados", "Checkin", "Quebra"],
-                  datasets: [
-                    {
-                      data: [
-                        info.guestsCount,
-                        info.checkinCount,
-                        info.dropCount,
-                      ],
-                    },
-                  ],
-                }}
-                width={screenWidth}
-                height={280}
-                chartConfig={chartConfig}
-                verticalLabelRotation={0}
-                fromZero
+                data={barData}
+                barWidth={55}
+                noOfSections={4}
+                isAnimated
+                barBorderTopLeftRadius={4}
+                barBorderTopRightRadius={4}
+                yAxisThickness={0}
+                xAxisThickness={0}
                 showValuesOnTopOfBars
+                showValuesAsTopLabel
               />
             </View>
-          </ScrollView>
-        )}
-      </View>
+          </Container>
+        </ScrollView>
+      )}
     </React.Fragment>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: backgroundColor,
-    height: screenHeight,
-  },
+  container: {},
   event: {
     display: "flex",
     gap: 20,
@@ -82,7 +79,7 @@ const styles = StyleSheet.create({
     margin: 20,
     borderRadius: 20,
   },
-  photo: { width: 150, height: 150, borderRadius: 75 },
+  photo: { width: 150, height: 150, borderRadius: 45 },
   name: {
     fontFamily: "PoppinsRegular",
     fontSize: 32,

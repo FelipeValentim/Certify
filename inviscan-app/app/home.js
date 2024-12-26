@@ -15,6 +15,7 @@ import CustomText from "@/components/CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAdd, faChevronRight } from "@fortawesome/free-solid-svg-icons/";
 import { format } from "date-fns";
+import { Container } from "@/components/CustomElements";
 
 export default function HomeScreen({ navigation, route }) {
   const [events, setEvents] = useState();
@@ -45,6 +46,7 @@ export default function HomeScreen({ navigation, route }) {
                 uri: event.photo,
               }}
             />
+
             <View style={styles.info}>
               <CustomText style={styles.name}>{event.name}</CustomText>
               <CustomText style={styles.eventType}>
@@ -69,7 +71,7 @@ export default function HomeScreen({ navigation, route }) {
     <Fragment>
       <Header route={route} navigation={navigation} />
 
-      <View style={styles.container}>
+      <Container style={styles.container}>
         {!events ? (
           <Loading color={primaryColor} size={24} />
         ) : (
@@ -91,7 +93,7 @@ export default function HomeScreen({ navigation, route }) {
           <FontAwesomeIcon icon={faAdd} color={"#FFF"} size={26} />
         </TouchableOpacity>
         <View></View>
-      </View>
+      </Container>
     </Fragment>
   );
 }
@@ -99,9 +101,7 @@ export default function HomeScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFF",
-    fontFamily: "PoppinsRegular",
     position: "relative",
-    flex: 1,
   },
   card: {
     backgroundColor: "transparent",

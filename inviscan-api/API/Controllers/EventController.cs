@@ -13,6 +13,7 @@ using Domain.Interfaces.Repositories;
 using API.Models;
 using Domain.Entities;
 using InviScan.Services;
+using static System.Net.WebRequestMethods;
 
 namespace API.Controllers
 {

@@ -1,9 +1,10 @@
-import { primaryColor, routes } from "@/constants/Default";
+import { primaryColor, routes, screenWidth } from "@/constants/Default";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
   Image,
+  Text,
   FlatList,
   TouchableOpacity,
 } from "react-native";
@@ -13,12 +14,28 @@ import Header from "@/components/Header";
 import Separator from "@/components/Separator";
 import CustomText from "@/components/CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faAdd, faChevronRight } from "@fortawesome/free-solid-svg-icons/";
+import {
+  faAdd,
+  faChevronRight,
+  faMugHot,
+} from "@fortawesome/free-solid-svg-icons/";
 import { format } from "date-fns";
 import { Container } from "@/components/CustomElements";
+import { SegmentedControl } from "@/components/SegmentedControl";
 
 export default function HomeScreen({ navigation, route }) {
-  const [events, setEvents] = useState();
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState();
+  const [selectedSegment, setSelectedSegment] = useState({
+    label: "Todos",
+    value: 0,
+  });
+  const [options] = useState([
+    { label: "Todos", value: 0 },
+    { label: "Criado", value: 1 },
+    { label: "Realizando", value: 2 },
+    { label: "Finalizado", value: 3 },
+  ]);
 
   useEffect(() => {
     const getEvents = async () => {
@@ -31,6 +48,24 @@ export default function HomeScreen({ navigation, route }) {
   const addEvent = (event) => {
     setEvents([...events, event]);
   };
+
+  useEffect(() => {
+    setSelectedSegment({
+      label: "Todos",
+      value: 0,
+    });
+  }, [events]);
+
+  useEffect(() => {
+    if (selectedSegment.value == 0) {
+      setFilteredEvents([...events]);
+    } else {
+      const newEvents = events.filter(
+        (x) => x.eventStatus == selectedSegment.value
+      );
+      setFilteredEvents([...newEvents]);
+    }
+  }, [selectedSegment]);
 
   const renderEvent = ({ item: event }) => (
     <>
@@ -72,15 +107,27 @@ export default function HomeScreen({ navigation, route }) {
       <Header route={route} navigation={navigation} />
 
       <Container style={styles.container}>
-        {!events ? (
+        {!filteredEvents ? (
           <Loading color={primaryColor} size={24} />
         ) : (
-          <FlatList
-            data={events}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderEvent}
-            contentContainerStyle={{ paddingBottom: 50 }}
-          />
+          <>
+            <View style={{ alignItems: "center", marginTop: 10 }}>
+              <SegmentedControl
+                width={screenWidth - 20}
+                borderRadius={10}
+                onPress={setSelectedSegment}
+                options={options}
+                selectedOption={selectedSegment}
+              />
+            </View>
+
+            <FlatList
+              data={filteredEvents}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderEvent}
+              contentContainerStyle={{ paddingBottom: 50 }}
+            />
+          </>
         )}
         <TouchableOpacity
           style={styles.floatingButton}

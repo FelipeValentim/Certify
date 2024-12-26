@@ -29,6 +29,7 @@ function NewEvent({ route, navigation }) {
     eventTypeId: null,
   });
   const [eventTypes, setEventTypes] = useState();
+  const { addEvent } = route.params;
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = React.useState({
@@ -73,8 +74,16 @@ function NewEvent({ route, navigation }) {
       } else {
         try {
           setLoading(true);
-          console.log(event);
-          await EventAPI.newEvent(event);
+
+          const { data } = await EventAPI.newEvent(event);
+
+          event.id = data;
+
+          event.eventType = {
+            name: eventTypes.find((x) => x.value === event.eventTypeId).label,
+          };
+
+          addEvent(event);
 
           navigation.goBack();
         } catch (error) {

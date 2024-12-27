@@ -261,7 +261,6 @@ function GuestsTab({
           />
 
           <SwipeListView
-            contentContainerStyle={{ paddingBottom: 150 }}
             data={guests}
             renderItem={({ item }, rowMap) => (
               <Pressable

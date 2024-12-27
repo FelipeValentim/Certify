@@ -33,7 +33,7 @@ export default function HomeScreen({ navigation, route }) {
   const [options] = useState([
     { label: "Todos", value: 0 },
     { label: "Criado", value: 1 },
-    { label: "Realizando", value: 2 },
+    { label: "Ativo", value: 2 },
     { label: "Finalizado", value: 3 },
   ]);
 
@@ -118,6 +118,7 @@ export default function HomeScreen({ navigation, route }) {
                 onPress={setSelectedSegment}
                 options={options}
                 selectedOption={selectedSegment}
+                containerBackgroundColor="#F5F5F5"
               />
             </View>
 
@@ -139,7 +140,6 @@ export default function HomeScreen({ navigation, route }) {
         >
           <FontAwesomeIcon icon={faAdd} color={"#FFF"} size={26} />
         </TouchableOpacity>
-        <View></View>
       </Container>
     </Fragment>
   );

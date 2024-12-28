@@ -5,9 +5,9 @@ using Infrastructure.Repositories;
 
 namespace Repository
 {
-    public class UserProfileRepository :  Repository<UserProfile>, IUserProfileRepository
+    public class GuestTypeRepository :  Repository<GuestType>, IGuestTypeRepository
     {
-        public UserProfileRepository(InviScanDbContext context) : base(context)
+        public GuestTypeRepository(InviScanDbContext context) : base(context)
         {
         }
     }

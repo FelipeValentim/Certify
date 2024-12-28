@@ -32,7 +32,7 @@ namespace Domain.Entities
         {
             Photo = "https://cdn.prod.website-files.com/648285b892d25284328a8a37/66e45432593b00dd787a616e_Calendar.jpg";
 
-			CreationDate = DateTime.Now;
+			CreatedDate = DateTime.Now;
 		}
     }
 }

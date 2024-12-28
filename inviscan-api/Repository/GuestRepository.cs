@@ -5,7 +5,7 @@ using Infrastructure.Repositories;
 
 namespace Repository
 {
-	public class GuestRepository : AuditableRepository<InviScanDbContext, Guest>, IGuestRepository
+	public class GuestRepository : AuditableRepository<Guest>, IGuestRepository
 	{
 		public GuestRepository(InviScanDbContext context) : base(context)
 		{
@@ -13,7 +13,7 @@ namespace Repository
 
 		public IEnumerable<Guest> GetGuests(Guid eventId)
 		{
-			return GetAll(x => x.EventId == eventId && x.DateDeleted.HasValue == false);
+			return GetAll(x => x.EventId == eventId);
 		}
 
 		public void Checkin(Guid[] ids)

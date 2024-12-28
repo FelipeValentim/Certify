@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces.Repositories;
+using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
+	public class Repository<TEntity> : Repository<InviScanDbContext, TEntity>, IRepository<TEntity> where TEntity : EntityBase
+	{
+		public Repository(InviScanDbContext context) : base(context)
+		{
+		}
+	}
+
 	public class Repository<TContext, TEntity> : IRepository<TEntity> where TContext : DbContext where TEntity : EntityBase
 	{
 		protected TContext context;

@@ -14,18 +14,21 @@ import Header from "@/components/Header";
 import Separator from "@/components/Separator";
 import CustomText from "@/components/CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faAdd,
-  faChevronRight,
-  faMugHot,
-} from "@fortawesome/free-solid-svg-icons/";
+import { faAdd, faChevronRight } from "@fortawesome/free-solid-svg-icons/";
 import { format } from "date-fns";
 import { Container } from "@/components/CustomElements";
 import { SegmentedControl } from "@/components/SegmentedControl";
+import {
+  Swipeable,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import ConfirmAlert from "@/components/ConfirmAlert";
 
 export default function HomeScreen({ navigation, route }) {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState();
+  const [confirmAlert, setConfirmAlert] = useState({});
   const [selectedSegment, setSelectedSegment] = useState({
     label: "Todos",
     value: 0,
@@ -67,40 +70,71 @@ export default function HomeScreen({ navigation, route }) {
     }
   }, [selectedSegment]);
 
-  const renderEvent = ({ item: event }) => (
-    <>
-      <TouchableOpacity
-        key={event.id}
-        onPress={() => navigation.navigate(routes.event, { eventId: event.id })}
-      >
-        <View style={styles.card}>
-          <View style={styles.event}>
-            <Image
-              style={styles.photo}
-              source={{
-                uri: event.photo,
-              }}
-            />
-
-            <View style={styles.info}>
-              <CustomText style={styles.name}>{event.name}</CustomText>
-              <CustomText style={styles.eventType}>
-                {event.eventType.name} - {format(event.date, "dd/MM/yyyy")}
-              </CustomText>
+  const renderEvent = ({ item: event }) => {
+    const rightSwipeActions = () => {
+      return (
+        <TouchableOpacity
+          onPress={() =>
+            setConfirmAlert({
+              open: true,
+              title: "Tem certeza disto?",
+              message: `Confirmar deleção do evento ${event.name}?`,
+              onConfirm: () =>
+                setEvents(events.filter((x) => x.id !== event.id)),
+            })
+          }
+          style={{
+            backgroundColor: "#dd2150",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "20%",
+          }}
+        >
+          <FontAwesomeIcon icon={faTrashCan} size={22} color="#FFF" />
+        </TouchableOpacity>
+      );
+    };
+    return (
+      <>
+        <Swipeable
+          childrenContainerStyle={{ backgroundColor: "#FFF" }}
+          renderLeftActions={rightSwipeActions}
+        >
+          <TouchableOpacity
+            key={event.id}
+            onPress={() =>
+              navigation.navigate(routes.event, { eventId: event.id })
+            }
+          >
+            <View style={styles.card}>
+              <View style={styles.event}>
+                <Image
+                  style={styles.photo}
+                  source={{
+                    uri: event.photo,
+                  }}
+                />
+                <View style={styles.info}>
+                  <CustomText style={styles.name}>{event.name}</CustomText>
+                  <CustomText style={styles.eventType}>
+                    {event.eventType.name} - {format(event.date, "dd/MM/yyyy")}
+                  </CustomText>
+                </View>
+                <View style={styles.arrow}>
+                  <FontAwesomeIcon
+                    icon={faChevronRight}
+                    color={"#606060"}
+                    size={15}
+                  />
+                </View>
+              </View>
             </View>
-            <View style={styles.arrow}>
-              <FontAwesomeIcon
-                icon={faChevronRight}
-                color={"#606060"}
-                size={15}
-              />
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-      <Separator />
-    </>
-  );
+          </TouchableOpacity>
+          <Separator />
+        </Swipeable>
+      </>
+    );
+  };
 
   return (
     <Fragment>
@@ -141,6 +175,15 @@ export default function HomeScreen({ navigation, route }) {
           <FontAwesomeIcon icon={faAdd} color={"#FFF"} size={26} />
         </TouchableOpacity>
       </Container>
+      <ConfirmAlert
+        open={confirmAlert.open}
+        toggle={() =>
+          setConfirmAlert({ ...confirmAlert, open: !confirmAlert.open })
+        }
+        title={confirmAlert.title}
+        message={confirmAlert.message}
+        onConfirm={confirmAlert.onConfirm}
+      />
     </Fragment>
   );
 }

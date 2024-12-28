@@ -30,6 +30,15 @@ export const EventAPI = {
         : undefined,
     });
   },
+  delete: async function (eventoId, cancel = false) {
+    return api.request({
+      url: `/Event/Delete/${eventoId}`,
+      method: "DELETE",
+      signal: cancel
+        ? cancelApiObject[this.delete.name].handleRequestCancellation().signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

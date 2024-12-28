@@ -24,12 +24,10 @@ namespace API.Controllers
         }
 
         [HttpGet("GetGuests/{eventId}")]
-        public async Task<IActionResult> GetGuests(Guid eventId)
+        public IActionResult GetGuests(Guid eventId)
         {
             try
             {
-                await Task.Delay(200);
-
                 var guests = _guestRepository.GetGuests(eventId);
 
                 return StatusCode(StatusCodes.Status200OK, guests);
@@ -41,14 +39,10 @@ namespace API.Controllers
         }
 
         [HttpPut("Checkin/{id}")]
-        public async Task<IActionResult> Checkin(Guid id)
+        public IActionResult Checkin(Guid id)
         {
             try
             {
-
-
-                await Task.Delay(200);
-
                 var guest = _guestRepository.GetByID(id);
 
                 if (guest == null)
@@ -72,12 +66,10 @@ namespace API.Controllers
         }
 
         [HttpPut("Uncheckin/{id}")]
-        public async Task<IActionResult> Uncheckin(Guid id)
+        public IActionResult Uncheckin(Guid id)
         {
             try
             {
-                await Task.Delay(200);
-
                 var guest = _guestRepository.GetByID(id);
 
                 if (guest == null)
@@ -101,12 +93,10 @@ namespace API.Controllers
         }
 
         [HttpPut("Checkin")]
-        public async Task<IActionResult> Checkin(Guid[] ids)
+        public IActionResult Checkin(Guid[] ids)
         {
             try
             {
-                await Task.Delay(200);
-
                 _guestRepository.Checkin(ids);
 
                 return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
@@ -119,12 +109,10 @@ namespace API.Controllers
 
 
         [HttpPut("Uncheckin")]
-        public async Task<IActionResult> Uncheckin(Guid[] ids)
+        public IActionResult Uncheckin(Guid[] ids)
         {
             try
             {
-                await Task.Delay(200);
-
                 _guestRepository.Uncheckin(ids);
 
                 return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
@@ -136,13 +124,11 @@ namespace API.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
             try
             {
-                await Task.Delay(200);
-
-                _guestRepository.DeleteGuest(id);
+                _guestRepository.Delete(id);
 
                 return StatusCode(StatusCodes.Status200OK, "Deleção realizada com sucesso.");
             }
@@ -153,13 +139,11 @@ namespace API.Controllers
         }
 
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete(Guid[] ids)
+        public IActionResult Delete(Guid[] ids)
         {
             try
             {
-                await Task.Delay(200);
-
-                _guestRepository.DeleteGuests(ids);
+                _guestRepository.Delete(ids);
 
                 return StatusCode(StatusCodes.Status200OK, "Deleção realizada com sucesso.");
             }
@@ -171,10 +155,8 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPost("NewGuest")]
-        public async Task<IActionResult> Post(GuestViewModel model)
+        public IActionResult Post(GuestViewModel model)
         {
-            await Task.Delay(200);
-
             try
             {
                 if (string.IsNullOrEmpty(model.Name))

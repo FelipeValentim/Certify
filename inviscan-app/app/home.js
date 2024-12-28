@@ -1,4 +1,9 @@
-import { primaryColor, routes, screenWidth } from "@/constants/Default";
+import {
+  primaryColor,
+  redColor,
+  routes,
+  screenWidth,
+} from "@/constants/Default";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -84,13 +89,20 @@ export default function HomeScreen({ navigation, route }) {
             })
           }
           style={{
-            backgroundColor: "#dd2150",
+            backgroundColor: "transparent",
             justifyContent: "center",
             alignItems: "center",
             width: "20%",
           }}
         >
-          <FontAwesomeIcon icon={faTrashCan} size={22} color="#FFF" />
+          <View
+            style={{
+              backgroundColor: redColor,
+              ...styles.swipeItem,
+            }}
+          >
+            <FontAwesomeIcon icon={faTrashCan} size={22} color="#FFF" />
+          </View>
         </TouchableOpacity>
       );
     };
@@ -198,7 +210,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   event: {
-    padding: 10,
+    padding: 5,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
@@ -242,5 +254,13 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     // Sombra para Android
     elevation: 5,
+  },
+
+  swipeItem: {
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 15,
   },
 });

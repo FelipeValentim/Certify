@@ -37,12 +37,10 @@ namespace API.Controllers
         }
 
         [HttpGet("GetEvents")]
-        public async Task<IActionResult> GetEvents()
+        public IActionResult GetEvents()
         {
             try
             {
-                await Task.Delay(200);
-
                 var userId = _userContextService.UserGuid;
 
 				var events = _eventRepository.GetEvents(userId);
@@ -68,6 +66,22 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+
+		[HttpDelete("Delete/{id}")]
+		public IActionResult Delete(Guid id)
+		{
+			try
+			{
+				_eventRepository.Delete(id);
+
+				return StatusCode(StatusCodes.Status200OK, "Deleção realizada com sucesso.");
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+			}
+		}
 
 
 		[HttpPost("NewEvent")]
@@ -120,12 +134,10 @@ namespace API.Controllers
 		}
 
 		[HttpGet("GetEvent/{id}")]
-        public async Task<IActionResult> GetEvent(Guid id)
+        public IActionResult GetEvent(Guid id)
         {
             try
             {
-                await Task.Delay(200);
-
 				EventViewModel item;
 
                 var eventItem = _eventRepository.GetEventWithGuests(id);
@@ -138,7 +150,7 @@ namespace API.Controllers
 					EndTime = eventItem.EndTime,
 					Name = eventItem.Name,
                     Photo = eventItem.Photo,
-                    Guests = eventItem.Guests.Where(x => !x.IsDeleted).Select(x => new GuestViewModel
+                    Guests = eventItem.Guests.Where(x => !x.DateDeleted.HasValue).Select(x => new GuestViewModel
 					{
                         Id = x.Id,
                         Name = x.Name,
@@ -162,7 +174,7 @@ namespace API.Controllers
         {
             var eventItem = _eventRepository.GetByID(id);
 
-            var guests = _guestRepository.GetAll(x => x.EventId == id && x.DateCheckin.HasValue && !x.IsDeleted);
+            var guests = _guestRepository.GetAll(x => x.EventId == id && x.DateCheckin.HasValue == true && x.DateDeleted.HasValue == false);
 
             string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "templates", "Documento.docx");
             string certificatesPath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "certificates");

@@ -21,6 +21,10 @@ export const H5 = ({ children, style = {} }) => {
   return <Text style={{ ...styles.h5, ...style }}>{children}</Text>;
 };
 
+export const MutedText = ({ children, style = {} }) => {
+  return <Text style={{ ...styles.muted, ...style }}>{children}</Text>;
+};
+
 export const Container = ({ children, style = {} }) => {
   return <View style={{ ...styles.container, ...style }}>{children}</View>;
 };
@@ -52,8 +56,7 @@ const styles = StyleSheet.create({
   },
   h3: {
     fontSize: 18,
-    fontWeight: "bold",
-    fontFamily: "PoppinsRegular",
+    fontFamily: "PoppinsBold",
   },
   h4: {
     fontSize: 14,
@@ -64,5 +67,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     fontFamily: "PoppinsRegular",
+  },
+  muted: {
+    fontSize: 15,
+    color: "#aaa",
+    textAlign: "center",
   },
 });

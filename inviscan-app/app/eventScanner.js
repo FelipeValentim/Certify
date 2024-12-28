@@ -8,6 +8,9 @@ import {
   screenWidth,
 } from "@/constants/Default";
 import { Snackbar } from "react-native-paper";
+import { Container, H2, H3, H4, MutedText } from "@/components/CustomElements";
+import AccessDenied from "@/assets/images/undraw_access-denied.svg";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const borderThickness = 7;
 
@@ -20,16 +23,14 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
 
   const lineAnim = useRef(new Animated.Value(screenWidth / 10)).current;
 
-  const askPermission = async () => {
-    const { status } = await Camera.requestCameraPermissionsAsync();
+  const requestPermission = async () => {
+    const { status } = await Camera.getCameraPermissionsAsync();
     setHasPermission(status === "granted");
   };
 
-  // Obter as dimensões do scanner após renderização
-
   useEffect(() => {
     (async () => {
-      await askPermission();
+      await requestPermission();
     })();
 
     // Animar as linhas expandindo e voltando
@@ -82,7 +83,20 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
     return <View />;
   }
   if (hasPermission === false) {
-    return <Text style={styles.noPermission}>Sem acesso a câmera</Text>;
+    return (
+      <Container style={styles.noPermissionContainer}>
+        <AccessDenied height={screenHeight / 4} />
+        <H3>Permissão Necessária</H3>
+        <MutedText>
+          Para usar o leitor de QR Code, o aplicativo precisa de acesso à
+          câmera.
+        </MutedText>
+        <MutedText>
+          Acesse as configurações do seu dispositivo e permita o acesso à câmera
+          para continuar.
+        </MutedText>
+      </Container>
+    );
   }
 
   return (
@@ -245,15 +259,12 @@ const styles = StyleSheet.create({
     width: borderThickness,
     right: 0,
   },
-  noPermission: {
-    fontFamily: "PoppinsRegular",
-    fontSize: 18,
-    alignSelf: "center",
-    backgroundColor: primaryColor,
-    padding: 14,
-    borderRadius: 6,
-    color: "#FFF",
-    margin: 20,
+  noPermissionContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    gap: 20,
   },
 });
 

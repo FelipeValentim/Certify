@@ -192,7 +192,6 @@ function GuestsTab({
         setLoading(true);
         await GuestAPI.deleteGuests(ids);
         setSelectedItems([]);
-        console.log(ids);
         updateDeleted(ids);
       }
     } catch (error) {

@@ -85,9 +85,9 @@ export default function LoginScreen() {
             size={90}
             color={"#000"}
           />
-          <View>
-            <H1 style={styles.h1}>Bem-vindo</H1>
-            <H3 style={styles.h2}>Entre na sua conta</H3>
+          <View style={{ alignItems: "center" }}>
+            <H1>Bem-vindo</H1>
+            <H3 style={{ fontFamily: "PoppinsRegular" }}>Entre na sua conta</H3>
           </View>
 
           <View>
@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
   container: {
     height: screenHeight,
     padding: 16,
-    display: "flex",
     gap: 32,
     justifyContent: "center",
     alignContent: "center",
@@ -130,18 +129,6 @@ const styles = StyleSheet.create({
     height: screenHeight,
     backgroundColor: "#FFF",
   },
-  h1: {
-    alignSelf: "center",
-  },
-  h2: {
-    alignSelf: "center",
-    fontWeight: "normal",
-  },
-  h3: {
-    alignSelf: "center",
-    fontWeight: "normal",
-  },
-
   register: {
     color: primaryColor,
   },

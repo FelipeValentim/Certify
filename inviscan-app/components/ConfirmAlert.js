@@ -6,6 +6,7 @@ import Zone from "@/assets/images/undraw_zone.svg";
 import CustomText from "./CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
+import { H3, MutedText } from "./CustomElements";
 
 const ConfirmAlert = ({
   onConfirm,
@@ -35,8 +36,8 @@ const ConfirmAlert = ({
           </View>
 
           <View>
-            <CustomText style={styles.title}>{title}</CustomText>
-            <Text style={styles.message}>{message}</Text>
+            <H3 style={styles.title}>{title}</H3>
+            <MutedText style={styles.message}>{message}</MutedText>
           </View>
 
           <ButtonLoading
@@ -90,13 +91,6 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   title: {
-    fontFamily: "PoppinsBold",
-    fontSize: 18,
-    textAlign: "center",
-  },
-  message: {
-    fontSize: 15,
-    color: "#aaa",
     textAlign: "center",
   },
   btn: {

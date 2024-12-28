@@ -3,7 +3,7 @@
 
 namespace Domain.Interfaces.Repositories
 {
-    public interface IUserProfileRepository : IRepositoryBase<UserProfile>
+    public interface IUserProfileRepository : IRepository<UserProfile>
     {
     }
 }

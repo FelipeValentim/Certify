@@ -5,99 +5,65 @@ using Infrastructure.Repositories;
 
 namespace Repository
 {
-    public class GuestRepository : RepositoryBase<InviScanDbContext, Guest>, IGuestRepository
-    {
-        public GuestRepository(InviScanDbContext context) : base(context)
-        {
-        }
+	public class GuestRepository : AuditableRepository<InviScanDbContext, Guest>, IGuestRepository
+	{
+		public GuestRepository(InviScanDbContext context) : base(context)
+		{
+		}
 
-        public IEnumerable<Guest> GetGuests(Guid eventId)
-        {
-            return GetAll(x => x.EventId == eventId);
-        }
+		public IEnumerable<Guest> GetGuests(Guid eventId)
+		{
+			return GetAll(x => x.EventId == eventId && x.DateDeleted.HasValue == false);
+		}
 
-        public void Checkin(Guid[] ids)
-        {
-            foreach (var id in ids)
-            {
-                var guest = GetByID(id);
+		public void Checkin(Guid[] ids)
+		{
+			var guests = GetAll(x => ids.Any(id => x.Id == id));
 
-                if (guest != null)
-                {
-                    guest.DateCheckin = DateTime.Now;
+			foreach (var guest in guests)
+			{
+				guest.DateCheckin = DateTime.Now;
 
-                    Update(guest);
-                }
-            }
-        }
+				Update(guest);
+			}
+		}
 
-        public void Checkin(Guid id)
-        {
-            var guest = GetByID(id);
+		public void Checkin(Guid id)
+		{
+			var guest = GetByID(id);
 
-            if (guest != null)
-            {
-                guest.DateCheckin = DateTime.Now;
+			if (guest != null)
+			{
+				guest.DateCheckin = DateTime.Now;
 
-                Update(guest);
-            }
-        }
+				Update(guest);
+			}
+		}
 
 
-        public void Uncheckin(Guid[] ids)
-        {
-            foreach (var id in ids)
-            {
-                var guest = GetByID(id);
+		public void Uncheckin(Guid[] ids)
+		{
+			var guests = GetAll(x => ids.Any(id => x.Id == id));
 
-                if (guest != null)
-                {
-                    guest.DateCheckin = null;
+			foreach (var guest in guests)
+			{
+				guest.DateCheckin = null;
 
-                    Update(guest);
-                }
-            }
-        }
+				Update(guest);
+			}
+		}
 
-        public void Uncheckin(Guid id)
-        {
-            var guest = GetByID(id);
+		public void Uncheckin(Guid id)
+		{
+			var guest = GetByID(id);
 
-            if (guest != null)
-            {
-                guest.DateCheckin = null;
+			if (guest != null)
+			{
+				guest.DateCheckin = null;
 
-                Update(guest);
-            }
-        }
+				Update(guest);
+			}
+		}
 
-        public void DeleteGuest(Guid id)
-        {
-            var guest = GetByID(id);
-
-            if (guest != null)
-            {
-                guest.IsDeleted = true;
-
-                Update(guest);
-            }
-        }
-
-        public void DeleteGuests(Guid[] ids)
-        {
-            foreach (var id in ids)
-            {
-                var guest = GetByID(id);
-
-                if (guest != null)
-                {
-                    guest.IsDeleted = true;
-
-                    Update(guest);
-                }
-            }
-        }
-
-
-    }
+	}
 }

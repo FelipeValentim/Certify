@@ -3,7 +3,7 @@
 
 namespace Domain.Interfaces.Repositories
 {
-    public interface IEventTypeRepository : IRepositoryBase<EventType>
+    public interface IEventTypeRepository : IRepository<EventType>
     {
     }
 }

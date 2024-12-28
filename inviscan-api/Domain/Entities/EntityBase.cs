@@ -14,5 +14,6 @@ namespace Domain.Entities
         }
 
         public Guid Id { get; set; }
-    }
+	}
+
 }

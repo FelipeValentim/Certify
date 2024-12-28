@@ -3,7 +3,7 @@
 
 namespace Domain.Interfaces.Repositories
 {
-    public interface IGuestRepository : IRepositoryBase<Guest>
+    public interface IGuestRepository : IAuditableRepository<Guest>
     {
         IEnumerable<Guest> GetGuests(Guid eventId);
 
@@ -15,10 +15,5 @@ namespace Domain.Interfaces.Repositories
         void Uncheckin(Guid id);
 
         void Uncheckin(Guid[] id);
-
-
-        void DeleteGuest(Guid id);
-        void DeleteGuests(Guid[] ids);
-
     }
 }

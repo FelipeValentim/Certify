@@ -1,7 +1,7 @@
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import EventInfoTab from "./eventTab";
 import EventGuestsTab from "./guestsTab";
 import EventTemplateTab from "./templateTab";
@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { EventAPI } from "@/services/EventAPI";
 import { getCurrentDateFormatted } from "@/helper/date";
 import { View, Animated } from "react-native";
+import { useFocusEffect } from "expo-router";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,6 +29,13 @@ export default function EventScreen({ route, navigation }) {
     };
     getData();
   }, []);
+
+  const handleTabFocus = (index) => {
+    Animated.spring(tabOffsetValue, {
+      toValue: getWidth() * index,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const checkin = async (ids) => {
     const newGuests = guests.map((guest) =>
@@ -105,12 +113,8 @@ export default function EventScreen({ route, navigation }) {
           }}
           name="Informações"
           listeners={() => ({
-            // Onpress Update....
-            tabPress: (e) => {
-              Animated.spring(tabOffsetValue, {
-                toValue: 0,
-                useNativeDriver: true,
-              }).start();
+            focus: () => {
+              handleTabFocus(0);
             },
           })}
         >
@@ -128,13 +132,9 @@ export default function EventScreen({ route, navigation }) {
             },
           }}
           name="Scanner"
-          listeners={({ navigation, route }) => ({
-            // Onpress Update....
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth(),
-                useNativeDriver: true,
-              }).start();
+          listeners={() => ({
+            focus: () => {
+              handleTabFocus(1);
             },
           })}
         >
@@ -160,13 +160,9 @@ export default function EventScreen({ route, navigation }) {
           }}
           name="Convidados"
           initialParams={{ eventId }}
-          listeners={({ navigation, route }) => ({
-            // Onpress Update....
-            tabPress: (e) => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 2,
-                useNativeDriver: true,
-              }).start();
+          listeners={() => ({
+            focus: () => {
+              handleTabFocus(2);
             },
           })}
         >
@@ -195,12 +191,8 @@ export default function EventScreen({ route, navigation }) {
           name="Template"
           initialParams={{ eventId }}
           listeners={() => ({
-            // Onpress Update....
-            tabPress: (e) => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 3,
-                useNativeDriver: true,
-              }).start();
+            focus: () => {
+              handleTabFocus(3);
             },
           })}
         >

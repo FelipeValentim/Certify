@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Guest : EntityBase
+    public class Guest : AuditableEntity
     {
         public string Name { get; set; }
 
@@ -21,13 +21,11 @@ namespace Domain.Entities
         public ICollection<Guest> Guests { get; set; }
         public Guest GuestParent { get; set; }
 
-        public bool IsDeleted { get; set; }
-
-        public Guest() : base()
+		public Guest() : base()
         {
             Photo = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
 
-            IsDeleted = false;
+            CreationDate = DateTime.Now;
         }
 
     }

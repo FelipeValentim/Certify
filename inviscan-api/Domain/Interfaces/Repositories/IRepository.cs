@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces.Repositories
 {
-    public interface IRepositoryBase<TEntity> where TEntity : class
+    public interface IRepository<TEntity> where TEntity : EntityBase
     {
         IEnumerable<TEntity> GetAll(
             Expression<Func<TEntity, bool>> filter = null,
@@ -19,13 +20,5 @@ namespace Domain.Interfaces.Repositories
 
 
         TEntity GetByID(object id);
-
-        void Insert(TEntity entity);
-
-        void Delete(object id);
-
-        void Delete(TEntity entityToDelete);
-
-        void Update(TEntity entityToUpdate);
     }
 }

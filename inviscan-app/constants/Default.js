@@ -8,7 +8,7 @@ export const httpStatus = {
 
 export const primaryColor = "#7B55E0";
 export const backgroundColor = "#F5F0FF";
-export const redColor = "#EE4E4E";
+export const redColor = "#dd2150";
 
 export const remote = {
   active: true,

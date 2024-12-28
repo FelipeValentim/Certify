@@ -150,7 +150,7 @@ namespace API.Controllers
 					EndTime = eventItem.EndTime,
 					Name = eventItem.Name,
                     Photo = eventItem.Photo,
-                    Guests = eventItem.Guests.Where(x => !x.DateDeleted.HasValue).Select(x => new GuestViewModel
+                    Guests = eventItem.Guests.Where(x => !x.DeletedDate.HasValue).Select(x => new GuestViewModel
 					{
                         Id = x.Id,
                         Name = x.Name,
@@ -174,7 +174,7 @@ namespace API.Controllers
         {
             var eventItem = _eventRepository.GetByID(id);
 
-            var guests = _guestRepository.GetAll(x => x.EventId == id && x.DateCheckin.HasValue == true && x.DateDeleted.HasValue == false);
+            var guests = _guestRepository.GetAll(x => x.EventId == id && x.DateCheckin.HasValue == true && x.DeletedDate.HasValue == false);
 
             string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "templates", "Documento.docx");
             string certificatesPath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "certificates");

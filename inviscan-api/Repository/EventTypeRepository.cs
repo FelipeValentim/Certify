@@ -5,7 +5,7 @@ using Infrastructure.Repositories;
 
 namespace Repository
 {
-    public class EventTypeRepository :  Repository<InviScanDbContext, EventType>, IEventTypeRepository
+    public class EventTypeRepository :  Repository<EventType>, IEventTypeRepository
     {
         public EventTypeRepository(InviScanDbContext context) : base(context)
         {

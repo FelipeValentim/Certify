@@ -1,16 +1,57 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces.Repositories;
+using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories
 {
 
+	public class AuditableRepository<TEntity> : AuditableRepository<InviScanDbContext, TEntity>, IAuditableRepository<TEntity> where TEntity : AuditableEntity
+	{
+		public AuditableRepository(InviScanDbContext context) : base(context)
+		{
+		}
+	}
 
 	public class AuditableRepository<TContext, TEntity> : Repository<TContext, TEntity>, IAuditableRepository<TEntity> where TContext : DbContext where TEntity : AuditableEntity
 	{
 		public AuditableRepository(TContext context) : base(context)
 		{
 			
+		}
+
+		public IEnumerable<TEntity> GetAll(
+			Expression<Func<TEntity, bool>> filter = null,
+			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+			string includeProperties = "", bool deleted = false)
+		{
+			IQueryable<TEntity> query = dbSet;
+
+			if (!deleted)
+			{
+				query = query.Where(x => x.DeletedDate.HasValue == false);
+			}
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+
+			foreach (var includeProperty in includeProperties.Split
+				(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				query = query.Include(includeProperty);
+			}
+
+			if (orderBy != null)
+			{
+				return orderBy(query).ToList();
+			}
+			else
+			{
+				return query.ToList();
+			}
 		}
 
 		public virtual void Insert(TEntity entity)
@@ -31,7 +72,7 @@ namespace Infrastructure.Repositories
 
 			if (entity != null)
 			{
-				entity.DateDeleted = DateTime.Now;
+				entity.DeletedDate = DateTime.Now;
 
 				Update(entity);
 			}
@@ -50,7 +91,7 @@ namespace Infrastructure.Repositories
 
 			foreach (var entity in entities)
 			{
-				entity.DateDeleted = DateTime.Now;
+				entity.DeletedDate = DateTime.Now;
 
 				Update(entity);
 			}

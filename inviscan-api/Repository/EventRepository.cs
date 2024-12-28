@@ -5,7 +5,7 @@ using Infrastructure.Repositories;
 
 namespace Repository
 {
-    public class EventRepository :  AuditableRepository<InviScanDbContext, Event>, IEventRepository
+    public class EventRepository :  AuditableRepository<Event>, IEventRepository
     {
         public EventRepository(InviScanDbContext context) : base(context)
         {
@@ -17,7 +17,7 @@ namespace Repository
 
 			if (entity != null)
 			{
-				entity.DateDeleted = DateTime.Now;
+				entity.DeletedDate = DateTime.Now;
 
 				Update(entity);
 			}
@@ -25,7 +25,7 @@ namespace Repository
 
 		public IEnumerable<Event> GetEvents(Guid userId)
         {
-            return GetAll(x => x.UserId == userId && x.DateDeleted.HasValue == false, includeProperties: "EventType");
+            return GetAll(x => x.UserId == userId, includeProperties: "EventType");
         }
 
         public Event GetEventWithGuests(Guid eventId)

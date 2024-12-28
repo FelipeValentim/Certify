@@ -34,6 +34,7 @@ builder.Services.AddTransient<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddTransient<IEventRepository, EventRepository>();
 builder.Services.AddTransient<IGuestRepository, GuestRepository>();
 builder.Services.AddTransient<IEventTypeRepository, EventTypeRepository>();
+builder.Services.AddTransient<IGuestTypeRepository, GuestTypeRepository>();
 
 // Serviços
 builder.Services.AddTransient<IGoogleDriveService, GoogleDriveService>();
@@ -43,6 +44,8 @@ builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEventTypeService, EventTypeService>();
 builder.Services.AddTransient<IUserContextService, UserContextService>();
+builder.Services.AddTransient<IGuestTypeService, GuestTypeService>();
+
 
 
 builder.Services.AddHttpContextAccessor();

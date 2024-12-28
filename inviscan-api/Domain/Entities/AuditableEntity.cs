@@ -4,13 +4,13 @@
 	{
 		public AuditableEntity() : base() 
 		{
-			CreationDate = DateTime.Now;
+			CreatedDate = DateTime.Now;
 
-			DateDeleted = null;
+			DeletedDate = null;
 		}
 
-		public DateTime CreationDate { get; set; }
-		public DateTime? DateDeleted { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public DateTime? DeletedDate { get; set; }
 
 	}
 }

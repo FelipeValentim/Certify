@@ -23,10 +23,7 @@ import { faAdd, faChevronRight } from "@fortawesome/free-solid-svg-icons/";
 import { format } from "date-fns";
 import { Container } from "@/components/CustomElements";
 import { SegmentedControl } from "@/components/SegmentedControl";
-import {
-  Swipeable,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+import { Swipeable } from "react-native-gesture-handler";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import ConfirmAlert from "@/components/ConfirmAlert";
 
@@ -57,6 +54,25 @@ export default function HomeScreen({ navigation, route }) {
     setEvents([...events, event]);
   };
 
+  const deleteEvent = async (id) => {
+    try {
+      if (confirmAlert.loading) return;
+
+      setConfirmAlert((prevState) => ({
+        ...prevState,
+        loading: true,
+      }));
+      await EventAPI.delete(id);
+
+      setEvents(events.filter((x) => x.id !== id));
+    } finally {
+      setConfirmAlert((prevState) => ({
+        ...prevState,
+        loading: false,
+      }));
+    }
+  };
+
   useEffect(() => {
     setSelectedSegment({
       label: "Todos",
@@ -84,8 +100,7 @@ export default function HomeScreen({ navigation, route }) {
               open: true,
               title: "Tem certeza disto?",
               message: `Confirmar deleção do evento ${event.name}?`,
-              onConfirm: () =>
-                setEvents(events.filter((x) => x.id !== event.id)),
+              onConfirm: () => deleteEvent(event.id),
             })
           }
           style={{
@@ -195,6 +210,7 @@ export default function HomeScreen({ navigation, route }) {
         title={confirmAlert.title}
         message={confirmAlert.message}
         onConfirm={confirmAlert.onConfirm}
+        loading={confirmAlert.loading}
       />
     </Fragment>
   );

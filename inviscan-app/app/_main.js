@@ -21,6 +21,7 @@ import Header from "@/components/Header";
 import { routes } from "@/constants/Default";
 import api from "@/services/configs/AxiosConfig";
 import { Snackbar } from "react-native-paper";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -81,67 +82,69 @@ const Main = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="home"
-            screenOptions={{
-              headerShown: false,
-            }}
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="home"
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              {isSignedIn ? (
+                <>
+                  <Stack.Screen
+                    name={routes.home}
+                    options={{
+                      title: routes.home,
+                    }}
+                    component={HomeScreen}
+                  />
+                  <Stack.Screen
+                    name={routes.event}
+                    options={{
+                      title: routes.event,
+                    }}
+                    component={EventScreen}
+                  />
+                  <Stack.Screen
+                    name={routes.guest}
+                    options={{
+                      title: routes.guest,
+                    }}
+                    component={GuestScreen}
+                  />
+                  <Stack.Screen
+                    name={routes.newGuest}
+                    options={{
+                      title: routes.newGuest,
+                    }}
+                    component={NewGuestScreen}
+                  />
+                  <Stack.Screen
+                    name={routes.newEvent}
+                    options={{
+                      title: routes.newEvent,
+                    }}
+                    component={NewEventScreen}
+                  />
+                </>
+              ) : (
+                <Stack.Screen
+                  name={routes.login}
+                  options={{ title: routes.login }}
+                  component={LoginScreen}
+                />
+              )}
+            </Stack.Navigator>
+          </NavigationContainer>
+          <Snackbar
+            visible={snackBar.visible}
+            duration={5000}
+            onDismiss={onDismiss}
           >
-            {isSignedIn ? (
-              <>
-                <Stack.Screen
-                  name={routes.home}
-                  options={{
-                    title: routes.home,
-                  }}
-                  component={HomeScreen}
-                />
-                <Stack.Screen
-                  name={routes.event}
-                  options={{
-                    title: routes.event,
-                  }}
-                  component={EventScreen}
-                />
-                <Stack.Screen
-                  name={routes.guest}
-                  options={{
-                    title: routes.guest,
-                  }}
-                  component={GuestScreen}
-                />
-                <Stack.Screen
-                  name={routes.newGuest}
-                  options={{
-                    title: routes.newGuest,
-                  }}
-                  component={NewGuestScreen}
-                />
-                <Stack.Screen
-                  name={routes.newEvent}
-                  options={{
-                    title: routes.newEvent,
-                  }}
-                  component={NewEventScreen}
-                />
-              </>
-            ) : (
-              <Stack.Screen
-                name={routes.login}
-                options={{ title: routes.login }}
-                component={LoginScreen}
-              />
-            )}
-          </Stack.Navigator>
-        </NavigationContainer>
-        <Snackbar
-          visible={snackBar.visible}
-          duration={5000}
-          onDismiss={onDismiss}
-        >
-          {snackBar.text}
-        </Snackbar>
+            {snackBar.text}
+          </Snackbar>
+        </GestureHandlerRootView>
       </SafeAreaView>
     </SafeAreaProvider>
   );

@@ -1,8 +1,20 @@
 import { primaryColor } from "@/constants/Default";
 import React, { useEffect, useRef } from "react";
 import { Pressable, Text, StyleSheet, Animated } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-function ButtonLoading({ children, onPress, loading, style = [] }) {
+function ButtonLoading({
+  children,
+  onPress,
+  loading,
+  borderRadius = 10,
+  height = 50,
+  padding = 8,
+  color = "#FFF",
+  backgroundColor = primaryColor,
+  loadingColor = "#FFF",
+  style = [],
+}) {
   const bounce1 = useRef(new Animated.Value(15)).current;
   const bounce2 = useRef(new Animated.Value(15)).current;
   const bounce3 = useRef(new Animated.Value(15)).current;
@@ -50,23 +62,23 @@ function ButtonLoading({ children, onPress, loading, style = [] }) {
 
   const styles = StyleSheet.create({
     button: {
-      backgroundColor: primaryColor,
-      borderRadius: 32,
-      padding: 8,
+      backgroundColor: backgroundColor,
+      borderRadius: borderRadius,
+      padding: padding,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       position: "relative",
-      height: 40,
+      height: height,
     },
     textButton: {
-      color: "#FFF",
+      color: color,
       fontSize: 16,
       fontFamily: "PoppinsBold",
     },
     loading: {
       position: "absolute",
-      backgroundColor: "#FFF",
+      backgroundColor: loadingColor,
       width: 10,
       height: 10,
       borderRadius: 5,
@@ -74,7 +86,7 @@ function ButtonLoading({ children, onPress, loading, style = [] }) {
   });
 
   return (
-    <Pressable style={[styles.button, ...style]} onPress={onPress}>
+    <TouchableOpacity style={[styles.button, ...style]} onPress={onPress}>
       {loading ? (
         <>
           <Animated.View
@@ -99,7 +111,7 @@ function ButtonLoading({ children, onPress, loading, style = [] }) {
       ) : (
         <Text style={styles.textButton}>{children}</Text>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 

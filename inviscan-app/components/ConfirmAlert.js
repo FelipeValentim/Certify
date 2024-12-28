@@ -1,7 +1,11 @@
 import { redColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import ButtonLoading from "./ButtonLoading";
+import Zone from "@/assets/images/undraw_zone.svg";
+import CustomText from "./CustomText";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
 const ConfirmAlert = ({
   onConfirm,
@@ -20,23 +24,40 @@ const ConfirmAlert = ({
     open && (
       <View style={styles.container}>
         <View style={styles.innerContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.message}>{message}</Text>
-          <View style={styles.btnGroup}>
-            <ButtonLoading
-              loading={loading}
-              onPress={handleConfirm}
-              style={[styles.btn]}
-            >
-              Confirmar
-            </ButtonLoading>
-            <ButtonLoading
-              onPress={toggle}
-              style={[styles.btn, styles.cancelBtn]}
-            >
-              Cancelar
-            </ButtonLoading>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+            }}
+          >
+            <Zone height={screenHeight / 6} />
           </View>
+
+          <View>
+            <CustomText style={styles.title}>{title}</CustomText>
+            <Text style={styles.message}>{message}</Text>
+          </View>
+
+          <ButtonLoading
+            loading={loading}
+            onPress={handleConfirm}
+            style={[styles.btn]}
+          >
+            Confirmar
+          </ButtonLoading>
+          <ButtonLoading
+            onPress={toggle}
+            loadingColor="#000"
+            color="#000"
+            backgroundColor="transparent"
+            style={[styles.btn, styles.cancelBtn]}
+          >
+            Cancelar
+          </ButtonLoading>
+          <Pressable style={styles.close} onPress={toggle}>
+            <FontAwesomeIcon icon={faX} size={14} color="#555" />
+          </Pressable>
         </View>
       </View>
     )
@@ -52,11 +73,12 @@ const styles = StyleSheet.create({
     zIndex: 999,
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
+    paddingBottom: 10,
   },
   innerContainer: {
-    height: screenHeight / 3,
-    width: screenWidth / 1.4,
+    height: screenHeight / 1.8,
+    width: screenWidth / 1.1,
     backgroundColor: "#FFF",
     borderRadius: 20,
     shadowColor: "#171717",
@@ -64,32 +86,38 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5,
+    padding: 20,
+    gap: 20,
   },
   title: {
-    fontFamily: "PoppinsRegular",
-    fontSize: 20,
+    fontFamily: "PoppinsBold",
+    fontSize: 18,
     textAlign: "center",
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#17171730",
   },
   message: {
-    fontSize: 18,
-    padding: 15,
-  },
-  btnGroup: {
-    display: "flex",
-    flexDirection: "row",
-    flex: 1,
-    alignItems: "center",
-    padding: 15,
-    gap: 10,
+    fontSize: 15,
+    color: "#aaa",
+    textAlign: "center",
   },
   btn: {
-    flex: 1,
+    borderWidth: 2,
+    // borderColor: "#555",
   },
-  cancelBtn: {
-    backgroundColor: redColor,
+  close: {
+    backgroundColor: "#FFF",
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    right: 0,
+    top: -50,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
   },
 });
 

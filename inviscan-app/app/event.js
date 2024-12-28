@@ -78,7 +78,6 @@ export default function EventScreen({ route, navigation }) {
         screenOptions={{
           tabBarShowLabel: false,
           tabBarActiveTintColor: primaryColor,
-
           tabBarStyle: {
             backgroundColor: "#FAFAFA",
             shadowColor: "#000",

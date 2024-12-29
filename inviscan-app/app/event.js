@@ -63,8 +63,8 @@ export default function EventScreen({ route, navigation }) {
     if (guests) {
       setInfo({
         ...info,
-        checkinCount: guests.filter((x) => x.checkin).length,
-        dropCount: guests.filter((x) => !x.checkin).length,
+        checkinCount: guests.filter((x) => x.checkinDate).length,
+        dropCount: guests.filter((x) => !x.checkinDate).length,
       });
     }
   }, [guests]);

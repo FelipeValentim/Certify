@@ -1,16 +1,15 @@
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import {
-  backgroundColor,
   primaryColor,
   redColor,
   routes,
+  screenHeight,
   screenWidth,
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
-import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList, Text, Pressable } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, StyleSheet, FlatList, Text, Image } from "react-native";
 import ConfirmAlert from "../components/ConfirmAlert";
 import { Container, H1, MutedText } from "@/components/CustomElements";
 import { SegmentedControl } from "@/components/SegmentedControl";
@@ -26,6 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Separator from "@/components/Separator";
 import CustomText from "@/components/CustomText";
 import { format } from "date-fns";
+import CustomSnackBar from "@/components/CustomSnackBar";
 
 const SelectionHeader = ({
   selectedItems,
@@ -152,6 +152,7 @@ function GuestsTab({
   route,
 }) {
   const [filteredGuests, setFilteredGuests] = useState();
+  const [snackBar, setSnackBar] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [confirmAlert, setConfirmAlert] = useState({});
@@ -165,9 +166,8 @@ function GuestsTab({
   });
   const [optionsStatus] = useState([
     { label: "Todos", value: 0 },
-    { label: "Criado", value: 1 },
+    { label: "Pendente", value: 1 },
     { label: "Checkin", value: 2 },
-    { label: "Ausente", value: 3 },
   ]);
 
   const [optionsType] = useState([
@@ -175,6 +175,10 @@ function GuestsTab({
     { label: "Aluno", value: 1 },
     { label: "Professor", value: 2 },
   ]);
+  let rowRefs = new Map();
+  const onDismissSnackBar = () => setSnackBar({ ...snackBar, visible: false });
+  const onOpenSnackBar = (message) =>
+    setSnackBar({ ...snackBar, message: message, visible: true });
 
   useEffect(() => {
     const defaultValues = {
@@ -223,6 +227,9 @@ function GuestsTab({
       if (!loading) {
         setLoading(true);
         await GuestAPI.checkins(ids);
+        onOpenSnackBar(
+          `Checkin dos ${selectedItems.length} convidados realizado com sucesso`
+        );
         setSelectedItems([]);
         updateCheckin(ids);
       }
@@ -239,6 +246,28 @@ function GuestsTab({
     }
   };
 
+  const checkin = async (id, name) => {
+    if (!loading) {
+      try {
+        setLoading(true);
+        await GuestAPI.checkin(id);
+        updateCheckin([id]);
+        onCloseSwipeable(id);
+        onOpenSnackBar(`Checkin do convidado ${name} realizado com sucesso`);
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status == httpStatus.conflict) {
+            updateCheckin([id]);
+          } else {
+            console.log(response.data);
+          }
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const uncheckins = async () => {
     const ids = selectedItems.map((x) => x.id);
 
@@ -248,6 +277,9 @@ function GuestsTab({
         await GuestAPI.uncheckins(ids);
         setSelectedItems([]);
         updateUncheckin(ids);
+        onOpenSnackBar(
+          `Uncheckin dos ${selectedItems.length} convidados realizado com sucesso`
+        );
       }
     } catch (error) {
       if (error.response) {
@@ -264,47 +296,86 @@ function GuestsTab({
 
   const deleteGuests = async () => {
     const ids = selectedItems.map((x) => x.id);
-    try {
-      if (!loading) {
+    if (!loading) {
+      try {
         setLoading(true);
         await GuestAPI.deleteGuests(ids);
         setSelectedItems([]);
         updateDeleted(ids);
-      }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status == httpStatus.conflict) {
-          updateDeleted(ids);
-        } else {
-          console.log(response.data);
+        onOpenSnackBar(
+          `${selectedItems.length} convidados deletados com sucesso`
+        );
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status == httpStatus.conflict) {
+            updateDeleted(ids);
+          } else {
+            console.log(response.data);
+          }
         }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
-  const uncheckin = async (id) => {
-    try {
-      if (!loading) {
+  const deleteGuest = async (id, name) => {
+    if (!loading) {
+      try {
+        setLoading(true);
+        await GuestAPI.deleteGuest(id);
+        updateDeleted([id]);
+        onOpenSnackBar(`${name} deletado com sucesso`);
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status == httpStatus.conflict) {
+            updateDeleted([id]);
+          } else {
+            console.log(response.data);
+          }
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const uncheckin = async (id, name) => {
+    if (!loading) {
+      try {
         setLoading(true);
         await GuestAPI.uncheckin(id);
-        updateUncheckin(id);
-      }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status == httpStatus.conflict) {
-          updateUncheckin(id);
-        } else {
-          console.log(response.data);
+        updateUncheckin([id]);
+        onCloseSwipeable(id);
+        onOpenSnackBar(`Uncheckin do convidado ${name} realizado com sucesso`);
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status == httpStatus.conflict) {
+            updateUncheckin([id]);
+          } else {
+            console.log(response.data);
+          }
         }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
-  const renderGuest = ({ item: guest }) => {
+  const onCloseOtherSwipeables = (id) => {
+    [...rowRefs.entries()].forEach(([key, ref]) => {
+      if (key !== id && ref) ref.close();
+    });
+  };
+
+  const onCloseSwipeable = (id) => {
+    const ref = rowRefs.get(id); // Obtém a referência associada ao id
+    if (ref) {
+      ref.close(); // Fecha o item
+    }
+  };
+
+  const renderGuest = ({ item: guest, index }) => {
     const leftSwipeActions = () => {
       return (
         <View style={{ flexDirection: "row", gap: 10, padding: 15 }}>
@@ -314,7 +385,7 @@ function GuestsTab({
                 open: true,
                 title: "Tem certeza disto?",
                 message: `Confirmar deleção do convidado ${guest.name}?`,
-                onConfirm: () => deleteGuests([guest.id]),
+                onConfirm: () => deleteGuest(guest.id, guest.name),
               })
             }
             style={{ ...styles.swipeItem, backgroundColor: redColor }}
@@ -328,7 +399,7 @@ function GuestsTab({
                   open: true,
                   title: "Tem certeza disto?",
                   message: `Confirmar uncheckin do convidado ${guest.name}?`,
-                  onConfirm: () => deleteEvent(guest.id),
+                  onConfirm: () => uncheckin(guest.id, guest.name),
                 })
               }
               style={{ ...styles.swipeItem, backgroundColor: "#FFC145" }}
@@ -342,7 +413,7 @@ function GuestsTab({
                   open: true,
                   title: "Tem certeza disto?",
                   message: `Confirmar checkin do convidado ${guest.name}?`,
-                  onConfirm: () => deleteEvent(guest.id),
+                  onConfirm: () => checkin(guest.id, guest.name),
                 })
               }
               style={{ ...styles.swipeItem, backgroundColor: "#36AE7C" }}
@@ -356,6 +427,12 @@ function GuestsTab({
 
     return (
       <Swipeable
+        ref={(ref) => {
+          if (ref && !rowRefs.get(guest.id)) {
+            rowRefs.set(guest.id, ref);
+          }
+        }}
+        onSwipeableWillOpen={() => onCloseOtherSwipeables(guest.id)}
         renderLeftActions={leftSwipeActions}
         childrenContainerStyle={{ backgroundColor: "#FFF" }}
       >
@@ -378,9 +455,6 @@ function GuestsTab({
               });
             }
           }}
-          // onPress={() =>
-          //   navigation.navigate(routes.event, { eventId: event.id })
-          // }
         >
           <View style={styles.card}>
             <View style={styles.guest}>
@@ -389,19 +463,21 @@ function GuestsTab({
                   <FontAwesomeIcon icon={faCheck} size={30} color="#aaa" />
                 </View>
               ) : (
-                <MutedText style={styles.photo}>
-                  {guest.name[0].toUpperCase()}
-                </MutedText>
+                <Image
+                  style={styles.photo}
+                  source={{
+                    uri: guest.photo,
+                  }}
+                />
               )}
 
               <View style={styles.info}>
                 <CustomText style={styles.name}>{guest.name}</CustomText>
                 <CustomText style={styles.guestType}>
                   {guest.guestType.name} -{" "}
-                  {guest.guestStatus == 1 && "Aguardando"}
+                  {guest.guestStatus == 1 && "Pendente"}
                   {guest.guestStatus == 2 &&
                     format(guest.checkinDate, "dd/MM/yyyy")}
-                  {guest.guestStatus == 3 && "Ausente"}
                 </CustomText>
               </View>
               <View style={styles.arrow}>
@@ -453,7 +529,7 @@ function GuestsTab({
                 containerBackgroundColor="#F5F5F5"
               />
               <SegmentedControl
-                width={screenWidth - 20}
+                width={screenWidth - 100}
                 borderRadius={10}
                 onPress={setSelectedType}
                 options={optionsType}
@@ -481,6 +557,14 @@ function GuestsTab({
         message={confirmAlert.message}
         onConfirm={confirmAlert.onConfirm}
         loading={loading}
+      />
+      <CustomSnackBar
+        visible={snackBar.visible}
+        style={{ top: 0 }}
+        duration={5000}
+        onDismiss={onDismissSnackBar}
+        type="success"
+        message={snackBar.message}
       />
     </React.Fragment>
   );

@@ -39,7 +39,7 @@ const ConfirmAlert = ({
 
   const handleConfirm = async () => {
     await onConfirm();
-    toggle();
+    toClose();
   };
 
   if (!open) return null;

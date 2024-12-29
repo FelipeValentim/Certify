@@ -160,12 +160,6 @@ namespace API.Controllers
                     Name = x.Name,
                     Photo = x.Photo,
 					CheckinDate = x.CheckinDate,
-                    Event = new EventViewModel
-                    {
-                        Date = item.Date,
-                        StartTime = item.StartTime,
-                        EndTime = item.EndTime,
-                    },
                     GuestType = new GuestTypeViewModel
                     {
                         Name = x.GuestType.Name,

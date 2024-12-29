@@ -7,10 +7,15 @@ import {
   screenHeight,
   screenWidth,
 } from "@/constants/Default";
-import { Snackbar } from "react-native-paper";
+import CustomSnackBar from "@/components/CustomSnackBar";
 import { Container, H2, H3, H4, MutedText } from "@/components/CustomElements";
 import AccessDenied from "@/assets/images/undraw_access-denied.svg";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faCheck,
+  faCircleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 
 const borderThickness = 7;
 
@@ -180,14 +185,14 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
           </View>
         </>
       ) : null}
-      <Snackbar
-        style={{ bottom: screenHeight / 8 }}
+      <CustomSnackBar
         visible={visible}
         duration={5000}
         onDismiss={onDismissSnackBar}
-      >
-        QRCode inválido para este evento
-      </Snackbar>
+        style={{ bottom: screenHeight / 8 }}
+        type="warning"
+        message={"QRCode inválido para este evento"}
+      />
     </View>
   );
 }

@@ -9,12 +9,18 @@ import {
 import { GuestAPI } from "@/services/GuestAPI";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList, Image } from "react-native";
+import { View, StyleSheet, FlatList, Text, Pressable } from "react-native";
 import ConfirmAlert from "../components/ConfirmAlert";
 import { Container, H1, MutedText } from "@/components/CustomElements";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { faCheck, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faChevronRight,
+  faRotateLeft,
+  faTrashCan,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Separator from "@/components/Separator";
 import CustomText from "@/components/CustomText";
@@ -36,9 +42,7 @@ const SelectionHeader = ({
     },
     innerContainer: {
       flex: 1,
-      display: "flex",
       flexDirection: "row",
-      alignItems: "center",
       marginHorizontal: 20,
     },
     options: {
@@ -49,70 +53,87 @@ const SelectionHeader = ({
       justifyContent: "flex-end",
     },
     option: {
-      padding: 15,
+      flex: 1,
+      padding: 10,
+      justifyContent: "center",
+    },
+    countContainer: {
+      justifyContent: "center",
+    },
+    count: {
+      color: "#FFF",
+      fontSize: 22,
+      lineHeight: 26,
+      letterSpacing: 10,
     },
   });
 
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        <Ionicons
-          onPress={() => setSelectedItems([])}
-          style={styles.option}
-          name="close"
-          color={"#FFF"}
-          size={30}
-        />
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 20,
+          }}
+        >
+          <TouchableOpacity
+            style={styles.option}
+            onPress={() => setSelectedItems([])}
+          >
+            <FontAwesomeIcon icon={faX} color={"#FFF"} size={18} />
+          </TouchableOpacity>
+          <View style={styles.countContainer}>
+            <Text style={styles.count}>{selectedItems.length}</Text>
+          </View>
+        </View>
 
         <View style={styles.options}>
           {/* {loading && <BounceLoading color={"#FFF"} size={12} />} */}
 
-          <Ionicons
+          <TouchableOpacity
             onPress={() =>
               setConfirmAlert({
                 open: true,
-                title: "Tem certeza?",
+                title: "Tem certeza disto?",
                 message: `Confirmar deleção de ${selectedItems.length} convidados?`,
                 onConfirm: () => deleteGuests(),
               })
             }
             style={styles.option}
-            name="trash-bin"
-            color={"#FFF"}
-            size={30}
-          />
+          >
+            <FontAwesomeIcon icon={faTrashCan} color={"#FFF"} size={18} />
+          </TouchableOpacity>
 
-          {selectedItems.filter((x) => x.checkin).length > 0 && (
-            <Ionicons
+          {selectedItems.filter((x) => x.checkinDate).length > 0 && (
+            <TouchableOpacity
               onPress={() =>
                 setConfirmAlert({
                   open: true,
-                  title: "Tem certeza?",
+                  title: "Tem certeza disto?",
                   message: `Confirmar uncheckin de ${selectedItems.length} convidados?`,
                   onConfirm: () => uncheckins(),
                 })
               }
               style={styles.option}
-              name="arrow-undo"
-              color={"#FFF"}
-              size={30}
-            />
+            >
+              <FontAwesomeIcon icon={faRotateLeft} color={"#FFF"} size={18} />
+            </TouchableOpacity>
           )}
-          {selectedItems.filter((x) => !x.checkin).length > 0 && (
-            <Ionicons
+          {selectedItems.filter((x) => !x.checkinDate).length > 0 && (
+            <TouchableOpacity
               onPress={() =>
                 setConfirmAlert({
                   open: true,
-                  title: "Tem certeza?",
+                  title: "Tem certeza disto?",
                   message: `Confirmar checkin de ${selectedItems.length} convidados?`,
                   onConfirm: () => checkins(),
                 })
               }
               style={styles.option}
-              name="checkmark-done"
-              color={"#FFF"}
-              size={30}
-            />
+            >
+              <FontAwesomeIcon icon={faCheck} color={"#FFF"} size={18} />
+            </TouchableOpacity>
           )}
         </View>
       </View>

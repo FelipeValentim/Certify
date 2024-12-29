@@ -3,6 +3,7 @@ import Loading from "@/components/Loading";
 import {
   backgroundColor,
   primaryColor,
+  redColor,
   routes,
   screenWidth,
 } from "@/constants/Default";
@@ -13,7 +14,7 @@ import { View, StyleSheet, FlatList, Text, Pressable } from "react-native";
 import ConfirmAlert from "../components/ConfirmAlert";
 import { Container, H1, MutedText } from "@/components/CustomElements";
 import { SegmentedControl } from "@/components/SegmentedControl";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import {
   faCheck,
   faChevronRight,
@@ -304,8 +305,60 @@ function GuestsTab({
   };
 
   const renderGuest = ({ item: guest }) => {
+    const leftSwipeActions = () => {
+      return (
+        <View style={{ flexDirection: "row", gap: 10, padding: 15 }}>
+          <TouchableOpacity
+            onPress={() =>
+              setConfirmAlert({
+                open: true,
+                title: "Tem certeza disto?",
+                message: `Confirmar deleção do convidado ${guest.name}?`,
+                onConfirm: () => deleteGuests([guest.id]),
+              })
+            }
+            style={{ ...styles.swipeItem, backgroundColor: redColor }}
+          >
+            <FontAwesomeIcon icon={faTrashCan} size={22} color="#FFF" />
+          </TouchableOpacity>
+          {guest.checkinDate ? (
+            <TouchableOpacity
+              onPress={() =>
+                setConfirmAlert({
+                  open: true,
+                  title: "Tem certeza disto?",
+                  message: `Confirmar uncheckin do convidado ${guest.name}?`,
+                  onConfirm: () => deleteEvent(guest.id),
+                })
+              }
+              style={{ ...styles.swipeItem, backgroundColor: "#FFC145" }}
+            >
+              <FontAwesomeIcon icon={faRotateLeft} size={22} color="#FFF" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() =>
+                setConfirmAlert({
+                  open: true,
+                  title: "Tem certeza disto?",
+                  message: `Confirmar checkin do convidado ${guest.name}?`,
+                  onConfirm: () => deleteEvent(guest.id),
+                })
+              }
+              style={{ ...styles.swipeItem, backgroundColor: "#36AE7C" }}
+            >
+              <FontAwesomeIcon icon={faCheck} size={22} color="#FFF" />
+            </TouchableOpacity>
+          )}
+        </View>
+      );
+    };
+
     return (
-      <>
+      <Swipeable
+        renderLeftActions={leftSwipeActions}
+        childrenContainerStyle={{ backgroundColor: "#FFF" }}
+      >
         <TouchableOpacity
           style={[
             selectedItems.some((x) => x.id == guest.id)
@@ -362,7 +415,7 @@ function GuestsTab({
           </View>
         </TouchableOpacity>
         <Separator />
-      </>
+      </Swipeable>
     );
   };
 
@@ -390,7 +443,7 @@ function GuestsTab({
           <Loading color={primaryColor} size={24} />
         ) : (
           <>
-            <View style={{ alignItems: "center", marginTop: 10, gap: 10 }}>
+            <View style={{ alignItems: "center", marginVertical: 10, gap: 10 }}>
               <SegmentedControl
                 width={screenWidth - 20}
                 borderRadius={10}
@@ -406,6 +459,7 @@ function GuestsTab({
                 options={optionsType}
                 selectedOption={selectedType}
                 containerBackgroundColor="#F5F5F5"
+                height={38}
               />
             </View>
             <FlatList
@@ -439,10 +493,9 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "transparent",
-    margin: 10,
+    margin: 15,
   },
   guest: {
-    padding: 5,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
@@ -476,6 +529,14 @@ const styles = StyleSheet.create({
   },
   selectedItem: {
     backgroundColor: "#f5f5f5",
+  },
+  swipeItem: {
+    flex: 1,
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 15,
   },
 });
 

@@ -2,7 +2,7 @@ import { Container, CustomScrollView } from "@/components/CustomElements";
 import CustomText from "@/components/CustomText";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
-import { primaryColor } from "@/constants/Default";
+import { primaryColor, redColor } from "@/constants/Default";
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { format, parse } from "date-fns";
@@ -25,7 +25,7 @@ const EventTab = ({ navigation, route, info, title }) => {
     {
       value: info?.dropCount || 0,
       label: "Quebra",
-      frontColor: "#EB5353",
+      frontColor: redColor,
     },
   ];
 

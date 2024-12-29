@@ -50,7 +50,7 @@ namespace API.Controllers
                     return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
                 }
 
-                if (guest.DateCheckin.HasValue)
+                if (guest.CheckinDate.HasValue)
                 {
                     return StatusCode(StatusCodes.Status409Conflict, "Já foi realizado checkin para este convidado.");
                 }
@@ -77,7 +77,7 @@ namespace API.Controllers
                     return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
                 }
 
-                if (!guest.DateCheckin.HasValue)
+                if (!guest.CheckinDate.HasValue)
                 {
                     return StatusCode(StatusCodes.Status409Conflict, "Já foi desfeito o checkin para este convidado.");
                 }
@@ -167,8 +167,8 @@ namespace API.Controllers
                 var guest = new Guest()
                 {
                     Name = model.Name,
-                    DateCheckin = null,
-                    EventId = model.Event
+                    CheckinDate = null,
+                    EventId = model.EventId
                 };
 
                 if (!string.IsNullOrEmpty(model.Photo))

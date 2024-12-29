@@ -65,7 +65,7 @@ const EventTab = ({ navigation, route, info, title }) => {
                 data={barData}
                 barWidth={55}
                 noOfSections={4}
-                isAnimated
+                // isAnimated
                 barBorderTopLeftRadius={4}
                 barBorderTopRightRadius={4}
                 yAxisThickness={0}

@@ -32,10 +32,10 @@ namespace API.Models
 		public EventTypeViewModel EventType { get; set; }
 
 		[JsonPropertyName("guestsCount")]
-		public int GuestsCount => Guests.Count;
+		public int GuestsCount => Guests.Count();
 
 		[JsonPropertyName("checkinCount")]
-		public int CheckinCount => Guests.Where(x => !string.IsNullOrEmpty(x.Checkin)).Count();
+		public int CheckinCount => Guests.Where(x => x.CheckinDate.HasValue).Count();
 
 		[JsonPropertyName("dropCount")]
 		public int DropCount => GuestsCount - CheckinCount;
@@ -62,7 +62,7 @@ namespace API.Models
 		}
 
 		[JsonPropertyName("guests")]
-		public ICollection<GuestViewModel> Guests { get; set; }
+		public IEnumerable<GuestViewModel> Guests { get; set; }
 
 		[JsonPropertyName("user")]
 		public UserViewModel User { get; set; }

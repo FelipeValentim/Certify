@@ -1,19 +1,24 @@
-import BounceLoading from "@/components/BounceLoading";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import {
   backgroundColor,
   primaryColor,
-  redColor,
   routes,
+  screenWidth,
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable, Image } from "react-native";
-import { SwipeListView } from "react-native-swipe-list-view";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, FlatList, Image } from "react-native";
 import ConfirmAlert from "../components/ConfirmAlert";
-import NewGuestButton from "../components/NewGuestButton";
+import { Container, H1, MutedText } from "@/components/CustomElements";
+import { SegmentedControl } from "@/components/SegmentedControl";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { faCheck, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import Separator from "@/components/Separator";
+import CustomText from "@/components/CustomText";
+import { format } from "date-fns";
 
 const SelectionHeader = ({
   selectedItems,
@@ -124,9 +129,59 @@ function GuestsTab({
   navigation,
   route,
 }) {
+  const [filteredGuests, setFilteredGuests] = useState();
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [confirmAlert, setConfirmAlert] = useState({});
+  const [selectedStatus, setSelectedStatus] = useState({
+    label: "Todos",
+    value: 0,
+  });
+  const [selectedType, setSelectedType] = useState({
+    label: "Todos",
+    value: 0,
+  });
+  const [optionsStatus] = useState([
+    { label: "Todos", value: 0 },
+    { label: "Criado", value: 1 },
+    { label: "Checkin", value: 2 },
+    { label: "Ausente", value: 3 },
+  ]);
+
+  const [optionsType] = useState([
+    { label: "Todos", value: 0 },
+    { label: "Aluno", value: 1 },
+    { label: "Professor", value: 2 },
+  ]);
+
+  useEffect(() => {
+    const defaultValues = {
+      label: "Todos",
+      value: 0,
+    };
+    setSelectedStatus(defaultValues);
+    setSelectedType(defaultValues);
+  }, [guests]);
+
+  useEffect(() => {
+    if (selectedStatus.value == 0 && selectedType.value == 0) {
+      setFilteredGuests([...guests]);
+    } else {
+      let newGuests = guests;
+      if (selectedStatus.value != 0) {
+        newGuests = newGuests.filter(
+          (x) => x.guestStatus == selectedStatus.value
+        );
+      }
+      if (selectedType.value != 0) {
+        newGuests = newGuests.filter(
+          (x) => x.guestType.name == selectedType.label
+        );
+      }
+
+      setFilteredGuests([...newGuests]);
+    }
+  }, [selectedStatus, selectedType]);
 
   const selectItem = (item) => {
     if (selectedItems.some((x) => x.id == item.id)) {
@@ -134,7 +189,7 @@ function GuestsTab({
     } else {
       setSelectedItems([
         ...selectedItems,
-        { id: item.id, checkin: item.checkin },
+        { id: item.id, checkinDate: item.checkinDate },
       ]);
     }
   };
@@ -227,6 +282,69 @@ function GuestsTab({
     }
   };
 
+  const renderGuest = ({ item: guest }) => {
+    return (
+      <>
+        <TouchableOpacity
+          style={[
+            selectedItems.some((x) => x.id == guest.id)
+              ? styles.selectedItem
+              : null,
+          ]}
+          key={guest.id}
+          onLongPress={() => selectItem(guest)}
+          onPress={() => {
+            if (selectedItems.length > 0) {
+              selectItem(guest);
+            } else {
+              navigation.navigate(routes.guest, {
+                guest: guest,
+                updateCheckin,
+                updateUncheckin,
+              });
+            }
+          }}
+          // onPress={() =>
+          //   navigation.navigate(routes.event, { eventId: event.id })
+          // }
+        >
+          <View style={styles.card}>
+            <View style={styles.guest}>
+              {selectedItems.some((x) => x.id == guest.id) ? (
+                <View style={styles.photo}>
+                  <FontAwesomeIcon icon={faCheck} size={30} color="#aaa" />
+                </View>
+              ) : (
+                <MutedText style={styles.photo}>
+                  {guest.name[0].toUpperCase()}
+                </MutedText>
+              )}
+
+              <View style={styles.info}>
+                <CustomText style={styles.name}>{guest.name}</CustomText>
+                <CustomText style={styles.guestType}>
+                  {guest.guestType.name} -{" "}
+                  {guest.guestStatus == 1 && "Aguardando"}
+                  {guest.guestStatus == 2 &&
+                    format(guest.checkinDate, "dd/MM/yyyy")}
+                  {guest.guestStatus == 3 && "Ausente"}
+                </CustomText>
+              </View>
+              <View style={styles.arrow}>
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  color={"#606060"}
+                  size={15}
+                />
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <Separator />
+      </>
+    );
+  };
+
   return (
     <React.Fragment>
       <Header
@@ -246,87 +364,39 @@ function GuestsTab({
           )
         }
       />
-      {!guests ? (
-        <Loading color={primaryColor} size={24} />
-      ) : (
-        <View style={styles.container}>
-          <NewGuestButton
-            onPress={() =>
-              navigation.navigate(routes.newGuest, {
-                eventId: route.params.eventId,
-                addGuest: addGuest,
-              })
-            }
-          />
+      <Container style={styles.container}>
+        {!guests ? (
+          <Loading color={primaryColor} size={24} />
+        ) : (
+          <>
+            <View style={{ alignItems: "center", marginTop: 10, gap: 10 }}>
+              <SegmentedControl
+                width={screenWidth - 20}
+                borderRadius={10}
+                onPress={setSelectedStatus}
+                options={optionsStatus}
+                selectedOption={selectedStatus}
+                containerBackgroundColor="#F5F5F5"
+              />
+              <SegmentedControl
+                width={screenWidth - 20}
+                borderRadius={10}
+                onPress={setSelectedType}
+                options={optionsType}
+                selectedOption={selectedType}
+                containerBackgroundColor="#F5F5F5"
+              />
+            </View>
+            <FlatList
+              data={filteredGuests}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderGuest}
+              contentContainerStyle={{ paddingBottom: 50 }}
+            />
+          </>
+        )}
+      </Container>
 
-          <SwipeListView
-            data={guests}
-            renderItem={({ item }, rowMap) => (
-              <Pressable
-                key={item.id}
-                onLongPress={() => selectItem(item)}
-                onPress={() => {
-                  if (selectedItems.length > 0) {
-                    selectItem(item);
-                  } else {
-                    navigation.navigate(routes.guest, {
-                      guest: item,
-                      updateCheckin,
-                      updateUncheckin,
-                    });
-                  }
-                }}
-              >
-                <View
-                  style={[
-                    styles.card,
-                    selectedItems.some((x) => x.id == item.id)
-                      ? styles.selectedItem
-                      : null,
-                  ]}
-                >
-                  <View style={styles.guest}>
-                    <Image
-                      style={styles.photo}
-                      source={{
-                        uri: item.photo,
-                      }}
-                    />
-                    <Text style={styles.name}>{item.name}</Text>
-                    {item.checkin ? (
-                      <Text style={styles.checkin}>checkin</Text>
-                    ) : (
-                      <Text style={styles.notCheckin}>checkin</Text>
-                    )}
-                  </View>
-                </View>
-              </Pressable>
-            )}
-            renderHiddenItem={({ item }, rowMap) =>
-              item.checkin &&
-              selectedItems.length === 0 && (
-                <Pressable
-                  onPress={() =>
-                    setConfirmAlert({
-                      open: true,
-                      title: "Tem certeza?",
-                      message: `Confirmar uncheckin de ${item.name}?`,
-                      onConfirm: () => uncheckin(item.id),
-                    })
-                  }
-                  style={styles.swipeHiddenContainer}
-                >
-                  <View style={styles.swipeHiddenItem}>
-                    <Ionicons name="arrow-undo" size={30} color={redColor} />
-                    <Text>Uncheckin</Text>
-                  </View>
-                </Pressable>
-              )
-            }
-            leftOpenValue={100}
-          />
-        </View>
-      )}
       <ConfirmAlert
         open={confirmAlert.open}
         toggle={() =>
@@ -342,65 +412,49 @@ function GuestsTab({
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: backgroundColor, flex: 1 },
-  card: {
+  container: {
     backgroundColor: "#FFF",
-    margin: 10,
-    borderRadius: 20,
     position: "relative",
   },
-  selectedItem: {
-    backgroundColor: "#C3B1E1",
+  card: {
+    backgroundColor: "transparent",
+    margin: 10,
   },
   guest: {
-    padding: 20,
-    display: "flex",
+    padding: 5,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-  },
-  swipeHiddenContainer: {
-    margin: 10,
-    borderRadius: 20,
-    // backgroundColor: "red",
     flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "flex-start",
-  },
-  swipeHiddenItem: {
-    backgroundColor: "#FFF",
-    borderRadius: 20,
-    padding: 10,
-    display: "flex",
-    alignItems: "center",
   },
   name: {
     fontSize: 16,
-    fontFamily: "PoppinsRegular",
     fontWeight: "bold",
-    flex: 1,
+  },
+  guestType: {
+    fontSize: 12,
+    borderRadius: 10,
+    color: "#555",
   },
   photo: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 15,
+    textAlign: "center",
+    verticalAlign: "middle",
+    fontSize: 22,
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  checkin: {
-    fontSize: 12,
-    fontFamily: "PoppinsRegular",
-    backgroundColor: primaryColor,
-    padding: 5,
-    borderRadius: 10,
-    color: "#FFF",
+  info: {
+    flex: 1,
   },
-  notCheckin: {
-    fontSize: 12,
-    fontFamily: "PoppinsRegular",
-    backgroundColor: "#ccc",
-    padding: 5,
-    borderRadius: 10,
-    color: "#FFF",
+  arrow: {
+    width: 15,
+  },
+  selectedItem: {
+    backgroundColor: "#f5f5f5",
   },
 });
 

@@ -12,14 +12,12 @@ namespace Domain.Entities
 
         public string Photo { get; set; }
 
-        public DateTime? DateCheckin { get; set; }
+        public DateTime? CheckinDate { get; set; }
 
         public Guid EventId { get; set; }
         public Event Event { get; set; }
-
-        public Guid? GuestId { get; set; }
-        public ICollection<Guest> Guests { get; set; }
-        public Guest GuestParent { get; set; }
+		public Guid GuestTypeId { get; set; }
+		public GuestType GuestType { get; set; }
 
 		public Guest() : base()
         {

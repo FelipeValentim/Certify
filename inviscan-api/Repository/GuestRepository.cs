@@ -13,7 +13,7 @@ namespace Repository
 
 		public IEnumerable<Guest> GetGuests(Guid eventId)
 		{
-			return GetAll(x => x.EventId == eventId);
+			return GetAll(x => x.EventId == eventId, includeProperties: "GuestType");
 		}
 
 		public void Checkin(Guid[] ids)
@@ -22,7 +22,7 @@ namespace Repository
 
 			foreach (var guest in guests)
 			{
-				guest.DateCheckin = DateTime.Now;
+				guest.CheckinDate = DateTime.Now;
 
 				Update(guest);
 			}
@@ -34,7 +34,7 @@ namespace Repository
 
 			if (guest != null)
 			{
-				guest.DateCheckin = DateTime.Now;
+				guest.CheckinDate = DateTime.Now;
 
 				Update(guest);
 			}
@@ -47,7 +47,7 @@ namespace Repository
 
 			foreach (var guest in guests)
 			{
-				guest.DateCheckin = null;
+				guest.CheckinDate = null;
 
 				Update(guest);
 			}
@@ -59,7 +59,7 @@ namespace Repository
 
 			if (guest != null)
 			{
-				guest.DateCheckin = null;
+				guest.CheckinDate = null;
 
 				Update(guest);
 			}

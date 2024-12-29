@@ -140,7 +140,7 @@ namespace API.Controllers
             {
 				EventViewModel item;
 
-                var eventItem = _eventRepository.GetEventWithGuests(id);
+                var eventItem = _eventRepository.GetByID(id);
 
                 item = new EventViewModel
 				{
@@ -149,17 +149,32 @@ namespace API.Controllers
 					StartTime = eventItem.StartTime,
 					EndTime = eventItem.EndTime,
 					Name = eventItem.Name,
-                    Photo = eventItem.Photo,
-                    Guests = eventItem.Guests.Where(x => !x.DeletedDate.HasValue).Select(x => new GuestViewModel
-					{
-                        Id = x.Id,
-                        Name = x.Name,
-                        Photo = x.Photo,
-                        Checkin = x.DateCheckin?.ToString("dd/MM/yyyy"),
-                    }).ToList(),
+                    Photo = eventItem.Photo
                 };
 
-                return StatusCode(StatusCodes.Status200OK, item);
+                var guests = _guestRepository.GetGuests(item.Id);
+
+                item.Guests = guests.Select(x => new GuestViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Photo = x.Photo,
+					CheckinDate = x.CheckinDate,
+                    Event = new EventViewModel
+                    {
+                        Date = item.Date,
+                        StartTime = item.StartTime,
+                        EndTime = item.EndTime,
+                    },
+                    GuestType = new GuestTypeViewModel
+                    {
+                        Name = x.GuestType.Name,
+                    }
+
+                });
+
+
+				return StatusCode(StatusCodes.Status200OK, item);
             }
             catch (Exception ex)
             {
@@ -174,7 +189,7 @@ namespace API.Controllers
         {
             var eventItem = _eventRepository.GetByID(id);
 
-            var guests = _guestRepository.GetAll(x => x.EventId == id && x.DateCheckin.HasValue == true && x.DeletedDate.HasValue == false);
+            var guests = _guestRepository.GetAll(x => x.EventId == id && x.CheckinDate.HasValue == true && x.DeletedDate.HasValue == false);
 
             string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "templates", "Documento.docx");
             string certificatesPath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "certificates");

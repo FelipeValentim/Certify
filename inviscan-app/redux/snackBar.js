@@ -10,10 +10,15 @@ const slice = createSlice({
   initialState: { ...defaultValue },
   reducers: {
     toast: (_, action) => {
-      return { ...defaultValue, visible: true, text: action.payload };
+      return {
+        ...defaultValue,
+        visible: true,
+        text: action.payload.text,
+        type: action.payload.type,
+      };
     },
-    close: () => {
-      return { ...defaultValue, visible: false };
+    close: (state) => {
+      state.visible = false;
     },
   },
 });

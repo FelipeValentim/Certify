@@ -40,7 +40,7 @@ export default function EventScreen({ route, navigation }) {
   const checkin = async (ids) => {
     const newGuests = guests.map((guest) =>
       ids.includes(guest.id)
-        ? { ...guest, checkin: getCurrentDateFormatted() }
+        ? { ...guest, checkinDate: new Date(), guestStatus: 2 }
         : guest
     );
     setGuests(newGuests);
@@ -48,7 +48,9 @@ export default function EventScreen({ route, navigation }) {
 
   const updateUncheckin = async (ids) => {
     const newGuests = guests.map((guest) =>
-      ids.includes(guest.id) ? { ...guest, checkin: null } : guest
+      ids.includes(guest.id)
+        ? { ...guest, checkinDate: null, guestStatus: 1 }
+        : guest
     );
 
     setGuests(newGuests);

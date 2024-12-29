@@ -15,13 +15,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "@/redux/token";
 import { close } from "@/redux/snackBar";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import Header from "@/components/Header";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { routes } from "@/constants/Default";
-import api from "@/services/configs/AxiosConfig";
-import { Snackbar } from "react-native-paper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import CustomSnackBar from "@/components/CustomSnackBar";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -137,13 +134,13 @@ const Main = () => {
               )}
             </Stack.Navigator>
           </NavigationContainer>
-          <Snackbar
+          <CustomSnackBar
             visible={snackBar.visible}
             duration={5000}
+            type={snackBar.type}
             onDismiss={onDismiss}
-          >
-            {snackBar.text}
-          </Snackbar>
+            message={snackBar.text}
+          />
         </GestureHandlerRootView>
       </SafeAreaView>
     </SafeAreaProvider>

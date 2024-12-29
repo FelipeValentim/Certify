@@ -72,7 +72,12 @@ function NewEvent({ route, navigation }) {
             : undefined,
         };
         setErrors(newErrors);
-        dispatch(toast(Object.values(newErrors).find((error) => error)));
+        dispatch(
+          toast({
+            text: Object.values(newErrors).find((error) => error),
+            type: "warning",
+          })
+        );
       } else {
         try {
           setLoading(true);

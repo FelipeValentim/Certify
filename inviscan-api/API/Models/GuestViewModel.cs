@@ -36,15 +36,11 @@ namespace API.Models
 		{
 			get
 			{
-				var status = GuestStatus.Created;
+				var status = GuestStatus.Pending;
 
 				if (CheckinDate.HasValue)
 				{
 					status = GuestStatus.Checkin;
-				}
-				else if (DateTime.Now >= Event.Date.Date.Add(Event.EndTime) && CheckinDate.HasValue == false)
-				{
-					status = GuestStatus.Absent;
 				}
 
 				return status;

@@ -19,7 +19,12 @@ const errorHandler = async (error) => {
   if (statusCode && statusCode !== httpStatus.unauthorized) {
     if (typeof error.response?.data === "string") {
       const message = error.response?.data;
-      store.dispatch(toast(message ? message : "Algum problema ocorreu"));
+      store.dispatch(
+        toast({
+          text: message ? message : "Algum problema ocorreu",
+          type: "error",
+        })
+      );
     }
   } else if (statusCode && statusCode === httpStatus.unauthorized) {
     await removeToken();

@@ -66,7 +66,7 @@ function Guest({ route, navigation }) {
                 />
               </View>
 
-              {!guest.checkin && (
+              {!guest.checkinDate && (
                 <ButtonLoading
                   onPress={() => checkin(guest.id)}
                   loading={loading}

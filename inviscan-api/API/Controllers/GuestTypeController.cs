@@ -25,11 +25,10 @@ namespace API.Controllers
         public GuestTypeController(IGuestTypeService guestTypeService)
         {
 			_guestTypeService = guestTypeService;
-    
         }
 
-        [HttpGet("GetEventTypes")]
-        public IActionResult GetEventTypes()
+        [HttpGet("GetGuestTypes")]
+        public IActionResult GetGuestTypes()
         {
             try
             {

@@ -15,6 +15,7 @@ import { Container, H1, MutedText } from "@/components/CustomElements";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import {
+  faAdd,
   faCheck,
   faChevronRight,
   faRotateLeft,
@@ -23,6 +24,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Separator from "@/components/Separator";
+import FloatingButton from "@/components/FloatingButton";
 import CustomText from "@/components/CustomText";
 import { format } from "date-fns";
 import CustomSnackBar from "@/components/CustomSnackBar";
@@ -546,6 +548,14 @@ function GuestsTab({
             />
           </>
         )}
+        <FloatingButton
+          onPress={() =>
+            navigation.navigate(routes.newGuest, {
+              addGuest: addGuest,
+            })
+          }
+          icon={faAdd}
+        />
       </Container>
 
       <ConfirmAlert

@@ -7,6 +7,12 @@ import {
   Dimensions,
   Pressable,
   Image,
+  FlatList,
+  Text,
+  Modal,
+  StatusBar,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -18,9 +24,14 @@ import {
   faEye,
   faEyeSlash,
   faPen,
+  faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { faImages } from "@fortawesome/free-regular-svg-icons";
 import * as SelectImage from "expo-image-picker";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { screenHeight } from "@/constants/Default";
+import { CustomScrollView } from "./CustomElements";
+import ModalContainer from "./ModalContainer";
 
 const now = new Date();
 
@@ -311,6 +322,69 @@ export const SelectPicker = ({
   );
 };
 
+export const SelectInput = ({
+  selected,
+  onSelected,
+  placeholder,
+  error,
+  items,
+  ...props
+}) => {
+  const selectInputStyle = StyleSheet.create({
+    selectItem: {
+      padding: 15,
+      flex: 1,
+    },
+  });
+
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState();
+
+  const togglePicker = () => {
+    setPickerVisible(!pickerVisible);
+  };
+
+  const onSelect = (item) => {
+    onSelected(item);
+    togglePicker();
+  };
+
+  useEffect(() => {
+    const item = items?.find((x) => x.id === selected);
+    if (item) {
+      setSelectedItem(item);
+    }
+  }, [selected]);
+
+  return (
+    <View style={selectInputStyle.container}>
+      <Pressable onPress={togglePicker} style={styles.formControl}>
+        <InputBase
+          editable={false}
+          placeholder={placeholder}
+          value={selectedItem?.name}
+          error={error}
+          {...props}
+        />
+        <FontAwesomeIcon style={styles.right} icon={faChevronDown} size={16} />
+      </Pressable>
+      <ModalContainer visible={pickerVisible} toggle={togglePicker}>
+        <CustomScrollView style={{ borderRadius: 20 }}>
+          {items?.map((item) => (
+            <TouchableOpacity
+              onPress={() => onSelect(item)}
+              key={item.id}
+              style={selectInputStyle.selectItem}
+            >
+              <Text style={{ fontSize: 20 }}>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </CustomScrollView>
+      </ModalContainer>
+    </View>
+  );
+};
+
 export const ImagePicker = ({ onPicker, photo }) => {
   const pickImage = async () => {
     const permissionResult = await SelectImage.requestCameraPermissionsAsync();
@@ -417,6 +491,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 20,
     bottom: 15,
+    color: "#555",
   },
   preview: {
     width: 150,

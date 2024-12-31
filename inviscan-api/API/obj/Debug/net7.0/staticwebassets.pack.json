@@ -25,8 +25,20 @@
       "PackagePath": "staticwebassets\\storage\\templates\\Documento.odt"
     },
     {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\Documento.pdf",
+      "PackagePath": "staticwebassets\\storage\\templates\\Documento.pdf"
+    },
+    {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\Documento.rtf",
       "PackagePath": "staticwebassets\\storage\\templates\\Documento.rtf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\dummy.pdf",
+      "PackagePath": "staticwebassets\\storage\\templates\\dummy.pdf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\dummy2.pdf",
+      "PackagePath": "staticwebassets\\storage\\templates\\dummy2.pdf"
     },
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\template.odf",

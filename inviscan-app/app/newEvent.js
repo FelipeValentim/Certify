@@ -10,6 +10,7 @@ import {
   InputTime,
   SelectPicker,
   ImagePicker,
+  SelectInput,
 } from "@/components/CustomInput";
 import { Container } from "@/components/CustomElements";
 import { EventTypeAPI } from "@/services/EventTypeAPI";
@@ -41,12 +42,7 @@ function NewEvent({ route, navigation }) {
   useEffect(() => {
     const getEventTypes = async () => {
       const { data } = await EventTypeAPI.getAll();
-      setEventTypes(
-        data.map((item) => ({
-          value: item.id,
-          label: item.name,
-        }))
-      );
+      setEventTypes(data);
     };
     getEventTypes();
   }, []);
@@ -176,12 +172,12 @@ function NewEvent({ route, navigation }) {
                   value={event.endTime}
                   error={errors.endTime}
                 />
-                <SelectPicker
+                <SelectInput
                   placeholder={"Tipo de evento"}
-                  selectedValue={event.eventTypeId}
+                  selected={event.eventTypeId}
                   items={eventTypes}
-                  onChange={(selectedValue) =>
-                    setEvent({ ...event, eventTypeId: selectedValue })
+                  onSelected={(selected) =>
+                    setEvent({ ...event, eventTypeId: selected.id })
                   }
                   error={errors.eventTypeId}
                 />
@@ -220,15 +216,6 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 10,
   },
-  preview: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#00000010",
-  },
-
   button: {
     width: 200,
     marginTop: 40,

@@ -4,7 +4,7 @@ import {
   primaryColor,
   screenHeight,
 } from "@/constants/Default";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,18 +14,41 @@ import {
   Pressable,
 } from "react-native";
 import Header from "@/components/Header";
-import * as ImagePicker from "expo-image-picker";
-import { Ionicons } from "@expo/vector-icons";
-import { Input } from "@/components/CustomInput";
+import {
+  InputNumber,
+  Input,
+  InputDate,
+  InputTime,
+  SelectPicker,
+  ImagePicker,
+  SelectInput,
+} from "@/components/CustomInput";
 import { GuestAPI } from "@/services/GuestAPI";
+import { GuestTypeAPI } from "@/services/GuestTypeAPI";
+import Loading from "@/components/Loading";
+import { Container, CustomScrollView } from "@/components/CustomElements";
 
 function NewGuest({ route, navigation }) {
   const [loading, setLoading] = useState(false);
-  const [guest, setGuest] = useState({ event: route.params.eventId });
+  const [guestTypes, setGuestTypes] = useState();
+  const [guest, setGuest] = useState({
+    eventId: route.params.eventId,
+    photo:
+      "https://www.pngitem.com/pimgs/m/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png",
+  });
   const [errors, setErrors] = React.useState({
     name: undefined,
+    email: undefined,
   });
   const { addGuest } = route.params;
+
+  useEffect(() => {
+    const getEventTypes = async () => {
+      const { data } = await GuestTypeAPI.getAll();
+      setGuestTypes(data);
+    };
+    getEventTypes();
+  }, []);
 
   const save = async () => {
     if (!loading) {
@@ -80,110 +103,97 @@ function NewGuest({ route, navigation }) {
     }
   };
 
-  const setName = (value) => {
-    if (value) {
-      setErrors({ ...errors, name: undefined });
-      setGuest({ ...guest, name: value });
-    } else {
-      setErrors({ ...errors, name: "Nome inválido" });
-      setGuest({ ...guest, name: "" });
+  const setField = (field, value, errorMessage, required = true) => {
+    if (required) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [field]: value ? undefined : errorMessage,
+      }));
     }
+
+    setEvent((prevEvent) => ({
+      ...prevEvent,
+      [field]: value || "",
+    }));
   };
 
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-          <View style={styles.card}>
-            <Pressable style={styles.preview} onPress={pickImage}>
-              {guest.photo ? (
-                <Image
-                  style={styles.preview}
-                  source={{
-                    uri: guest.photo,
-                  }}
-                />
-              ) : (
-                <View>
-                  <Ionicons name="image-outline" size={48} />
-                </View>
-              )}
-            </Pressable>
+      {!guestTypes ? (
+        <Loading color={primaryColor} size={24} />
+      ) : (
+        <CustomScrollView>
+          <Container style={styles.container}>
+            <View style={styles.content}>
+              <ImagePicker
+                photo={guest.photo}
+                onPicker={(base64) => setGuest({ ...guest, photo: base64 })}
+              />
 
-            <Text style={styles.name}>{guest.name}</Text>
-            {guest.checkin && (
-              <Text style={styles.checkin}>Checkin: {guest.checkin}</Text>
-            )}
-            <Input
-              value={guest.name}
-              onChangeText={(text) => setName(text)}
-              placeholder="Nome"
-              error={errors.name}
-            ></Input>
-            <ButtonLoading
-              loading={loading}
-              onPress={save}
-              style={[styles.button]}
-            >
-              Salvar
-            </ButtonLoading>
-          </View>
-        </ScrollView>
-      </View>
+              {/* <Text style={styles.name}>{guest.name}</Text> */}
+              {guest.checkin && (
+                <Text style={styles.checkin}>Checkin: {guest.checkin}</Text>
+              )}
+
+              <View style={styles.inputs}>
+                <Input
+                  value={guest.name}
+                  onChangeText={(text) =>
+                    setField("name", text, "Nome é obrigatório")
+                  }
+                  placeholder="Nome"
+                  error={errors.name}
+                />
+                <Input
+                  value={guest.email}
+                  onChangeText={(text) =>
+                    setField("email", text, "Email é obrigatório")
+                  }
+                  placeholder="Email"
+                  error={errors.email}
+                />
+                <SelectInput
+                  items={guestTypes}
+                  placeholder={"Tipo de convidado"}
+                  selected={guest.guestTypeId}
+                  onSelected={(itemSelected) =>
+                    setGuest({ ...guest, guestTypeId: itemSelected.id })
+                  }
+                />
+              </View>
+
+              <ButtonLoading
+                loading={loading}
+                onPress={save}
+                style={[styles.button]}
+              >
+                Salvar
+              </ButtonLoading>
+            </View>
+          </Container>
+        </CustomScrollView>
+      )}
     </Fragment>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: backgroundColor,
-    height: screenHeight,
+    padding: 20,
   },
-  card: {
-    backgroundColor: "#FFF",
-    margin: 10,
-    borderRadius: 20,
-    padding: 30,
-    display: "flex",
+  content: {
     alignItems: "center",
-    gap: 50,
+    flex: 1,
+    gap: 10,
   },
-  name: {
-    fontSize: 28,
-    fontFamily: "PoppinsRegular",
-    fontWeight: "bold",
-  },
-  photo: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-  },
-  preview: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#00000030",
-  },
-  qrCode: {
-    borderWidth: 3,
-    borderColor: backgroundColor,
-    padding: 10,
-    borderRadius: 20,
-  },
-  checkin: {
-    fontSize: 14,
-    fontFamily: "PoppinsRegular",
-    backgroundColor: primaryColor,
-    padding: 10,
-    borderRadius: 10,
-    color: "#FFF",
+  inputs: {
+    width: "100%",
+    gap: 10,
   },
   button: {
     width: 200,
+    marginTop: 40,
   },
 });
 

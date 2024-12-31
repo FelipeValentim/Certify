@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "paths": {
       "@/*": ["./*"]
@@ -17,6 +18,7 @@
     "app/_main.js",
     "app/auth/_layout.js",
     "app/auth/register.js",
-    "app/auth/index.js"
+    "app/auth/index.js",
+    "components/ModalContainer.js"
   ]
 }

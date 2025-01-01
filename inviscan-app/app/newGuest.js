@@ -1,6 +1,7 @@
 import ButtonLoading from "@/components/ButtonLoading";
 import {
   backgroundColor,
+  baseURL,
   primaryColor,
   screenHeight,
 } from "@/constants/Default";
@@ -27,14 +28,17 @@ import { GuestAPI } from "@/services/GuestAPI";
 import { GuestTypeAPI } from "@/services/GuestTypeAPI";
 import Loading from "@/components/Loading";
 import { Container, CustomScrollView } from "@/components/CustomElements";
+import { useDispatch } from "react-redux";
+import { toast } from "@/redux/snackBar";
 
 function NewGuest({ route, navigation }) {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [guestTypes, setGuestTypes] = useState();
   const [guest, setGuest] = useState({
     eventId: route.params.eventId,
-    photo:
-      "https://www.pngitem.com/pimgs/m/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png",
+    fullPhotoUrl: `${baseURL}/storage/default_avatar.png`,
+    new: true,
   });
   const [errors, setErrors] = React.useState({
     name: undefined,
@@ -52,11 +56,21 @@ function NewGuest({ route, navigation }) {
 
   const save = async () => {
     if (!loading) {
-      if (!guest.name) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          name: !guest.name ? "Nome é obrigatório" : undefined,
-        }));
+      if (!guest.name || !guest.email || !guest.guestTypeId) {
+        const newErrors = {
+          name: !guest.email ? "Nome é obrigatório" : undefined,
+          email: !guest.email ? "Email é obrigatório" : undefined,
+          guestTypeId: !guest.guestTypeId
+            ? "Tipo de Convidado é obrigatório"
+            : undefined,
+        };
+        setErrors(newErrors);
+        dispatch(
+          toast({
+            text: Object.values(newErrors).find((error) => error),
+            type: "warning",
+          })
+        );
       } else {
         try {
           setLoading(true);
@@ -64,7 +78,11 @@ function NewGuest({ route, navigation }) {
           const response = await GuestAPI.newGuest(guest);
 
           const { data } = response;
-          addGuest(data);
+          guest.id = data.id;
+          guest.guestStatus = 1;
+          // guest.photo = null; TODO
+          // guest.fullPhotoUrl = `${baseURL}${guest.photo}`;
+          addGuest(guest);
           navigation.goBack();
         } catch (error) {
           setErrors((prevErrors) => ({
@@ -78,31 +96,6 @@ function NewGuest({ route, navigation }) {
     }
   };
 
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
-      return;
-    }
-
-    // No permissions request is necessary for launching the image library
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-
-    if (!result.canceled) {
-      setGuest({
-        ...guest,
-        photo: `data:image/png;base64,${result.assets[0].base64}`,
-      });
-    }
-  };
-
   const setField = (field, value, errorMessage, required = true) => {
     if (required) {
       setErrors((prevErrors) => ({
@@ -111,8 +104,8 @@ function NewGuest({ route, navigation }) {
       }));
     }
 
-    setEvent((prevEvent) => ({
-      ...prevEvent,
+    setGuest((prevGuest) => ({
+      ...prevGuest,
       [field]: value || "",
     }));
   };
@@ -127,8 +120,10 @@ function NewGuest({ route, navigation }) {
           <Container style={styles.container}>
             <View style={styles.content}>
               <ImagePicker
-                photo={guest.photo}
-                onPicker={(base64) => setGuest({ ...guest, photo: base64 })}
+                photo={guest.photo ?? guest.fullPhotoUrl}
+                onPicker={(base64) =>
+                  setGuest({ ...guest, photo: base64, defaultPhoto: false })
+                }
               />
 
               {/* <Text style={styles.name}>{guest.name}</Text> */}
@@ -158,8 +153,13 @@ function NewGuest({ route, navigation }) {
                   placeholder={"Tipo de convidado"}
                   selected={guest.guestTypeId}
                   onSelected={(itemSelected) =>
-                    setGuest({ ...guest, guestTypeId: itemSelected.id })
+                    setGuest({
+                      ...guest,
+                      guestTypeId: itemSelected.id,
+                      guestType: itemSelected,
+                    })
                   }
+                  error={errors.guestTypeId}
                 />
               </View>
 

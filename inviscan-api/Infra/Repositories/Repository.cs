@@ -79,5 +79,17 @@ namespace Infrastructure.Repositories
 		{
 			return dbSet.Find(id);
 		}
+
+		public virtual int Count(Expression<Func<TEntity, bool>> filter = null)
+		{
+			IQueryable<TEntity> query = dbSet;
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+
+			return query.Count();
+		}
 	}
 }

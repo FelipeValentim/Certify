@@ -12,9 +12,24 @@ import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import { getCurrentDateFormatted } from "@/helper/date";
 import Header from "@/components/Header";
+import {
+  Container,
+  CustomScrollView,
+  H1,
+  H3,
+  MutedText,
+} from "@/components/CustomElements";
+import CustomText from "@/components/CustomText";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { format } from "date-fns";
+import { faClock } from "@fortawesome/free-regular-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { toast } from "@/redux/snackBar";
 
 function Guest({ route, navigation }) {
-  const [guest, setGuest] = useState(route.params?.guest);
+  const dispatch = useDispatch();
+  const [guest] = useState(route.params?.guest);
   const { updateCheckin } = route.params;
   const [loading, setLoading] = useState(false);
   const checkin = async (id) => {
@@ -22,40 +37,74 @@ function Guest({ route, navigation }) {
       if (!loading) {
         setLoading(true);
         await GuestAPI.checkin(id);
-        setGuest({ ...guest, checkin: getCurrentDateFormatted() });
+        dispatch(
+          toast({ text: "Checkin realizado com sucesso", type: "sucess" })
+        );
         updateCheckin([id]);
       }
     } catch (error) {
       if (error.response) {
         if (error.response.status == httpStatus.conflict) {
-          setGuest({ ...guest, checkin: getCurrentDateFormatted() });
+          dispatch(
+            toast({
+              text: "Já foi realizado checkin para este convidado",
+              type: "warning",
+            })
+          );
           updateCheckin([id]);
         } else {
           console.log(response.data);
         }
       }
     } finally {
+      navigation.goBack();
       setLoading(false);
     }
   };
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
-      <View style={styles.container}>
-        {!guest ? (
-          <Loading color={primaryColor} size={24} />
-        ) : (
-          <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-            <View style={styles.card}>
+      {!guest ? (
+        <Loading color={primaryColor} size={24} />
+      ) : (
+        <CustomScrollView>
+          <Container>
+            <View style={styles.content}>
               <Image
                 style={styles.photo}
                 source={{
                   uri: guest.fullPhotoUrl,
                 }}
               />
-              <Text style={styles.name}>{guest.name}</Text>
-              {guest.checkin && (
-                <Text style={styles.checkin}>Checkin: {guest.checkin}</Text>
+              <View style={{ alignItems: "center" }}>
+                <H1>{guest.name}</H1>
+                <MutedText style={styles.guestType}>
+                  {guest.guestType.name}
+                </MutedText>
+                <MutedText>{guest.email}</MutedText>
+              </View>
+              {guest.checkinDate ? (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 5,
+                    alignItems: "center",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faClock} />
+                  <Text>{format(guest.checkinDate, "dd/MM/yyyy HH:mm")}</Text>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 5,
+                    alignItems: "center",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSpinner} />
+                  <Text>Pendente</Text>
+                </View>
               )}
               <View style={styles.qrCode}>
                 <QRCode
@@ -75,31 +124,21 @@ function Guest({ route, navigation }) {
                 </ButtonLoading>
               )}
             </View>
-          </ScrollView>
-        )}
-      </View>
+          </Container>
+        </CustomScrollView>
+      )}
     </Fragment>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: backgroundColor,
-    height: screenHeight,
-  },
-  card: {
-    backgroundColor: "#FFF",
-    margin: 10,
-    borderRadius: 20,
-    padding: 30,
-    display: "flex",
+  content: {
     alignItems: "center",
-    gap: 50,
+    flex: 1,
+    gap: 10,
   },
-  name: {
-    fontSize: 28,
-    fontFamily: "PoppinsRegular",
-    fontWeight: "bold",
+  guestType: {
+    fontSize: 20,
   },
   photo: {
     width: 150,
@@ -107,18 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 75,
   },
   qrCode: {
-    borderWidth: 3,
-    borderColor: backgroundColor,
-    padding: 10,
-    borderRadius: 20,
-  },
-  checkin: {
-    fontSize: 14,
-    fontFamily: "PoppinsRegular",
-    backgroundColor: primaryColor,
-    padding: 10,
-    borderRadius: 10,
-    color: "#FFF",
+    padding: 20,
   },
   button: {
     width: 200,

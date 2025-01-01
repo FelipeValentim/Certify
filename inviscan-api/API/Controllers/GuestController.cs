@@ -16,7 +16,7 @@ namespace API.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IGuestRepository _guestRepository;
-        private readonly IStorageService _storageService;
+		private readonly IStorageService _storageService;
 
         public GuestController(IHttpContextAccessor httpContextAccessor, IGuestRepository guestRepository, IStorageService storageService)
         {
@@ -188,14 +188,14 @@ namespace API.Controllers
 					return StatusCode(StatusCodes.Status400BadRequest, "Evento é obrigatório.");
 				}
 
-                if (_guestRepository.Exists(model.Email)) 
+                if (_guestRepository.Exists(model.EventId, model.Email)) 
                 {
 					return StatusCode(StatusCodes.Status400BadRequest, "Email já cadastrado para este evento.");
 				} 
 
 				var guest = new Guest()
                 {
-                    Name = model.Name,
+                    Name = model.Name.Trim(),
 					Email = model.Email,
                     EventId = model.EventId,
                     GuestTypeId = model.GuestTypeId,

@@ -17,6 +17,7 @@ const ModalContainer = ({
   toggle,
   children,
   maxHeight = screenHeight / 1.8,
+  overlayStyle = {},
 }) => {
   const styles = StyleSheet.create({
     container: { flex: 1, position: "relative" },
@@ -39,6 +40,7 @@ const ModalContainer = ({
       shadowOpacity: 0.2,
       shadowRadius: 3,
       elevation: 5,
+      ...overlayStyle,
     },
     close: {
       backgroundColor: "#FFF",

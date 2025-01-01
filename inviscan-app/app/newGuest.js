@@ -79,7 +79,6 @@ function NewGuest({ route, navigation }) {
 
           const { data } = response;
           guest.id = data.id;
-          guest.guestStatus = 1;
           // guest.photo = null; TODO
           // guest.fullPhotoUrl = `${baseURL}${guest.photo}`;
           addGuest(guest);

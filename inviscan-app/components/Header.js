@@ -7,7 +7,14 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 
-const Header = ({ navigation, title, route, component }) => {
+const Header = ({
+  navigation,
+  title,
+  route,
+  component,
+  rightButtonAction,
+  rightButtonComponent,
+}) => {
   const dispatch = useDispatch();
   const logout = async () => {
     await removeToken();
@@ -23,21 +30,19 @@ const Header = ({ navigation, title, route, component }) => {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         {navigation.canGoBack() ? (
-          <TouchableOpacity style={styles.goBackButton} onPress={goBack}>
+          <TouchableOpacity style={styles.btn} onPress={goBack}>
             <FontAwesomeIcon icon={faChevronLeft} size={18} color={"#FFF"} />
           </TouchableOpacity>
         ) : (
           // PLACEHOLDER - SIDEBAR
-          <View style={styles.goBackButton}></View>
-        )}
-        <Text style={styles.title}>{title ?? route.name}</Text>
-        {route.name == routes.home ? (
-          <TouchableOpacity style={styles.signOutButton} onPress={logout}>
+          <TouchableOpacity style={styles.btn} onPress={logout}>
             <FontAwesomeIcon icon={faPowerOff} size={18} color={"#FFF"} />
           </TouchableOpacity>
-        ) : (
-          <View style={styles.signOutButton}></View>
         )}
+        <Text style={styles.title}>{title ?? route.name}</Text>
+        <TouchableOpacity style={styles.btn} onPress={rightButtonAction}>
+          {rightButtonComponent}
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -61,12 +66,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flex: 1,
   },
-  signOutButton: {
-    padding: 30,
-    alignItems: "center",
-    width: 18,
-  },
-  goBackButton: {
+
+  btn: {
     padding: 30,
     alignItems: "center",
     width: 18,

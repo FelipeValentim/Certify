@@ -1,7 +1,6 @@
 import { primaryColor } from "@/constants/Default";
 import React, { useEffect, useRef } from "react";
-import { Pressable, Text, StyleSheet, Animated } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, Text, StyleSheet, Animated } from "react-native";
 
 function ButtonLoading({
   children,

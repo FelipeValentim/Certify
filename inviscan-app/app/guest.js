@@ -17,7 +17,6 @@ function Guest({ route, navigation }) {
   const [guest, setGuest] = useState(route.params?.guest);
   const { updateCheckin } = route.params;
   const [loading, setLoading] = useState(false);
-
   const checkin = async (id) => {
     try {
       if (!loading) {
@@ -51,7 +50,7 @@ function Guest({ route, navigation }) {
               <Image
                 style={styles.photo}
                 source={{
-                  uri: guest.photo,
+                  uri: guest.fullPhotoUrl,
                 }}
               />
               <Text style={styles.name}>{guest.name}</Text>

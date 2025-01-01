@@ -65,5 +65,9 @@ namespace Repository
 			}
 		}
 
+		public bool Exists(string email)
+		{
+			return Count(x => x.Email.ToLower() == email.ToLower()) > 0;
+		}
 	}
 }

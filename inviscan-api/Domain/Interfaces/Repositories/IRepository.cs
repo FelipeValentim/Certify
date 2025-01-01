@@ -20,5 +20,8 @@ namespace Domain.Interfaces.Repositories
 
 
         TEntity GetByID(object id);
-    }
+
+        int Count(Expression<Func<TEntity, bool>> filter = null);
+
+	}
 }

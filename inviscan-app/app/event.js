@@ -65,6 +65,7 @@ export default function EventScreen({ route, navigation }) {
     if (guests) {
       setInfo({
         ...info,
+        guestsCount: guests.length,
         checkinCount: guests.filter((x) => x.checkinDate).length,
         dropCount: guests.filter((x) => !x.checkinDate).length,
       });

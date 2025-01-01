@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,9 @@ namespace Domain.Entities
     public class Guest : AuditableEntity
     {
         public string Name { get; set; }
+		public string Email { get; set; }
 
-        public string Photo { get; set; }
+		public string Photo { get; set; }
 
         public DateTime? CheckinDate { get; set; }
 
@@ -21,9 +23,7 @@ namespace Domain.Entities
 
 		public Guest() : base()
         {
-            Photo = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
-
-            CreatedDate = DateTime.Now;
+            Photo = $"/storage/default_avatar.png";
         }
 
     }

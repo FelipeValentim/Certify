@@ -18,20 +18,17 @@ namespace Infrastructure.Repositories
 	{
 		public AuditableRepository(TContext context) : base(context)
 		{
-			
+
 		}
 
-		public IEnumerable<TEntity> GetAll(
+		public override IEnumerable<TEntity> GetAll(
 			Expression<Func<TEntity, bool>> filter = null,
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-			string includeProperties = "", bool deleted = false)
+			string includeProperties = "")
 		{
 			IQueryable<TEntity> query = dbSet;
 
-			if (!deleted)
-			{
-				query = query.Where(x => x.DeletedDate.HasValue == false);
-			}
+			query = query.Where(x => x.DeletedDate.HasValue == false);
 
 			if (filter != null)
 			{
@@ -95,6 +92,20 @@ namespace Infrastructure.Repositories
 
 				Update(entity);
 			}
+		}
+
+		public override int Count(Expression<Func<TEntity, bool>> filter = null)
+		{
+			IQueryable<TEntity> query = dbSet;
+
+			query = query.Where(x => x.DeletedDate.HasValue == false);
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+
+			return query.Count();
 		}
 	}
 }

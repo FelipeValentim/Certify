@@ -1,6 +1,14 @@
 {
   "Files": [
     {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\ee50614e-aca7-495f-89c5-9bcde9018ab7\\photo.png",
+      "PackagePath": "staticwebassets\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\ee50614e-aca7-495f-89c5-9bcde9018ab7\\photo.png"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\f75206be-4d8c-4562-99ff-205479c46163\\photo.png",
+      "PackagePath": "staticwebassets\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\f75206be-4d8c-4562-99ff-205479c46163\\photo.png"
+    },
+    {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\AnaCosta_12345678.pdf",
       "PackagePath": "staticwebassets\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\AnaCosta_12345678.pdf"
     },
@@ -15,6 +23,10 @@
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\PedroAzevedo_12345678.pdf",
       "PackagePath": "staticwebassets\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\PedroAzevedo_12345678.pdf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\default_avatar.png",
+      "PackagePath": "staticwebassets\\storage\\default_avatar.png"
     },
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\Documento.docx",

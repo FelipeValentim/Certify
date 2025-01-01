@@ -45,7 +45,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEventTypeService, EventTypeService>();
 builder.Services.AddTransient<IUserContextService, UserContextService>();
 builder.Services.AddTransient<IGuestTypeService, GuestTypeService>();
-
+builder.Services.AddTransient<IStorageService, StorageService>();
 
 
 builder.Services.AddHttpContextAccessor();

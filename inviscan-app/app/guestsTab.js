@@ -192,10 +192,11 @@ function GuestsTab({
   }, [guests]);
 
   useEffect(() => {
+    let newGuests = guests;
+
     if (selectedStatus.value == 0 && selectedType.value == 0) {
-      setFilteredGuests([...guests]);
+      setFilteredGuests([...newGuests]);
     } else {
-      let newGuests = guests;
       if (selectedStatus.value != 0) {
         newGuests = newGuests.filter(
           (x) => x.guestStatus == selectedStatus.value
@@ -468,7 +469,7 @@ function GuestsTab({
                 <Image
                   style={styles.photo}
                   source={{
-                    uri: guest.photo,
+                    uri: guest.fullPhotoUrl,
                   }}
                 />
               )}
@@ -548,10 +549,12 @@ function GuestsTab({
             />
           </>
         )}
+
         <FloatingButton
           onPress={() =>
             navigation.navigate(routes.newGuest, {
               addGuest: addGuest,
+              eventId: route.params.eventId,
             })
           }
           icon={faAdd}

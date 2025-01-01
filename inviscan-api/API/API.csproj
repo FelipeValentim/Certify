@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Constants\" />
     <Folder Include="Views\Error\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

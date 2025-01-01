@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Q1Pm/JQeUbudKUOiwDEVBnyqGRAJKclO3wOm/iolZE4=",
+  "Hash": "CKqjTW0uDhzYenmLp+GoZOLpCaQtwu1bEXL/QLCLPfo=",
   "Source": "API",
   "BasePath": "_content/API",
   "Mode": "Default",
@@ -16,6 +16,40 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\ee50614e-aca7-495f-89c5-9bcde9018ab7\\photo.png",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "storage/0d6cf2ad-1e00-4936-a529-1efbeb95bc77/ee50614e-aca7-495f-89c5-9bcde9018ab7/photo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\ee50614e-aca7-495f-89c5-9bcde9018ab7\\photo.png"
+    },
+    {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\f75206be-4d8c-4562-99ff-205479c46163\\photo.png",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "storage/0d6cf2ad-1e00-4936-a529-1efbeb95bc77/f75206be-4d8c-4562-99ff-205479c46163/photo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\f75206be-4d8c-4562-99ff-205479c46163\\photo.png"
+    },
     {
       "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\AnaCosta_12345678.pdf",
       "SourceId": "API",
@@ -83,6 +117,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\storage\\certificates\\0d6cf2ad1e004936a5291efbeb95bc77\\PedroAzevedo_12345678.pdf"
+    },
+    {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\default_avatar.png",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "storage/default_avatar.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\storage\\default_avatar.png"
     },
     {
       "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\templates\\Documento.docx",

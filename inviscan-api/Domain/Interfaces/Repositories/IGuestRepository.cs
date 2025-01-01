@@ -15,5 +15,6 @@ namespace Domain.Interfaces.Repositories
         void Uncheckin(Guid id);
 
         void Uncheckin(Guid[] id);
-    }
+		bool Exists(string email);
+	}
 }

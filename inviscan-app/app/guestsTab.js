@@ -4,12 +4,18 @@ import {
   primaryColor,
   redColor,
   routes,
-  screenHeight,
   screenWidth,
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
 import React, { useEffect, useRef, useState } from "react";
-import { View, StyleSheet, FlatList, Text, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  Image,
+  BackHandler,
+} from "react-native";
 import ConfirmAlert from "../components/ConfirmAlert";
 import { Container, H1, MutedText } from "@/components/CustomElements";
 import { SegmentedControl } from "@/components/SegmentedControl";
@@ -17,8 +23,9 @@ import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import {
   faAdd,
   faCheck,
+  faCheckToSlot,
   faChevronRight,
-  faRotateLeft,
+  faClockRotateLeft,
   faTrashCan,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
@@ -71,6 +78,23 @@ const SelectionHeader = ({
     },
   });
 
+  function handleBackButtonClick() {
+    if (selectedItems.length > 0) {
+      setSelectedItems([]);
+    }
+    return true;
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener(
+        "hardwareBackPress",
+        handleBackButtonClick
+      );
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -120,7 +144,11 @@ const SelectionHeader = ({
               }
               style={styles.option}
             >
-              <FontAwesomeIcon icon={faRotateLeft} color={"#FFF"} size={18} />
+              <FontAwesomeIcon
+                icon={faClockRotateLeft}
+                color={"#FFF"}
+                size={18}
+              />
             </TouchableOpacity>
           )}
           {selectedItems.filter((x) => !x.checkinDate).length > 0 && (
@@ -135,7 +163,7 @@ const SelectionHeader = ({
               }
               style={styles.option}
             >
-              <FontAwesomeIcon icon={faCheck} color={"#FFF"} size={18} />
+              <FontAwesomeIcon icon={faCheckToSlot} color={"#FFF"} size={18} />
             </TouchableOpacity>
           )}
         </View>
@@ -381,7 +409,13 @@ function GuestsTab({
   const renderGuest = ({ item: guest, index }) => {
     const leftSwipeActions = () => {
       return (
-        <View style={{ flexDirection: "row", gap: 10, padding: 15 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 10,
+            padding: 15,
+          }}
+        >
           <TouchableOpacity
             onPress={() =>
               setConfirmAlert({
@@ -407,7 +441,11 @@ function GuestsTab({
               }
               style={{ ...styles.swipeItem, backgroundColor: "#FFC145" }}
             >
-              <FontAwesomeIcon icon={faRotateLeft} size={22} color="#FFF" />
+              <FontAwesomeIcon
+                icon={faClockRotateLeft}
+                size={22}
+                color="#FFF"
+              />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -421,7 +459,7 @@ function GuestsTab({
               }
               style={{ ...styles.swipeItem, backgroundColor: "#36AE7C" }}
             >
-              <FontAwesomeIcon icon={faCheck} size={22} color="#FFF" />
+              <FontAwesomeIcon icon={faCheckToSlot} size={22} color="#FFF" />
             </TouchableOpacity>
           )}
         </View>
@@ -447,6 +485,7 @@ function GuestsTab({
           ]}
           key={guest.id}
           onLongPress={() => selectItem(guest)}
+          delayLongPress={400}
           onPress={() => {
             if (selectedItems.length > 0) {
               selectItem(guest);
@@ -478,9 +517,9 @@ function GuestsTab({
                 <CustomText style={styles.name}>{guest.name}</CustomText>
                 <CustomText style={styles.guestType}>
                   {guest.guestType.name} -{" "}
-                  {guest.guestStatus == 1 && "Pendente"}
-                  {guest.guestStatus == 2 &&
-                    format(guest.checkinDate, "dd/MM/yyyy")}
+                  {guest.checkinDate
+                    ? format(guest.checkinDate, "dd/MM/yyyy")
+                    : "Pendente"}
                 </CustomText>
               </View>
               <View style={styles.arrow}>
@@ -573,7 +612,6 @@ function GuestsTab({
       />
       <CustomSnackBar
         visible={snackBar.visible}
-        style={{ top: 0 }}
         duration={5000}
         onDismiss={onDismissSnackBar}
         type="success"

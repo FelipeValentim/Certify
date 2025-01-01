@@ -19,7 +19,11 @@ import Header from "@/components/Header";
 import Separator from "@/components/Separator";
 import CustomText from "@/components/CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faAdd, faChevronRight } from "@fortawesome/free-solid-svg-icons/";
+import {
+  faAdd,
+  faChevronRight,
+  faRefresh,
+} from "@fortawesome/free-solid-svg-icons/";
 import { format } from "date-fns";
 import { Container } from "@/components/CustomElements";
 import { SegmentedControl } from "@/components/SegmentedControl";
@@ -42,11 +46,13 @@ export default function HomeScreen({ navigation, route }) {
     { label: "Finalizado", value: 3 },
   ]);
 
+  const getEvents = async () => {
+    setFilteredEvents(null);
+    const response = await EventAPI.getAll(true);
+    setEvents(response.data);
+  };
+
   useEffect(() => {
-    const getEvents = async () => {
-      const response = await EventAPI.getAll(true);
-      setEvents(response.data);
-    };
     getEvents();
   }, []);
 
@@ -165,7 +171,14 @@ export default function HomeScreen({ navigation, route }) {
 
   return (
     <Fragment>
-      <Header route={route} navigation={navigation} />
+      <Header
+        route={route}
+        navigation={navigation}
+        rightButtonComponent={
+          <FontAwesomeIcon icon={faRefresh} color="#FFF" size={18} />
+        }
+        rightButtonAction={getEvents}
+      />
 
       <Container style={styles.container}>
         {!filteredEvents ? (

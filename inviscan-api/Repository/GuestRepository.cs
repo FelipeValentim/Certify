@@ -65,9 +65,9 @@ namespace Repository
 			}
 		}
 
-		public bool Exists(string email)
+		public bool Exists(Guid eventId, string email)
 		{
-			return Count(x => x.Email.ToLower() == email.ToLower()) > 0;
+			return Count(x => x.Email.ToLower() == email.ToLower() && x.EventId == eventId) > 0;
 		}
 	}
 }

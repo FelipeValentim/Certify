@@ -19,6 +19,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { routes } from "@/constants/Default";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import CustomSnackBar from "@/components/CustomSnackBar";
+import { StatusBar } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -142,6 +143,7 @@ const Main = () => {
             message={snackBar.text}
           />
         </GestureHandlerRootView>
+        <StatusBar translucent backgroundColor={"#000"} />
       </SafeAreaView>
     </SafeAreaProvider>
   );

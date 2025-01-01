@@ -160,6 +160,7 @@ namespace API.Controllers
                     Name = x.Name,
                     Photo = x.Photo,
 					CheckinDate = x.CheckinDate,
+                    Email = x.Email,
                     GuestType = new GuestTypeViewModel
                     {
                         Name = x.GuestType.Name,

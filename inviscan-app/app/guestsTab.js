@@ -1,5 +1,5 @@
-import Header from "@/components/Header";
-import Loading from "@/components/Loading";
+import Header from "@/components/common/Header";
+import Loading from "@/components/common/Loading";
 import {
   primaryColor,
   redColor,
@@ -16,9 +16,9 @@ import {
   Image,
   BackHandler,
 } from "react-native";
-import ConfirmAlert from "../components/ConfirmAlert";
-import { Container, H1, MutedText } from "@/components/CustomElements";
-import { SegmentedControl } from "@/components/SegmentedControl";
+import ConfirmAlert from "../components/common/ConfirmAlert";
+import { Container, H1, MutedText } from "@/components/common/CustomElements";
+import { SegmentedControl } from "@/components/common/SegmentedControl";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import {
   faAdd,
@@ -30,11 +30,11 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Separator from "@/components/Separator";
-import FloatingButton from "@/components/FloatingButton";
-import CustomText from "@/components/CustomText";
+import Separator from "@/components/common/Separator";
+import FloatingButton from "@/components/common/FloatingButton";
+import CustomText from "@/components/common/CustomText";
 import { format } from "date-fns";
-import CustomSnackBar from "@/components/CustomSnackBar";
+import CustomSnackBar from "@/components/common/CustomSnackBar";
 
 const SelectionHeader = ({
   selectedItems,

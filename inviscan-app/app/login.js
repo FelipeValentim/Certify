@@ -1,5 +1,5 @@
-import { H1, H3 } from "@/components/CustomElements";
-import { Input, InputPassword } from "@/components/CustomInput";
+import { H1, H3 } from "@/components/common/CustomElements";
+import { Input, InputPassword } from "@/components/common/CustomInput";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
 import React from "react";
 import { StyleSheet, View, Text, ImageBackground } from "react-native";
@@ -7,7 +7,7 @@ import { AccountAPI } from "@/services/AccountAPI";
 import { setToken } from "@/storage/AsyncStorage";
 
 import { useDispatch } from "react-redux";
-import ButtonLoading from "@/components/ButtonLoading";
+import ButtonLoading from "@/components/common/ButtonLoading";
 import { signIn } from "@/redux/token";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons";

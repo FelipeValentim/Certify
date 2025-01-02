@@ -1,7 +1,10 @@
-import { Container, CustomScrollView } from "@/components/CustomElements";
-import CustomText from "@/components/CustomText";
-import Header from "@/components/Header";
-import Loading from "@/components/Loading";
+import {
+  Container,
+  CustomScrollView,
+} from "@/components/common/CustomElements";
+import CustomText from "@/components/common/CustomText";
+import Header from "@/components/common/Header";
+import Loading from "@/components/common/Loading";
 import { primaryColor, redColor } from "@/constants/Default";
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";

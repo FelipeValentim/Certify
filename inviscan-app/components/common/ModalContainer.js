@@ -16,7 +16,7 @@ const ModalContainer = ({
   visible,
   toggle,
   children,
-  maxHeight = screenHeight / 1.8,
+  maxHeight = screenHeight,
   overlayStyle = {},
 }) => {
   const styles = StyleSheet.create({

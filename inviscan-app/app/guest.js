@@ -1,5 +1,5 @@
-import ButtonLoading from "@/components/ButtonLoading";
-import Loading from "@/components/Loading";
+import ButtonLoading from "@/components/common/ButtonLoading";
+import Loading from "@/components/common/Loading";
 import {
   backgroundColor,
   httpStatus,
@@ -11,15 +11,15 @@ import React, { Fragment, useState } from "react";
 import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import { getCurrentDateFormatted } from "@/helper/date";
-import Header from "@/components/Header";
+import Header from "@/components/common/Header";
 import {
   Container,
   CustomScrollView,
   H1,
   H3,
   MutedText,
-} from "@/components/CustomElements";
-import CustomText from "@/components/CustomText";
+} from "@/components/common/CustomElements";
+import CustomText from "@/components/common/CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { format } from "date-fns";
 import { faClock } from "@fortawesome/free-regular-svg-icons";

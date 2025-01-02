@@ -1,14 +1,30 @@
-import Header from "@/components/Header";
+import Header from "@/components/common/Header";
 import { primaryColor, screenHeight } from "@/constants/Default";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
-import { H2, H3, H4 } from "@/components/CustomElements";
+import { H2, H3, H4 } from "@/components/common/CustomElements";
+import TemplateInfo from "@/components/TemplateInfo";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 
 const TemplateTab = ({ navigation, route, title }) => {
+  const [visibleInfo, setVisibleInfo] = useState(false);
+
+  const toggleInfo = () => {
+    setVisibleInfo(!visibleInfo);
+  };
+
   return (
     <React.Fragment>
-      <Header route={route} navigation={navigation} />
+      <Header
+        route={route}
+        navigation={navigation}
+        rightButtonComponent={
+          <FontAwesomeIcon icon={faQuestionCircle} color="#FFF" size={18} />
+        }
+        rightButtonAction={toggleInfo}
+      />
       <View style={styles.container}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.main}>
@@ -34,6 +50,7 @@ const TemplateTab = ({ navigation, route, title }) => {
           </View>
         </ScrollView>
       </View>
+      <TemplateInfo toggle={toggleInfo} visible={visibleInfo} />
     </React.Fragment>
   );
 };

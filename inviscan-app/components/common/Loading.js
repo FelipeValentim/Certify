@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import BounceLoading from "@/components/BounceLoading";
+import BounceLoading from "@/components/common/BounceLoading";
 
 function Loading({ color, size = 10 }) {
   return (

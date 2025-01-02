@@ -29,9 +29,16 @@ export const Container = ({ children, style = {} }) => {
   return <View style={{ ...styles.container, ...style }}>{children}</View>;
 };
 
-export const CustomScrollView = ({ children, style = {} }) => {
+export const CustomScrollView = ({
+  children,
+  contentContainerStyle,
+  style = {},
+}) => {
   return (
-    <ScrollView style={{ ...styles.scrollView, ...style }}>
+    <ScrollView
+      style={{ ...styles.scrollView, ...style }}
+      contentContainerStyle={contentContainerStyle}
+    >
       {children}
     </ScrollView>
   );

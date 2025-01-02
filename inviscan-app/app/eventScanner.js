@@ -7,8 +7,14 @@ import {
   screenHeight,
   screenWidth,
 } from "@/constants/Default";
-import CustomSnackBar from "@/components/CustomSnackBar";
-import { Container, H2, H3, H4, MutedText } from "@/components/CustomElements";
+import CustomSnackBar from "@/components/common/CustomSnackBar";
+import {
+  Container,
+  H2,
+  H3,
+  H4,
+  MutedText,
+} from "@/components/common/CustomElements";
 import AccessDenied from "@/assets/images/undraw_access-denied.svg";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";

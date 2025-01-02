@@ -14,10 +14,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { EventAPI } from "@/services/EventAPI";
-import Loading from "@/components/Loading";
-import Header from "@/components/Header";
-import Separator from "@/components/Separator";
-import CustomText from "@/components/CustomText";
+import Loading from "@/components/common/Loading";
+import Header from "@/components/common/Header";
+import Separator from "@/components/common/Separator";
+import CustomText from "@/components/common/CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faAdd,
@@ -25,11 +25,11 @@ import {
   faRefresh,
 } from "@fortawesome/free-solid-svg-icons/";
 import { format } from "date-fns";
-import { Container } from "@/components/CustomElements";
-import { SegmentedControl } from "@/components/SegmentedControl";
+import { Container } from "@/components/common/CustomElements";
+import { SegmentedControl } from "@/components/common/SegmentedControl";
 import { Swipeable } from "react-native-gesture-handler";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import ConfirmAlert from "@/components/ConfirmAlert";
+import ConfirmAlert from "@/components/common/ConfirmAlert";
 
 export default function HomeScreen({ navigation, route }) {
   const [events, setEvents] = useState([]);
@@ -174,9 +174,9 @@ export default function HomeScreen({ navigation, route }) {
       <Header
         route={route}
         navigation={navigation}
-        rightButtonComponent={
+        rightButtonComponent={() => (
           <FontAwesomeIcon icon={faRefresh} color="#FFF" size={18} />
-        }
+        )}
         rightButtonAction={getEvents}
       />
 

@@ -1,8 +1,8 @@
-import ButtonLoading from "@/components/ButtonLoading";
+import ButtonLoading from "@/components/common/ButtonLoading";
 
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
-import Header from "@/components/Header";
+import Header from "@/components/common/Header";
 import {
   InputNumber,
   Input,
@@ -11,10 +11,10 @@ import {
   SelectPicker,
   ImagePicker,
   SelectInput,
-} from "@/components/CustomInput";
-import { Container } from "@/components/CustomElements";
+} from "@/components/common/CustomInput";
+import { Container } from "@/components/common/CustomElements";
 import { EventTypeAPI } from "@/services/EventTypeAPI";
-import Loading from "@/components/Loading";
+import Loading from "@/components/common/Loading";
 import { primaryColor } from "@/constants/Default";
 import { toast } from "@/redux/snackBar";
 import { useDispatch } from "react-redux";

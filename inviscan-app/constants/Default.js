@@ -1,4 +1,16 @@
 import { Dimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+export const useAdjustedScreenDimensions = () => {
+  const insets = useSafeAreaInsets();
+
+  const adjustedHeight = screenHeight - insets.top - insets.bottom;
+  const adjustedWidth = screenWidth - insets.left - insets.right;
+
+  return {
+    adjustedHeight,
+    adjustedWidth,
+  };
+};
 
 export const httpStatus = {
   ok: 200,

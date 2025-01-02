@@ -1,4 +1,4 @@
-import ButtonLoading from "@/components/ButtonLoading";
+import ButtonLoading from "@/components/common/ButtonLoading";
 import {
   backgroundColor,
   baseURL,
@@ -14,7 +14,7 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import Header from "@/components/Header";
+import Header from "@/components/common/Header";
 import {
   InputNumber,
   Input,
@@ -23,11 +23,14 @@ import {
   SelectPicker,
   ImagePicker,
   SelectInput,
-} from "@/components/CustomInput";
+} from "@/components/common/CustomInput";
 import { GuestAPI } from "@/services/GuestAPI";
 import { GuestTypeAPI } from "@/services/GuestTypeAPI";
-import Loading from "@/components/Loading";
-import { Container, CustomScrollView } from "@/components/CustomElements";
+import Loading from "@/components/common/Loading";
+import {
+  Container,
+  CustomScrollView,
+} from "@/components/common/CustomElements";
 import { useDispatch } from "react-redux";
 import { toast } from "@/redux/snackBar";
 

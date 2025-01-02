@@ -18,7 +18,7 @@ import { close } from "@/redux/snackBar";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { routes } from "@/constants/Default";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import CustomSnackBar from "@/components/CustomSnackBar";
+import CustomSnackBar from "@/components/common/CustomSnackBar";
 import { StatusBar } from "react-native";
 
 SplashScreen.preventAutoHideAsync();

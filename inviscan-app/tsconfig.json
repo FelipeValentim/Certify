@@ -19,6 +19,6 @@
     "app/auth/_layout.js",
     "app/auth/register.js",
     "app/auth/index.js",
-    "components/ModalContainer.js"
+    "components/common/ModalContainer.js"
   ]
 }

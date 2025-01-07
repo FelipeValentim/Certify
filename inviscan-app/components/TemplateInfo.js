@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useImperativeHandle } from "react";
 import { View, StyleSheet, Pressable, Image, Modal } from "react-native";
 import ButtonLoading from "@/components/common/ButtonLoading";
 import Question from "@/assets/images/undraw_question.svg";
@@ -13,9 +13,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ImageViewer from "react-native-image-zoom-viewer";
 
 const TemplateInfo = ({ visible, toggle }) => {
-  if (!visible) return null;
   const { top, bottom } = useSafeAreaInsets();
   const [imageZoom, setImageZoom] = useState(false);
+  const [performFunction, setPerformFunction] = useState({});
 
   const images = [
     {
@@ -30,7 +30,6 @@ const TemplateInfo = ({ visible, toggle }) => {
   const styles = StyleSheet.create({
     innerContainer: {
       height: screenHeight - top - bottom - 30,
-      padding: 20,
       gap: 20,
     },
     imageContainer: {
@@ -43,6 +42,9 @@ const TemplateInfo = ({ visible, toggle }) => {
     },
     btn: {
       borderWidth: 2,
+      marginHorizontal: 20,
+      marginBottom: 20,
+      marginTop: 0,
     },
     title: {
       textAlign: "center",
@@ -50,62 +52,78 @@ const TemplateInfo = ({ visible, toggle }) => {
     rounded: {
       borderRadius: 20,
     },
+    contentContainerStyle: {
+      gap: 20,
+      padding: 20,
+    },
+    example: {
+      width: "100%",
+      height: undefined,
+      resizeMode: "contain",
+      aspectRatio: 1.25,
+      marginTop: 10,
+    },
   });
+
+  if (!visible) return null;
 
   return (
     <ModalContainer
       visible={visible}
       toggle={toggle}
       overlayStyle={{ bottom: 10 }}
+      toPerformFunction={setPerformFunction}
     >
-      <View style={[styles.innerContainer, styles.rounded]}>
-        <CustomScrollView contentContainerStyle={{ gap: 20 }}>
+      <View style={{ ...styles.innerContainer }}>
+        <CustomScrollView
+          contentContainerStyle={{
+            ...styles.contentContainerStyle,
+          }}
+          style={styles.rounded}
+        >
           <View style={styles.imageContainer}>
             <Question height={screenHeight / 6} />
           </View>
           <H3 style={styles.title}>Informações importantes</H3>
-          <MutedText style={styles.message}>
-            Este modelo DOC/DOCX utiliza placeholders para personalizar o
-            conteúdo automaticamente. Basta enviar o template com os seguintes
-            marcadores, e eles serão substituídos pelas informações específicas,
-            gerando os certificados finais prontos para uso:
-            {"\n"}
-            {"\n"}
-            {"{nome}"} - Nome do convidado
-            {"\n"}
-            {"{data}"} - Data do evento
-            {"\n"}
-            {"{tipoconvidado}"} - Tipo de convidado
-            {"\n"}
-            {"{evento}"} - Nome do evento
-            {"\n"}
-            {"{horarioinicial}"} - Horário inicial
-            {"\n"}
-            {"{horariofinal}"} - Horário final
-            {"\n"} {"\n"}
-            Aqui está um exemplo de como deve ficar. Vale ressaltar que apenas{" "}
-            {"{nome}"} é obrigatório:
-          </MutedText>
+          <View>
+            <MutedText style={styles.message}>
+              O modelo deve possuir placeholders para personalizar o conteúdo
+              automaticamente. Basta enviar o template com os seguintes
+              marcadores, e eles serão substituídos pelas informações
+              específicas, gerando os certificados finais prontos para uso:
+              {"\n"}
+              {"\n"}
+              {"{nome}"} - Nome do convidado
+              {"\n"}
+              {"{data}"} - Data do evento
+              {"\n"}
+              {"{tipoconvidado}"} - Tipo de convidado
+              {"\n"}
+              {"{evento}"} - Nome do evento
+              {"\n"}
+              {"{horarioinicial}"} - Horário inicial
+              {"\n"}
+              {"{horariofinal}"} - Horário final
+              {"\n"} {"\n"}
+              Aqui está um exemplo de como deve ficar. Vale ressaltar que apenas{" "}
+              {"{nome}"} é obrigatório:
+            </MutedText>
 
-          <Pressable onPress={() => setImageZoom(true)}>
-            <Image
-              style={{
-                width: "100%",
-                height: undefined,
-                resizeMode: "contain",
-                aspectRatio: 1,
-              }}
-              source={require("@/assets/images/certificate_example.png")}
-            />
-          </Pressable>
+            <Pressable onPress={() => setImageZoom(true)}>
+              <Image
+                style={styles.example}
+                source={require("@/assets/images/certificate_example.png")}
+              />
+            </Pressable>
+          </View>
         </CustomScrollView>
 
         <ButtonLoading
-          onPress={toggle}
+          onPress={() => performFunction.close()}
           loadingColor="#000"
           color="#000"
           backgroundColor="transparent"
-          style={[styles.btn, styles.cancelBtn]}
+          style={{ ...styles.btn }}
         >
           Entendido
         </ButtonLoading>

@@ -12,7 +12,8 @@ function ButtonLoading({
   color = "#FFF",
   backgroundColor = primaryColor,
   loadingColor = "#FFF",
-  style = [],
+  style = {},
+  innerComponent,
 }) {
   const bounce1 = useRef(new Animated.Value(15)).current;
   const bounce2 = useRef(new Animated.Value(15)).current;
@@ -85,7 +86,7 @@ function ButtonLoading({
   });
 
   return (
-    <TouchableOpacity style={[styles.button, ...style]} onPress={onPress}>
+    <TouchableOpacity style={{ ...styles.button, ...style }} onPress={onPress}>
       {loading ? (
         <>
           <Animated.View
@@ -107,6 +108,8 @@ function ButtonLoading({
             ]}
           ></Animated.View>
         </>
+      ) : innerComponent ? (
+        innerComponent
       ) : (
         <Text style={styles.textButton}>{children}</Text>
       )}

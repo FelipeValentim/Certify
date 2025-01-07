@@ -51,6 +51,37 @@ namespace Infrastructure.Repositories
 			}
 		}
 
+		public override TEntity Get(Expression<Func<TEntity, bool>> filter = null, string includeProperties = "")
+		{
+			IQueryable<TEntity> query = dbSet;
+
+			query = query.Where(x => x.DeletedDate.HasValue == false);
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+
+			foreach (var includeProperty in includeProperties.Split
+				(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				query = query.Include(includeProperty);
+			}
+
+			return query.FirstOrDefault();
+		}
+
+		public override TEntity GetByID(Guid id)
+		{
+			IQueryable<TEntity> query = dbSet;
+
+			query = query.Where(x => x.DeletedDate.HasValue == false);
+
+			query.Where(x => x.Id == id);
+
+			return query.FirstOrDefault();
+		}
+
 		public virtual void Insert(TEntity entity)
 		{
 			dbSet.Add(entity);

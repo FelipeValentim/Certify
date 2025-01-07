@@ -19,7 +19,7 @@ namespace Domain.Interfaces.Repositories
     string includeProperties = "");
 
 
-        TEntity GetByID(object id);
+        TEntity GetByID(Guid id);
 
         int Count(Expression<Func<TEntity, bool>> filter = null);
 

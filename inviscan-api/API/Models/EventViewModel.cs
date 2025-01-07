@@ -1,4 +1,5 @@
-﻿using Domain.Enum;
+﻿using Domain.Entities;
+using Domain.Enum;
 using System.Text.Json.Serialization;
 
 namespace API.Models
@@ -30,6 +31,12 @@ namespace API.Models
 
 		[JsonPropertyName("eventType")]
 		public EventTypeViewModel EventType { get; set; }
+
+		[JsonPropertyName("eventTemplateId")]
+		public Guid? EventTemplateId { get; set; }
+
+		[JsonPropertyName("eventTemplate")]
+		public EventTemplateViewModel EventTemplate { get; set; }
 
 		[JsonPropertyName("guestsCount")]
 		public int GuestsCount => Guests.Count();

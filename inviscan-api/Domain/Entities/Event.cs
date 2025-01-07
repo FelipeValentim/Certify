@@ -13,6 +13,7 @@ namespace Domain.Entities
         public string Description { get; set; }
 
         public string Photo { get; set; }
+
 		public int? Pax { get; set; }
 		public DateTime Date { get; set; }
 		public TimeSpan StartTime { get; set; }
@@ -25,6 +26,9 @@ namespace Domain.Entities
 		public Guid EventTypeId { get; set; }
 
 		public EventType EventType { get; set; }
+
+		public Guid? EventTemplateId { get; set; }
+		public EventTemplate EventTemplate { get; set; }
 
 		public ICollection<Guest> Guests { get; set; }
 

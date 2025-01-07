@@ -28,6 +28,7 @@ namespace Infrastructure.Context
         public DbSet<Event> Event { get; set; }
         public DbSet<Guest> Guest { get; set; }
 		public DbSet<EventType> EventType { get; set; }
+		public DbSet<EventTemplate> EventTemplate { get; set; }
 
 	}
 }

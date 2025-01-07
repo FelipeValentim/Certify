@@ -199,7 +199,9 @@ export default function EventScreen({ route, navigation }) {
             },
           })}
         >
-          {(props) => <EventTemplateTab {...props} />}
+          {(props) => (
+            <EventTemplateTab template={info.eventTemplate} {...props} />
+          )}
         </Tab.Screen>
       </Tab.Navigator>
       <Animated.View

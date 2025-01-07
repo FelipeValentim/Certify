@@ -1,9 +1,14 @@
-﻿namespace Domain.Interfaces.Services
+﻿using Domain.Dto;
+
+namespace Domain.Interfaces.Services
 {
 	public interface IStorageService
 	{
-		void UploadFile(Stream stream);
+		string UploadFile(Stream stream, Guid eventId);
 		string UploadFile(string base64, Guid eventId, Guid guestId);
+
+		string UploadFile(FileDto file, Guid eventId);
+
 
 	}
 }

@@ -39,6 +39,17 @@ export const EventAPI = {
         : undefined,
     });
   },
+  uploadTemplate: async function (file, eventId, cancel = false) {
+    return api.request({
+      url: `/Event/UploadTemplate/${eventId}`,
+      method: "POST",
+      data: file,
+      signal: cancel
+        ? cancelApiObject[this.uploadTemplate.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

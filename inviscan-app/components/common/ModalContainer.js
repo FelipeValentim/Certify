@@ -18,6 +18,7 @@ const ModalContainer = ({
   children,
   maxHeight = screenHeight,
   overlayStyle = {},
+  toPerformFunction = () => {},
 }) => {
   const styles = StyleSheet.create({
     container: { flex: 1, position: "relative" },
@@ -80,6 +81,10 @@ const ModalContainer = ({
       useNativeDriver: true,
     }).start(toggle);
   };
+
+  useEffect(() => {
+    toPerformFunction({ close: () => toClose() });
+  }, [toPerformFunction]);
 
   return (
     <Modal transparent visible={visible} onRequestClose={toClose}>

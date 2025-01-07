@@ -14,6 +14,8 @@ using API.Models;
 using Domain.Entities;
 using InviScan.Services;
 using static System.Net.WebRequestMethods;
+using Services;
+using Domain.Dto;
 
 namespace API.Controllers
 {
@@ -27,13 +29,17 @@ namespace API.Controllers
         private readonly IEventRepository _eventRepository;
         private readonly IGuestRepository _guestRepository;
         private readonly IDocumentService _documentService;
-        public EventController(IUserContextService userContextService,  IEventRepository eventRepository, IGuestRepository guestRepository, IWebHostEnvironment webHostEnvironment, IDocumentService documentService)
+		private readonly IEventService _eventService;
+		public EventController(IUserContextService userContextService,  IEventRepository eventRepository, IGuestRepository guestRepository, IWebHostEnvironment webHostEnvironment, 
+            IDocumentService documentService, IEventService eventService)
         {
             _eventRepository = eventRepository;
 			_userContextService = userContextService;
             _guestRepository = guestRepository;
             _webHostEnvironment = webHostEnvironment;
             _documentService = documentService;
+			_eventService = eventService;
+
         }
 
         [HttpGet("GetEvents")]
@@ -140,7 +146,7 @@ namespace API.Controllers
             {
 				EventViewModel item;
 
-                var eventItem = _eventRepository.GetByID(id);
+                var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "EventTemplate");
 
                 item = new EventViewModel
 				{
@@ -149,8 +155,16 @@ namespace API.Controllers
 					StartTime = eventItem.StartTime,
 					EndTime = eventItem.EndTime,
 					Name = eventItem.Name,
-                    Photo = eventItem.Photo
-                };
+                    Photo = eventItem.Photo,
+                    EventTemplateId = eventItem.EventTemplateId,
+					EventTemplate = eventItem.EventTemplateId.HasValue
+		            ? new EventTemplateViewModel
+		            {
+			            Path = eventItem.EventTemplate.Path,
+                        PreviewPath = eventItem.EventTemplate.PreviewPath,
+		            }
+		            : null
+				};
 
                 var guests = _guestRepository.GetGuests(item.Id);
 
@@ -177,8 +191,16 @@ namespace API.Controllers
             }
         }
 
+		[HttpPost("UploadTemplate/{eventId}")]
+		public async Task<IActionResult> UploadTemplate(FileDto file, Guid eventId)
+        {
+            var response = _eventService.SaveTemplate(file, eventId);
+          
+			return StatusCode(response.Code, response.Data);
+		}
 
-        [AllowAnonymous]
+
+		[AllowAnonymous]
         [HttpGet("GetCertificates/{id}")]
         public IActionResult GetCertificates(Guid id)
         {
@@ -197,46 +219,46 @@ namespace API.Controllers
             if (!Directory.Exists(eventDirectory))
                 Directory.CreateDirectory(eventDirectory); // Cria a pasta do usuário, caso não exista
 
-            foreach (var guest in guests)
-            {
-                var eventId = guest.EventId.ToString("N");
-                var guestId = guest.Id.ToString("N");
+            //foreach (var guest in guests)
+            //{
+            //    var eventId = guest.EventId.ToString("N");
+            //    var guestId = guest.Id.ToString("N");
 
-                // Passo 1: Carregar o template DOCX
-                using (DocX document = DocX.Load(templatePath))
-                {
-                    var options = new StringReplaceTextOptions
-                    {
-                        TrackChanges = false,
-                        RegExOptions = RegexOptions.None,
-                        NewFormatting = null,
-                        FormattingToMatch = null,
-                        FormattingToMatchOptions = MatchFormattingOptions.SubsetMatch,
-                        EscapeRegEx = true,
-                        UseRegExSubstitutions = false,
-                        RemoveEmptyParagraph = true
-                    };
+            //    // Passo 1: Carregar o template DOCX
+            //    using (DocX document = DocX.Load(templatePath))
+            //    {
+            //        var options = new StringReplaceTextOptions
+            //        {
+            //            TrackChanges = false,
+            //            RegExOptions = RegexOptions.None,
+            //            NewFormatting = null,
+            //            FormattingToMatch = null,
+            //            FormattingToMatchOptions = MatchFormattingOptions.SubsetMatch,
+            //            EscapeRegEx = true,
+            //            UseRegExSubstitutions = false,
+            //            RemoveEmptyParagraph = true
+            //        };
 
-                    // Passo 2: Substituir o placeholder {{nome}} pelo nome do convidado
-                    options.SearchValue = "{{nome}}";
-                    options.NewValue = guest.Name;
-                    document.ReplaceText(options);
+            //        // Passo 2: Substituir o placeholder {{nome}} pelo nome do convidado
+            //        options.SearchValue = "{{nome}}";
+            //        options.NewValue = guest.Name;
+            //        document.ReplaceText(options);
 
-                    options.SearchValue = "{{data}}";
-                    options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy 'às' HH:mm");
-                    document.ReplaceText(options);
+            //        options.SearchValue = "{{data}}";
+            //        options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy 'às' HH:mm");
+            //        document.ReplaceText(options);
 
 
-                    // Passo 3: Salvar o documento com o nome do convidado
-                    string tempDocxPath = Path.Combine(eventDirectory, $"{guest.Name.Replace(" ", "")}_{guest.Id.ToString("N").Substring(0, 8)}.docx");
-                    document.SaveAs(tempDocxPath);
+            //        // Passo 3: Salvar o documento com o nome do convidado
+            //        string tempDocxPath = Path.Combine(eventDirectory, $"{guest.Name.Replace(" ", "")}_{guest.Id.ToString("N").Substring(0, 8)}.docx");
+            //        document.SaveAs(tempDocxPath);
 
-                    string pdfPath = Path.Combine(eventDirectory, $"{guest.Name.Replace(" ", "")}_{guest.Id.ToString("N").Substring(0, 8)}.pdf");
+            //        string pdfPath = Path.Combine(eventDirectory, $"{guest.Name.Replace(" ", "")}_{guest.Id.ToString("N").Substring(0, 8)}.pdf");
 
-                    // Passo 4: Converter o documento DOCX para PDF
-                    _documentService.ConvertDocxToPdf(tempDocxPath, pdfPath);
-                }
-            }
+            //        // Passo 4: Converter o documento DOCX para PDF
+            //        _documentService.ConvertDocxToPdf(tempDocxPath, pdfPath);
+            //    }
+            //}
 
             return StatusCode(StatusCodes.Status200OK, "Certificados gerados com sucesso.");
         }

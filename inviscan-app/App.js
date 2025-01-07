@@ -1,3 +1,4 @@
+import "@expo/metro-runtime";
 import "react-native-reanimated";
 
 import Main from "./app/_main";

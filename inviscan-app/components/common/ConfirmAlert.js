@@ -51,7 +51,7 @@ const ConfirmAlert = ({
             loadingColor="#000"
             color="#000"
             backgroundColor="transparent"
-            style={[styles.btn, styles.cancelBtn]}
+            style={{ ...styles.btn }}
           >
             Cancelar
           </ButtonLoading>

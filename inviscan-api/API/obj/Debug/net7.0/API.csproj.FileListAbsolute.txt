@@ -116,3 +116,4 @@ C:\Projects\event-checkin\inviscan-api\API\obj\Debug\net7.0\refint\API.dll
 C:\Projects\event-checkin\inviscan-api\API\obj\Debug\net7.0\API.pdb
 C:\Projects\event-checkin\inviscan-api\API\obj\Debug\net7.0\API.genruntimeconfig.cache
 C:\Projects\event-checkin\inviscan-api\API\obj\Debug\net7.0\ref\API.dll
+C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\MimeTypesMap.dll

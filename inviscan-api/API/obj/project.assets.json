@@ -61,6 +61,27 @@
           "lib/net5.0/Xceed.Words.NET.dll": {}
         }
       },
+      "FreeSpire.Doc/12.2.0": {
+        "type": "package",
+        "dependencies": {
+          "HarfBuzzSharp": "2.6.1.5",
+          "System.Drawing.Common": "6.0.0",
+          "System.Security.Cryptography.Pkcs": "6.0.0",
+          "System.Security.Cryptography.Xml": "6.0.0",
+          "System.Security.Permissions": "6.0.0",
+          "System.Text.Encoding.CodePages": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/Spire.Doc.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Spire.Doc.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Google.Apis/1.68.0": {
         "type": "package",
         "dependencies": {
@@ -340,6 +361,23 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "Microsoft.AspNetCore.Hosting.Server.Abstractions/2.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Features": "2.2.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "2.2.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.AspNetCore.Hosting.Server.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.AspNetCore.Hosting.Server.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
       },
       "Microsoft.AspNetCore.Http.Abstractions/2.2.0": {
         "type": "package",
@@ -998,6 +1036,15 @@
           }
         }
       },
+      "MimeTypesMap/1.0.9": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/MimeTypesMap.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/MimeTypesMap.dll": {}
+        }
+      },
       "Newtonsoft.Json/13.0.3": {
         "type": "package",
         "compile": {
@@ -1153,27 +1200,6 @@
           "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so": {
             "assetType": "native",
             "rid": "ubuntu.16.10-x64"
-          }
-        }
-      },
-      "Spire.Doc/12.11.7": {
-        "type": "package",
-        "dependencies": {
-          "HarfBuzzSharp": "2.6.1.5",
-          "System.Drawing.Common": "6.0.0",
-          "System.Security.Cryptography.Pkcs": "6.0.0",
-          "System.Security.Cryptography.Xml": "6.0.0",
-          "System.Security.Permissions": "6.0.0",
-          "System.Text.Encoding.CodePages": "6.0.0"
-        },
-        "compile": {
-          "lib/net6.0/Spire.Doc.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/Spire.Doc.dll": {
-            "related": ".xml"
           }
         }
       },
@@ -2631,10 +2657,13 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "DocX": "3.0.1",
           "Domain": "1.0.0",
+          "FreeSpire.Doc": "12.2.0",
           "Konscious.Security.Cryptography.Argon2": "1.3.1",
+          "Microsoft.AspNetCore.Hosting.Server.Abstractions": "2.2.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
-          "Spire.Doc": "12.11.7",
+          "MimeTypesMap": "1.0.9",
           "System.IdentityModel.Tokens.Jwt": "8.3.0"
         },
         "compile": {
@@ -2642,7 +2671,10 @@
         },
         "runtime": {
           "bin/placeholder/Services.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -2707,6 +2739,26 @@
         "lib/net5.0/Xceed.Document.NET.dll",
         "lib/net5.0/Xceed.Words.NET.dll",
         "tools/install.ps1"
+      ]
+    },
+    "FreeSpire.Doc/12.2.0": {
+      "sha512": "qqc9tf1utZAQoQPfOFUXTXT0C27XZAqathA8/8jk991r/fi/NlpG5wQFgWJZ6v2zFftouuaRI7jby0pjPCjaKw==",
+      "type": "package",
+      "path": "freespire.doc/12.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "freespire.doc.12.2.0.nupkg.sha512",
+        "freespire.doc.nuspec",
+        "lib/net40/Spire.Doc.XML",
+        "lib/net40/Spire.Doc.dll",
+        "lib/net48/Spire.Doc.dll",
+        "lib/net48/Spire.Doc.xml",
+        "lib/net6.0/Spire.Doc.dll",
+        "lib/net6.0/Spire.Doc.xml",
+        "lib/netstandard2.0/Spire.Doc.dll",
+        "lib/netstandard2.0/Spire.Doc.xml",
+        "license.txt"
       ]
     },
     "Google.Apis/1.68.0": {
@@ -3018,6 +3070,19 @@
         "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
         "microsoft.aspnetcore.authentication.jwtbearer.6.0.30.nupkg.sha512",
         "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Hosting.Server.Abstractions/2.2.0": {
+      "sha512": "1PMijw8RMtuQF60SsD/JlKtVfvh4NORAhF4wjysdABhlhTrYmtgssqyncR0Stq5vqtjplZcj6kbT4LRTglt9IQ==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.hosting.server.abstractions/2.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Hosting.Server.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Hosting.Server.Abstractions.xml",
+        "microsoft.aspnetcore.hosting.server.abstractions.2.2.0.nupkg.sha512",
+        "microsoft.aspnetcore.hosting.server.abstractions.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Http.Abstractions/2.2.0": {
@@ -3945,6 +4010,19 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "MimeTypesMap/1.0.9": {
+      "sha512": "M0TuSCwL1a8QV0VKw8ysY4AIs6v/Aor3N7GXQeqgNlAvqjx9Kj9KxNd09Pg5RzpY1tCOU8mkrfYBi1Lxwj8quQ==",
+      "type": "package",
+      "path": "mimetypesmap/1.0.9",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/netstandard2.0/MimeTypesMap.dll",
+        "mimetypesmap.1.0.9.nupkg.sha512",
+        "mimetypesmap.nuspec"
+      ]
+    },
     "Newtonsoft.Json/13.0.3": {
       "sha512": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
       "type": "package",
@@ -4169,26 +4247,6 @@
         "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
         "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.nuspec",
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
-      ]
-    },
-    "Spire.Doc/12.11.7": {
-      "sha512": "C5vmBsBeNWFUBbXPTSWu2tWGIq36Y/FrOyI+gWCzoe5guOSKpo8uX6W/uJu9b72cFoiJRcEZR+UObBXW8UyOEw==",
-      "type": "package",
-      "path": "spire.doc/12.11.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/Spire.Doc.dll",
-        "lib/net40/Spire.Doc.xml",
-        "lib/net48/Spire.Doc.dll",
-        "lib/net48/Spire.Doc.xml",
-        "lib/net6.0/Spire.Doc.dll",
-        "lib/net6.0/Spire.Doc.xml",
-        "lib/netcoreapp2.0/Spire.Doc.dll",
-        "lib/netcoreapp2.0/Spire.Doc.xml",
-        "license.txt",
-        "spire.doc.12.11.7.nupkg.sha512",
-        "spire.doc.nuspec"
       ]
     },
     "Swashbuckle.AspNetCore/6.2.3": {
@@ -7778,7 +7836,6 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "DocX >= 3.0.1",
       "Google.Apis.Auth >= 1.68.0",
       "Google.Apis.Drive.v3 >= 1.68.0.3627",
       "Google.Apis.Oauth2.v2 >= 1.68.0.1869",
@@ -7836,10 +7893,6 @@
       "net7.0": {
         "targetAlias": "net7.0",
         "dependencies": {
-          "DocX": {
-            "target": "Package",
-            "version": "[3.0.1, )"
-          },
           "Google.Apis.Auth": {
             "target": "Package",
             "version": "[1.68.0, )"

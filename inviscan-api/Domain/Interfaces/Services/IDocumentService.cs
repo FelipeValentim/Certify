@@ -1,11 +1,11 @@
-﻿using Domain.Dto;
+﻿using Domain.DTO;
 
 namespace Domain.Interfaces.Services
 {
     public interface IDocumentService
     {
-        void ConvertDocxToPdf(string docxFilePath, string pdfFilePath);
-		bool PlaceholderExists(FileDto file, params string[] placeholders);
-		void GeneratePreview(FileDto file, string previewPath);
+        Stream ConvertDocumentToPdf(Stream documentStream);
+		bool PlaceholderExists(FileDTO file, params string[] placeholders);
+		void GeneratePreview(FileDTO file, string previewPath);
 	}
 }

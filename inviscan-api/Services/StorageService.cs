@@ -1,11 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Domain.Entities;
-using Domain.Interfaces.Services;
+﻿using Domain.Interfaces.Services;
 using HeyRed.Mime;
-using Domain.Dto;
+using Domain.DTO;
 
 namespace Services
 {
@@ -49,7 +44,7 @@ namespace Services
 			return relativePath;
 		}
 
-		public string UploadFile(FileDto file, Guid eventId)
+		public string UploadFile(FileDTO file, Guid eventId)
 		{
 			// 1. Verifica se a string base64 é válida
 			if (string.IsNullOrWhiteSpace(file.Base64))

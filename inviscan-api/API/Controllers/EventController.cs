@@ -1,21 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Repository;
-using System.Security.Claims;
-using InviScan;
-using Xceed.Words.NET;
-using Microsoft.Extensions.Logging;
-using Xceed.Document.NET;
-using System.Text.RegularExpressions;
 using Domain.Interfaces.Services;
-using Domain.Identity;
 using Domain.Interfaces.Repositories;
 using API.Models;
 using Domain.Entities;
-using InviScan.Services;
-using static System.Net.WebRequestMethods;
-using Services;
-using Domain.Dto;
 
 namespace API.Controllers
 {
@@ -191,79 +179,13 @@ namespace API.Controllers
             }
         }
 
-		[HttpPost("UploadTemplate/{eventId}")]
-		public async Task<IActionResult> UploadTemplate(FileDto file, Guid eventId)
-        {
-            var response = _eventService.SaveTemplate(file, eventId);
-          
-			return StatusCode(response.Code, response.Data);
-		}
-
-
 		[AllowAnonymous]
-        [HttpGet("GetCertificates/{id}")]
-        public IActionResult GetCertificates(Guid id)
+        [HttpGet("Certificado/Download/{eventId}")]
+        public IActionResult GetCertificates(Guid eventId)
         {
-            var eventItem = _eventRepository.GetByID(id);
+            var result = _eventService.DownloadCertificates(eventId);
 
-            var guests = _guestRepository.GetAll(x => x.EventId == id && x.CheckinDate.HasValue == true && x.DeletedDate.HasValue == false);
-
-            string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "templates", "Documento.docx");
-            string certificatesPath = Path.Combine(_webHostEnvironment.WebRootPath, "storage", "certificates");
-
-            if (!Directory.Exists(certificatesPath))
-                Directory.CreateDirectory(certificatesPath);
-
-            string eventDirectory = Path.Combine(certificatesPath, id.ToString("N")); // Pasta do usuário com o id do convidado
-
-            if (!Directory.Exists(eventDirectory))
-                Directory.CreateDirectory(eventDirectory); // Cria a pasta do usuário, caso não exista
-
-            //foreach (var guest in guests)
-            //{
-            //    var eventId = guest.EventId.ToString("N");
-            //    var guestId = guest.Id.ToString("N");
-
-            //    // Passo 1: Carregar o template DOCX
-            //    using (DocX document = DocX.Load(templatePath))
-            //    {
-            //        var options = new StringReplaceTextOptions
-            //        {
-            //            TrackChanges = false,
-            //            RegExOptions = RegexOptions.None,
-            //            NewFormatting = null,
-            //            FormattingToMatch = null,
-            //            FormattingToMatchOptions = MatchFormattingOptions.SubsetMatch,
-            //            EscapeRegEx = true,
-            //            UseRegExSubstitutions = false,
-            //            RemoveEmptyParagraph = true
-            //        };
-
-            //        // Passo 2: Substituir o placeholder {{nome}} pelo nome do convidado
-            //        options.SearchValue = "{{nome}}";
-            //        options.NewValue = guest.Name;
-            //        document.ReplaceText(options);
-
-            //        options.SearchValue = "{{data}}";
-            //        options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy 'às' HH:mm");
-            //        document.ReplaceText(options);
-
-
-            //        // Passo 3: Salvar o documento com o nome do convidado
-            //        string tempDocxPath = Path.Combine(eventDirectory, $"{guest.Name.Replace(" ", "")}_{guest.Id.ToString("N").Substring(0, 8)}.docx");
-            //        document.SaveAs(tempDocxPath);
-
-            //        string pdfPath = Path.Combine(eventDirectory, $"{guest.Name.Replace(" ", "")}_{guest.Id.ToString("N").Substring(0, 8)}.pdf");
-
-            //        // Passo 4: Converter o documento DOCX para PDF
-            //        _documentService.ConvertDocxToPdf(tempDocxPath, pdfPath);
-            //    }
-            //}
-
-            return StatusCode(StatusCodes.Status200OK, "Certificados gerados com sucesso.");
+            return StatusCode(result.Code, result.Data);
         }
-
-
-       
     }
 }

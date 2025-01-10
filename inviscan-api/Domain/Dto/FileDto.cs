@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Domain.Dto
+namespace Domain.DTO
 {
-	public class FileDto
+	public class FileDTO
 	{
 		[JsonPropertyName("name")]
 		public string Name { get; set; }

@@ -1,8 +1,7 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Domain.Dto
+﻿
+namespace Domain.DTO
 {
-	public class EventTemplateDto
+	public class EventTemplateDTO
 	{
 		public string RelativePreviewPath { get; set; }
 

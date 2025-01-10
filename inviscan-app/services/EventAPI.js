@@ -39,14 +39,26 @@ export const EventAPI = {
         : undefined,
     });
   },
-  uploadTemplate: async function (file, eventId, cancel = false) {
+  removeTemplate: async function (eventId, cancel = false) {
     return api.request({
-      url: `/Event/UploadTemplate/${eventId}`,
+      url: `/Event/RemoveTemplate/${eventId}`,
       method: "POST",
-      data: file,
+      data: eventId,
       signal: cancel
-        ? cancelApiObject[this.uploadTemplate.name].handleRequestCancellation()
+        ? cancelApiObject[this.removeTemplate.name].handleRequestCancellation()
             .signal
+        : undefined,
+    });
+  },
+
+  downloadCertificates: async function (eventId, cancel = false) {
+    return api.request({
+      url: `/Event/Certificado/Download/${eventId}`,
+      method: "GET",
+      signal: cancel
+        ? cancelApiObject[
+            this.downloadCertificates.name
+          ].handleRequestCancellation().signal
         : undefined,
     });
   },

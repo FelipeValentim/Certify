@@ -23,5 +23,6 @@ namespace Domain.Interfaces.Repositories
 
         int Count(Expression<Func<TEntity, bool>> filter = null);
 
+
 	}
 }

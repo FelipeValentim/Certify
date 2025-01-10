@@ -63,7 +63,7 @@ namespace Infrastructure.Repositories
 			}
 
 			foreach (var includeProperty in includeProperties.Split
-				(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+				(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()))
 			{
 				query = query.Include(includeProperty);
 			}
@@ -88,19 +88,23 @@ namespace Infrastructure.Repositories
 			context.SaveChanges();
 		}
 
-		public virtual void Delete(object id)
-		{
-			TEntity entityToDelete = dbSet.Find(id);
-			Delete(entityToDelete);
-		}
-
-		public virtual void Delete(Guid id)
+		public virtual void Delete(Guid id, bool physicalDeletion = false)
 		{
 			var entity = GetByID(id);
 
 			if (entity != null)
 			{
-				entity.DeletedDate = DateTime.Now;
+				if (physicalDeletion)
+				{
+					// Remover fisicamente do banco de dados
+					dbSet.Remove(entity);
+				}
+				else
+				{
+					// Deleção lógica: apenas marca a data de exclusão
+					entity.DeletedDate = DateTime.Now;
+					Update(entity);  // Atualiza a entidade com a data de exclusão
+				}
 
 				Update(entity);
 			}

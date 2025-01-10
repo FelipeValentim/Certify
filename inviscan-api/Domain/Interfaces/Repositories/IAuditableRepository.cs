@@ -7,10 +7,9 @@ namespace Domain.Interfaces.Repositories
     {
 		void Insert(TEntity entity);
 
-		void Delete(Guid id);
+		void Delete(Guid id, bool physicalDeletion = false);
 		void Delete(Guid[] ids);
 
 		void Update(TEntity entity);
-
 	}
 }

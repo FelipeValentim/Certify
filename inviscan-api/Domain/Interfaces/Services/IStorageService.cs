@@ -1,4 +1,4 @@
-﻿using Domain.Dto;
+﻿using Domain.DTO;
 
 namespace Domain.Interfaces.Services
 {
@@ -7,7 +7,7 @@ namespace Domain.Interfaces.Services
 		string UploadFile(Stream stream, Guid eventId);
 		string UploadFile(string base64, Guid eventId, Guid guestId);
 
-		string UploadFile(FileDto file, Guid eventId);
+		string UploadFile(FileDTO file, Guid eventId);
 
 
 	}

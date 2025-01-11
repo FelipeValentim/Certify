@@ -50,6 +50,7 @@ builder.Services.AddTransient<IStorageService, StorageService>();
 builder.Services.AddTransient<IEventService, EventService>();
 builder.Services.AddTransient<IEventTemplateService, EventTemplateService>();
 builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<IGuestService, GuestService>();
 
 
 builder.Services.AddHttpContextAccessor();

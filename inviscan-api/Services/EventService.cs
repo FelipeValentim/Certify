@@ -295,5 +295,15 @@ namespace Services
 			return ResponseModel.Success();
 
 		}
+
+		public Event Get(Guid id)
+		{
+			return _eventRepository.GetByID(id);
+		}
+
+		public int CountGuests(Guid eventId)
+		{
+			return _guestRepository.Count(x => x.EventId == eventId);
+		}
 	}
 }

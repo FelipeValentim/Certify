@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using Domain.DTO;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -16,13 +17,13 @@ namespace API.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IGuestRepository _guestRepository;
-		private readonly IStorageService _storageService;
+		private readonly IGuestService _guestService;
 
-        public GuestController(IHttpContextAccessor httpContextAccessor, IGuestRepository guestRepository, IStorageService storageService)
+		public GuestController(IHttpContextAccessor httpContextAccessor, IGuestRepository guestRepository, IStorageService storageService, IGuestService guestService)
         {
             _guestRepository = guestRepository;
             _httpContextAccessor = httpContextAccessor;
-			_storageService = storageService;
+            _guestService = guestService;
         }
 
         [HttpGet("GetGuests/{eventId}")]
@@ -155,68 +156,13 @@ namespace API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("NewGuest")]
-        public IActionResult Post(GuestViewModel model)
+        public IActionResult Post(GuestDTO model)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(model.Name))
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Nome é obrigatório.");
-                }
+            var response = _guestService.Add(model);
 
-				if (string.IsNullOrEmpty(model.Email))
-				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Email é obrigatório.");
-				}
+			return StatusCode(response.Code, response.Data);
+		}
 
-				string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-
-				if (!Regex.IsMatch(model.Email, pattern))
-				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Email inválido.");
-				}
-
-				if (model.GuestTypeId == Guid.Empty)
-				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Tipo de Convidado é obrigatório.");
-				}
-
-				if (model.EventId == Guid.Empty)
-				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Evento é obrigatório.");
-				}
-
-                if (_guestRepository.Exists(model.EventId, model.Email)) 
-                {
-					return StatusCode(StatusCodes.Status400BadRequest, "Email já cadastrado para este evento.");
-				} 
-
-				var guest = new Guest()
-                {
-                    Name = model.Name.Trim(),
-					Email = model.Email,
-                    EventId = model.EventId,
-                    GuestTypeId = model.GuestTypeId,
-                };
-
-                if (!string.IsNullOrEmpty(model.Photo))
-                {
-					guest.Photo = _storageService.UploadFile(model.Photo, guest.EventId, guest.Id);
-                }
-
-				_guestRepository.Insert(guest);
-
-                return StatusCode(StatusCodes.Status200OK, new { id = guest.Id, photo = guest.Photo });
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-
-        }
-
-    }
+	}
 }

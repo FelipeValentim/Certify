@@ -1,4 +1,5 @@
 ﻿using Domain.DTO;
+using Domain.Entities;
 
 namespace Domain.Interfaces.Services
 {
@@ -9,6 +10,10 @@ namespace Domain.Interfaces.Services
 		ResponseModel<FileDTO> DownloadCertificates(Guid eventId);
 
 		ResponseModel SendCertificates(Guid eventId);
+
+		Event Get(Guid id);
+
+		int CountGuests(Guid eventId);
 
 	}
 }

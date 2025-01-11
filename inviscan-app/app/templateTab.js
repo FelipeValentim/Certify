@@ -91,6 +91,10 @@ const TemplateTab = ({ navigation, route, title, template }) => {
     savefile(data);
   };
 
+  const sendCertificates = async () => {
+    const { data } = await EventAPI.sendCertificates(eventId);
+  };
+
   const savefile = async (file) => {
     const permissions =
       await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -148,7 +152,7 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                       open: true,
                       title: "Tem certeza disto?",
                       message: `Deseja realmente enviar o certificado para os participantes com checkin?`,
-                      onConfirm: () => console.log("enviado"),
+                      onConfirm: () => sendCertificates(),
                     })
                   }
                 >
@@ -160,7 +164,14 @@ const TemplateTab = ({ navigation, route, title, template }) => {
 
                 <TouchableOpacity
                   style={styles.action}
-                  onPress={downloadCertificates}
+                  onPress={() =>
+                    setConfirmAlert({
+                      open: true,
+                      title: "Tem certeza disto?",
+                      message: `Deseja realmente baixar os certificado para os participantes com checkin?`,
+                      onConfirm: () => downloadCertificates(),
+                    })
+                  }
                 >
                   <View style={styles.actionIcon}>
                     <FontAwesomeIcon icon={faDownload} color="#FFF" size={32} />

@@ -7,5 +7,8 @@ namespace Domain.Interfaces.Services
 		ResponseModel SaveTemplate(FileDTO file, Guid eventId);
 
 		ResponseModel<FileDTO> DownloadCertificates(Guid eventId);
+
+		ResponseModel SendCertificates(Guid eventId);
+
 	}
 }

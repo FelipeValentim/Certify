@@ -62,6 +62,17 @@ export const EventAPI = {
         : undefined,
     });
   },
+  sendCertificates: async function (eventId, cancel = false) {
+    return api.request({
+      url: `/Event/Certificado/Send/${eventId}`,
+      method: "POST",
+      signal: cancel
+        ? cancelApiObject[
+            this.sendCertificates.name
+          ].handleRequestCancellation().signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

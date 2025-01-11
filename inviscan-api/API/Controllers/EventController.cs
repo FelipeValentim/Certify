@@ -179,13 +179,20 @@ namespace API.Controllers
             }
         }
 
-		[AllowAnonymous]
         [HttpGet("Certificado/Download/{eventId}")]
-        public IActionResult GetCertificates(Guid eventId)
+        public IActionResult DownloadCertificates(Guid eventId)
         {
             var result = _eventService.DownloadCertificates(eventId);
 
             return StatusCode(result.Code, result.Data);
         }
-    }
+
+		[HttpPost("Certificado/Send/{eventId}")]
+		public IActionResult SendCertificates(Guid eventId)
+		{
+			var result = _eventService.SendCertificates(eventId);
+
+			return StatusCode(result.Code, result.Data);
+		}
+	}
 }

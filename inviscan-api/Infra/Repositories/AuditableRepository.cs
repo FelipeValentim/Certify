@@ -77,7 +77,7 @@ namespace Infrastructure.Repositories
 
 			query = query.Where(x => x.DeletedDate.HasValue == false);
 
-			query.Where(x => x.Id == id);
+			query = query.Where(x => x.Id == id);
 
 			return query.FirstOrDefault();
 		}

@@ -25,7 +25,7 @@ export default function EventScreen({ route, navigation }) {
     const getData = async () => {
       const { data } = await EventAPI.get(eventId);
       setInfo(data);
-      setGuests(data.guests);
+      setGuests([...data.guests]);
     };
     getData();
   }, []);

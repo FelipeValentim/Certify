@@ -57,10 +57,10 @@ namespace Services
 					return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Evento é obrigatório.");
 				}
 
-				if (DateTime.Now > eventItem.Date.Add(eventItem.EndTime)) // Já passou o horário final do evento
-				{
-					return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Não é permitido adicionar mais convidados (evento finalizado).");
-				}
+				//if (DateTime.Now > eventItem.Date.Add(eventItem.EndTime)) // Já passou o horário final do evento
+				//{
+				//	return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Não é permitido adicionar mais convidados (evento finalizado).");
+				//}
 
 				if (eventItem.Pax.HasValue) // Tem limite de convidados
 				{

@@ -17,7 +17,12 @@ import {
   BackHandler,
 } from "react-native";
 import ConfirmAlert from "../components/common/ConfirmAlert";
-import { Container, H1, MutedText } from "@/components/common/CustomElements";
+import {
+  Container,
+  CustomScrollView,
+  H1,
+  MutedText,
+} from "@/components/common/CustomElements";
 import { SegmentedControl } from "@/components/common/SegmentedControl";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import {
@@ -41,7 +46,6 @@ const SelectionHeader = ({
   setSelectedItems,
   checkins,
   uncheckins,
-  loading,
   deleteGuests,
   setConfirmAlert,
 }) => {
@@ -181,7 +185,7 @@ function GuestsTab({
   navigation,
   route,
 }) {
-  const [filteredGuests, setFilteredGuests] = useState();
+  const [filteredGuests, setFilteredGuests] = useState([]);
   const [snackBar, setSnackBar] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -221,7 +225,6 @@ function GuestsTab({
 
   useEffect(() => {
     let newGuests = guests;
-
     if (selectedStatus.value == 0 && selectedType.value == 0) {
       setFilteredGuests([...newGuests]);
     } else {
@@ -235,7 +238,6 @@ function GuestsTab({
           (x) => x.guestType.name == selectedType.label
         );
       }
-
       setFilteredGuests([...newGuests]);
     }
   }, [selectedStatus, selectedType]);
@@ -406,7 +408,7 @@ function GuestsTab({
     }
   };
 
-  const renderGuest = ({ item: guest, index }) => {
+  const RenderGuest = ({ item }) => {
     const leftSwipeActions = () => {
       return (
         <View
@@ -421,22 +423,22 @@ function GuestsTab({
               setConfirmAlert({
                 open: true,
                 title: "Tem certeza disto?",
-                message: `Confirmar deleção do convidado ${guest.name}?`,
-                onConfirm: () => deleteGuest(guest.id, guest.name),
+                message: `Confirmar deleção do convidado ${item.name}?`,
+                onConfirm: () => deleteGuest(item.id, item.name),
               })
             }
             style={{ ...styles.swipeItem, backgroundColor: redColor }}
           >
             <FontAwesomeIcon icon={faTrashCan} size={22} color="#FFF" />
           </TouchableOpacity>
-          {guest.checkinDate ? (
+          {item.checkinDate ? (
             <TouchableOpacity
               onPress={() =>
                 setConfirmAlert({
                   open: true,
                   title: "Tem certeza disto?",
-                  message: `Confirmar uncheckin do convidado ${guest.name}?`,
-                  onConfirm: () => uncheckin(guest.id, guest.name),
+                  message: `Confirmar uncheckin do convidado ${item.name}?`,
+                  onConfirm: () => uncheckin(item.id, item.name),
                 })
               }
               style={{ ...styles.swipeItem, backgroundColor: "#FFC145" }}
@@ -453,8 +455,8 @@ function GuestsTab({
                 setConfirmAlert({
                   open: true,
                   title: "Tem certeza disto?",
-                  message: `Confirmar checkin do convidado ${guest.name}?`,
-                  onConfirm: () => checkin(guest.id, guest.name),
+                  message: `Confirmar checkin do convidado ${item.name}?`,
+                  onConfirm: () => checkin(item.id, item.name),
                 })
               }
               style={{ ...styles.swipeItem, backgroundColor: "#36AE7C" }}
@@ -469,29 +471,29 @@ function GuestsTab({
     return (
       <Swipeable
         ref={(ref) => {
-          if (ref && !rowRefs.get(guest.id)) {
-            rowRefs.set(guest.id, ref);
+          if (ref && !rowRefs.get(item.id)) {
+            rowRefs.set(item.id, ref);
           }
         }}
-        onSwipeableWillOpen={() => onCloseOtherSwipeables(guest.id)}
+        onSwipeableWillOpen={() => onCloseOtherSwipeables(item.id)}
         renderLeftActions={leftSwipeActions}
         childrenContainerStyle={{ backgroundColor: "#FFF" }}
       >
         <TouchableOpacity
           style={[
-            selectedItems.some((x) => x.id == guest.id)
+            selectedItems.some((x) => x.id == item.id)
               ? styles.selectedItem
               : null,
           ]}
-          key={guest.id}
-          onLongPress={() => selectItem(guest)}
+          key={item.id}
+          onLongPress={() => selectItem(item)}
           delayLongPress={400}
           onPress={() => {
             if (selectedItems.length > 0) {
-              selectItem(guest);
+              selectItem(item);
             } else {
               navigation.navigate(routes.guest, {
-                guest: guest,
+                guest: item,
                 updateCheckin,
                 updateUncheckin,
               });
@@ -500,7 +502,7 @@ function GuestsTab({
         >
           <View style={styles.card}>
             <View style={styles.guest}>
-              {selectedItems.some((x) => x.id == guest.id) ? (
+              {selectedItems.some((x) => x.id == item.id) ? (
                 <View style={styles.photo}>
                   <FontAwesomeIcon icon={faCheck} size={30} color="#aaa" />
                 </View>
@@ -508,17 +510,17 @@ function GuestsTab({
                 <Image
                   style={styles.photo}
                   source={{
-                    uri: guest.fullPhotoUrl,
+                    uri: item.fullPhotoUrl,
                   }}
                 />
               )}
 
               <View style={styles.info}>
-                <CustomText style={styles.name}>{guest.name}</CustomText>
+                <CustomText style={styles.name}>{item.name}</CustomText>
                 <CustomText style={styles.guestType}>
-                  {guest.guestType.name} -{" "}
-                  {guest.checkinDate
-                    ? format(guest.checkinDate, "dd/MM/yyyy")
+                  {item.guestType.name} -{" "}
+                  {item.checkinDate
+                    ? format(item.checkinDate, "dd/MM/yyyy")
                     : "Pendente"}
                 </CustomText>
               </View>
@@ -581,9 +583,12 @@ function GuestsTab({
               />
             </View>
             <FlatList
+              initialNumToRender={filteredGuests.length}
+              maxToRenderPerBatch={filteredGuests.length}
+              removeClippedSubviews={false}
               data={filteredGuests}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderGuest}
+              keyExtractor={(item) => item.id.toString()} // Corrigir keyExtractor para evitar warnings
+              renderItem={RenderGuest}
               contentContainerStyle={{ paddingBottom: 50 }}
             />
           </>

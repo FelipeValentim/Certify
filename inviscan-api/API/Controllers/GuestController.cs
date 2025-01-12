@@ -46,9 +46,9 @@ namespace API.Controllers
         {
             try
             {
-                var guest = _guestRepository.GetByID(id);
+				var guest = _guestRepository.GetByID(id);
 
-                if (guest == null)
+				if (guest == null)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
                 }

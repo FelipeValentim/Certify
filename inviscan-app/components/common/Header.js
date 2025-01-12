@@ -40,7 +40,13 @@ const Header = ({
           </TouchableOpacity>
         )}
         <Text style={styles.title}>{title ?? route.name}</Text>
-        <TouchableOpacity style={styles.btn} onPress={rightButtonAction}>
+        <TouchableOpacity
+          style={{
+            ...styles.btn,
+            backgroundColor: rightButtonComponent && "#FFFFFF30",
+          }}
+          onPress={rightButtonAction}
+        >
           {rightButtonComponent}
         </TouchableOpacity>
       </View>
@@ -68,9 +74,13 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    padding: 20,
+    height: 40,
+    width: 40,
+    justifyContent: "center",
+    borderRadius: 10,
     flex: 1,
     alignItems: "center",
+    backgroundColor: "#FFFFFF30",
   },
 });
 

@@ -15,12 +15,14 @@ namespace Services
 		private readonly IGuestRepository _guestRepository;
 		private readonly IEventService _eventService;
 		private readonly IStorageService _storageService;
+		private readonly IGuestTypeService _guestTypeService;
 
-		public GuestService(IGuestRepository guestRepository, IEventService eventService, IStorageService storageService)
+		public GuestService(IGuestRepository guestRepository, IEventService eventService, IStorageService storageService, IGuestTypeService guestTypeService)
 		{
 			_guestRepository = guestRepository;
 			_eventService = eventService;
 			_storageService = storageService;
+			_guestTypeService = guestTypeService;
 		}
 
 		public ResponseModel<object> Add(GuestDTO model)
@@ -101,6 +103,20 @@ namespace Services
 			{
 				// Retornar erro genérico em caso de exceção
 				return ResponseModel<object>.Error(HttpStatusCode.InternalServerError, ex.Message);
+			}
+		}
+
+		public void SetStudentGuestType(ref GuestDTO guest)
+		{
+			var guestType = _guestTypeService.GetGuestTypeById(new Guid("569708F0-5263-4C29-A884-8EC882084715"));
+
+			if (guestType != null)
+			{
+				guest.GuestTypeId= guestType.Id;
+			}
+			else
+			{
+				throw new Exception("Não existe GuestType com esse ID.");
 			}
 		}
 	}

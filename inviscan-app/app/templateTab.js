@@ -7,18 +7,12 @@ import {
   H2,
   H3,
   MutedText,
+  Section,
 } from "@/components/common/CustomElements";
 import TemplateInfo from "@/components/TemplateInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faCloudArrowUp,
-  faDownload,
-  faEnvelope,
-  faQuestionCircle,
-  faTrashAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCloudArrowUp, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import UploadImage from "@/assets/images/undraw_upload.svg";
-import Services from "@/assets/images/undraw_services.svg";
 import ButtonLoading from "@/components/common/ButtonLoading";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -26,6 +20,8 @@ import { EventTemplateAPI } from "@/services/EventTemplateAPI";
 import PdfViewer from "@/components/PdfViewer";
 import ConfirmAlert from "@/components/common/ConfirmAlert";
 import { EventAPI } from "@/services/EventAPI";
+import CustomText from "@/components/common/CustomText";
+import { Ionicons } from "@expo/vector-icons";
 
 const TemplateTab = ({ navigation, route, title, template }) => {
   const [eventId] = useState(route.params.eventId);
@@ -119,14 +115,14 @@ const TemplateTab = ({ navigation, route, title, template }) => {
         route={route}
         navigation={navigation}
         rightButtonComponent={
-          <FontAwesomeIcon icon={faQuestionCircle} color="#FFF" size={18} />
+          <FontAwesomeIcon icon={faQuestion} color="#FFF" size={18} />
         }
         rightButtonAction={toggleInfo}
       />
       <Container style={styles.container}>
         <ScrollView
           contentContainerStyle={{
-            gap: 40,
+            gap: 30,
             flex: 1,
             justifyContent: "center",
           }}
@@ -136,13 +132,11 @@ const TemplateTab = ({ navigation, route, title, template }) => {
               <View style={{ height: 260 }}>
                 <PdfViewer source={{ uri: previewUrl }} useGoogleDriveViewer />
               </View>
-              <View style={styles.imageContainer}>
-                <Services height={screenHeight / 8} />
-              </View>
+              <Section>Certificados</Section>
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  gap: 10,
                 }}
               >
                 <TouchableOpacity
@@ -156,10 +150,20 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                     })
                   }
                 >
+                  <CustomText style={styles.actionText}>Enviar</CustomText>
+
                   <View style={styles.actionIcon}>
-                    <FontAwesomeIcon icon={faEnvelope} color="#FFF" size={32} />
+                    {/* <FontAwesomeIcon
+                      icon={faEnvelope}
+                      color={primaryColor}
+                      size={22}
+                    /> */}
+                    <Ionicons
+                      name="mail-outline"
+                      color={primaryColor}
+                      size={26}
+                    />
                   </View>
-                  <MutedText style={styles.actionText}>Enviar</MutedText>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -173,13 +177,22 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                     })
                   }
                 >
+                  <CustomText style={styles.actionText}>Baixar</CustomText>
                   <View style={styles.actionIcon}>
-                    <FontAwesomeIcon icon={faDownload} color="#FFF" size={32} />
+                    {/* <FontAwesomeIcon
+                      icon={faDownload}
+                      color={primaryColor}
+                      size={22}
+                    /> */}
+                    <Ionicons
+                      name="download-outline"
+                      color={primaryColor}
+                      size={26}
+                    />
                   </View>
-                  <MutedText style={styles.actionText}>Baixar</MutedText>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.action}
                   onPress={() =>
                     setConfirmAlert({
@@ -194,7 +207,7 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                     <FontAwesomeIcon icon={faTrashAlt} color="#FFF" size={32} />
                   </View>
                   <MutedText style={styles.actionText}>Remover</MutedText>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               <ConfirmAlert
                 open={confirmAlert.open}
@@ -275,20 +288,28 @@ const styles = StyleSheet.create({
     height: 300,
   },
   action: {
-    height: 76,
-    width: 76,
+    flex: 1,
+    height: 60,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: primaryColor,
+    flexDirection: "row",
     gap: 10,
+    alignItems: "center",
   },
   actionIcon: {
-    backgroundColor: primaryColor,
-    height: "100%",
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 23,
+    backgroundColor: "#FFF",
+    height: 40,
+    width: 40,
+    borderRadius: 10,
   },
   actionText: {
-    fontSize: 14,
+    fontSize: 20,
+    flex: 1,
+    color: "#FFF",
+    textAlign: "center",
   },
 });
 

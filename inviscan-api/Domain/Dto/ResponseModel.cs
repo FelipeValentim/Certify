@@ -9,7 +9,7 @@ namespace Domain.DTO
 			return new ResponseModel
 			{
 				Succeed = false,
-				Data = message,
+				Message = message,
 				StatusCode = statusCode,
 			};
 		}
@@ -29,6 +29,7 @@ namespace Domain.DTO
 		public bool Succeed { get; set; }
 		public T Data { get; set; }
 		public string Message { get; set; }
+		public object Response => Succeed ? Data : Message;
 		public HttpStatusCode StatusCode { get; set; }
 		public int Code => (int)StatusCode;
 

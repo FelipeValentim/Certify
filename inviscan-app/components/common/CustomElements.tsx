@@ -8,6 +8,7 @@ import {
   TextStyle,
   ViewStyle,
 } from "react-native";
+import CustomText from "./CustomText";
 
 interface TextProps {
   children: React.ReactNode;
@@ -51,6 +52,16 @@ export const MutedText: React.FC<TextProps> = ({ children, style = {} }) => {
 
 export const Container: React.FC<ViewProps> = ({ children, style = {} }) => {
   return <View style={[styles.container, style]}>{children}</View>;
+};
+
+export const Section: React.FC<ViewProps> = ({ children, style = {} }) => {
+  return (
+    <View style={[styles.section, style]}>
+      <View style={styles.line} />
+      <CustomText style={styles.sectionTitle}>{children}</CustomText>
+      <View style={styles.line} />
+    </View>
+  );
 };
 
 export const CustomScrollView: React.FC<ScrollViewProps> = ({
@@ -103,5 +114,19 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#aaa",
     textAlign: "center",
+  },
+  section: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  line: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#aaa",
+  },
+  sectionTitle: {
+    marginHorizontal: 10,
+    color: "#aaa",
   },
 });

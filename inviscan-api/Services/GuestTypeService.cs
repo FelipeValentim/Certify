@@ -2,6 +2,7 @@
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Spire.Doc;
+using System.Xml.Linq;
 
 namespace Services
 {
@@ -16,6 +17,16 @@ namespace Services
 		public IEnumerable<GuestType> GetGuestTypes()
 		{
 			return _guestTypeRepository.GetAll();
+		}
+
+		public GuestType GetGuestTypeByName(string name)
+		{
+			return _guestTypeRepository.Get(x => x.Name == name);
+		}
+
+		public GuestType GetGuestTypeById(Guid id)
+		{
+			return _guestTypeRepository.GetByID(id);
 		}
 	}
 }

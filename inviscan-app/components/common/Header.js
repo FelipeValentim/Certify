@@ -64,13 +64,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "PoppinsRegular",
     textAlign: "center",
-    flex: 1,
+    flex: 4,
   },
 
   btn: {
-    padding: 30,
+    padding: 20,
+    flex: 1,
     alignItems: "center",
-    width: 18,
   },
 });
 

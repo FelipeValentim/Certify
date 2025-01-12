@@ -33,7 +33,7 @@ import ConfirmAlert from "@/components/common/ConfirmAlert";
 
 export default function HomeScreen({ navigation, route }) {
   const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState();
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [confirmAlert, setConfirmAlert] = useState({});
   const [selectedSegment, setSelectedSegment] = useState({
     label: "Todos",
@@ -47,7 +47,7 @@ export default function HomeScreen({ navigation, route }) {
   ]);
 
   const getEvents = async () => {
-    setFilteredEvents(null);
+    setFilteredEvents([]);
     const response = await EventAPI.getAll(true);
     setEvents(response.data);
   };
@@ -174,9 +174,9 @@ export default function HomeScreen({ navigation, route }) {
       <Header
         route={route}
         navigation={navigation}
-        rightButtonComponent={() => (
+        rightButtonComponent={
           <FontAwesomeIcon icon={faRefresh} color="#FFF" size={18} />
-        )}
+        }
         rightButtonAction={getEvents}
       />
 
@@ -198,6 +198,7 @@ export default function HomeScreen({ navigation, route }) {
 
             <FlatList
               data={filteredEvents}
+              initialNumToRender={filteredEvents.length}
               keyExtractor={(item) => item.id.toString()}
               renderItem={renderEvent}
               contentContainerStyle={{ paddingBottom: 50 }}

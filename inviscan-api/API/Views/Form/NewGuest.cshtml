@@ -247,6 +247,14 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
+        .text-align-center{
+            text-align: center;
+        }
+
+        .mt-5{
+            margin-top: 3rem;
+        }
     </style>
 </head>
 
@@ -273,9 +281,11 @@
 
 
 
-            <div class="formbold-mb-6">
+            <div class="formbold-mb-6 mt-5">
+
                 <input type="file" id="photoInput" accept="image/*" class="formbold-form-input display-none" />
                 <div class="formbold-img-container">
+                <label for="name" class="formbold-form-label text-align-center">Sua foto</label>
                     <div class="formbold-img photo-container">
                         <img id="photoPreview" class="formbold-img" src="https://simply-novel-shiner.ngrok-free.app/default/avatar.png" alt="Preview da Imagem" />
                         <label for="photoInput" class="edit">
@@ -292,7 +302,7 @@
             </div>
 
             <div class="formbold-mb-3">
-                <label for="name" class="formbold-form-label">Nome</label>
+                <label for="name" class="formbold-form-label">Nome*</label>
 
                 <input type="text"
                        name="name"
@@ -302,7 +312,7 @@
             </div>
 
             <div>
-                <label for="email" class="formbold-form-label">Email</label>
+                <label for="email" class="formbold-form-label">Email*</label>
                 <input type="email"
                        name="email"
                        id="email"

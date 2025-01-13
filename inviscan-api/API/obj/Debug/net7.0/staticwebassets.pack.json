@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\130b0410-fdcf-46e5-bde1-2c313008362f\\photo.png"
     },
     {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\1d5d3d29-415b-4add-bffa-e9103596c621\\photo.png",
+      "PackagePath": "staticwebassets\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\1d5d3d29-415b-4add-bffa-e9103596c621\\photo.png"
+    },
+    {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\25dff4a3-e34e-4c74-9079-fde63e7362a4\\photo.png",
       "PackagePath": "staticwebassets\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\25dff4a3-e34e-4c74-9079-fde63e7362a4\\photo.png"
     },
@@ -63,6 +67,18 @@
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\teste.zip",
       "PackagePath": "staticwebassets\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\teste.zip"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\2584b71a-ab66-4455-9822-c444ad4b0fc0\\photo.png",
+      "PackagePath": "staticwebassets\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\2584b71a-ab66-4455-9822-c444ad4b0fc0\\photo.png"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\preview.pdf",
+      "PackagePath": "staticwebassets\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\preview.pdf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\template.docx",
+      "PackagePath": "staticwebassets\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\template.docx"
     },
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificate_example.png",

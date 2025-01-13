@@ -167,7 +167,6 @@ namespace API.Controllers
                     {
                         Name = x.GuestType.Name,
                     }
-
                 });
 
 

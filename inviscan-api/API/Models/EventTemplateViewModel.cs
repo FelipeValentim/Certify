@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Domain.Constants;
+using System.Text.Json.Serialization;
 
 namespace API.Models
 {
@@ -9,6 +10,9 @@ namespace API.Models
 
 		[JsonPropertyName("previewPath")]
 		public string PreviewPath { get; set; }
+
+		[JsonPropertyName("fullPreviewPath")]
+		public string FullPreviewPath => $"{Default.URL}{PreviewPath}";
 
 	}
 }

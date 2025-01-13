@@ -10,8 +10,10 @@ import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { format, parse } from "date-fns";
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
+import * as Clipboard from "expo-clipboard";
+import { Ionicons } from "@expo/vector-icons";
 
 const EventTab = ({ navigation, route, info, title }) => {
   const barData = [
@@ -26,8 +28,8 @@ const EventTab = ({ navigation, route, info, title }) => {
       frontColor: "#36AE7C",
     },
     {
-      value: info?.dropCount || 0,
-      label: "Quebra",
+      value: info?.pendingCount || 0,
+      label: "Pendente",
       frontColor: redColor,
     },
   ];
@@ -63,6 +65,17 @@ const EventTab = ({ navigation, route, info, title }) => {
                   {format(parse(info.endTime, "HH:mm:ss", new Date()), "HH:mm")}
                 </CustomText>
               </View>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                }}
+                onPress={async () =>
+                  await Clipboard.setStringAsync(info.formURL)
+                }
+              >
+                <CustomText numberOfLines={1}>{info.formURL}</CustomText>
+                <Ionicons name="clipboard-outline" color={"#000"} size={20} />
+              </TouchableOpacity>
 
               <BarChart
                 data={barData}

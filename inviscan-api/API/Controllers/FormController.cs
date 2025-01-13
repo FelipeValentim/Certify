@@ -57,7 +57,7 @@ namespace InviScan.Controllers
 
             var response = _guestService.Add(model);
 
-			return StatusCode(response.Code, response.Response);
+			return StatusCode(response.Code, response.Result);
 		}
 	}
 }

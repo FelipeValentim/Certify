@@ -1,4 +1,5 @@
-﻿using Domain.DTO;
+﻿using Domain.Constants;
+using Domain.DTO;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -36,6 +37,18 @@ namespace Services
 		{
 			try
 			{
+				var allowedMimeTypes = new[] { "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
+
+				if (!Array.Exists(allowedMimeTypes, mime => mime.Equals(file.MimeType, StringComparison.OrdinalIgnoreCase)))
+				{
+					return ResponseModel.Error(HttpStatusCode.BadRequest, "Tipo de arquivo inválido.");
+				}
+
+				if (file.Size >= 10 * 1024 * 1024) //10MB LIMIT
+				{
+					return ResponseModel.Error(HttpStatusCode.BadRequest, "Documento ultrapassa 10mb.");
+				}
+
 				if (eventId == Guid.Empty)
 				{
 					return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento inválido.");
@@ -76,7 +89,7 @@ namespace Services
 
 				_eventRepository.Update(entity);
 
-				return ResponseModel.Success();
+				return ResponseModel.Success(data: $"{Default.URL}{relativePath}");
 			}
 			catch (Exception ex)
 			{

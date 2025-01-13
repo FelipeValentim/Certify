@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Constants;
+using Domain.Entities;
 using Domain.Enum;
 using System.Text.Json.Serialization;
 
@@ -35,6 +36,9 @@ namespace API.Models
 		[JsonPropertyName("eventTemplateId")]
 		public Guid? EventTemplateId { get; set; }
 
+		[JsonPropertyName("formURL")]
+		public string FormURL => $"{Default.URL}/form/guest/{Id}";
+
 		[JsonPropertyName("eventTemplate")]
 		public EventTemplateViewModel EventTemplate { get; set; }
 
@@ -44,8 +48,8 @@ namespace API.Models
 		[JsonPropertyName("checkinCount")]
 		public int CheckinCount => Guests.Where(x => x.CheckinDate.HasValue).Count();
 
-		[JsonPropertyName("dropCount")]
-		public int DropCount => GuestsCount - CheckinCount;
+		[JsonPropertyName("pendingCount")]
+		public int PendingCount => GuestsCount - CheckinCount;
 
 
 		[JsonPropertyName("eventStatus")]

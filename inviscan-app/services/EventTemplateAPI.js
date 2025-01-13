@@ -13,6 +13,16 @@ export const EventTemplateAPI = {
         : undefined,
     });
   },
+  removeTemplate: async function (eventId, cancel = false) {
+    return api.request({
+      url: `/EventTemplate/Remove/${eventId}`,
+      method: "DELETE",
+      signal: cancel
+        ? cancelApiObject[this.removeTemplate.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

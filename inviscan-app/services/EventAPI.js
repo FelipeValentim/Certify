@@ -39,17 +39,6 @@ export const EventAPI = {
         : undefined,
     });
   },
-  removeTemplate: async function (eventId, cancel = false) {
-    return api.request({
-      url: `/Event/RemoveTemplate/${eventId}`,
-      method: "POST",
-      data: eventId,
-      signal: cancel
-        ? cancelApiObject[this.removeTemplate.name].handleRequestCancellation()
-            .signal
-        : undefined,
-    });
-  },
 
   downloadCertificates: async function (eventId, cancel = false) {
     return api.request({

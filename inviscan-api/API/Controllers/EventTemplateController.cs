@@ -22,7 +22,7 @@ namespace API.Controllers
         {
             var response = _eventTemplateService.UploadTemplate(file, eventId);
           
-			return StatusCode(response.Code, response.Data);
+			return StatusCode(response.Code, response.Result);
 		}
 
 		[HttpDelete("Remove/{eventId}")]

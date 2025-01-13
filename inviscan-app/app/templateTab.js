@@ -11,7 +11,12 @@ import {
 } from "@/components/common/CustomElements";
 import TemplateInfo from "@/components/TemplateInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCloudArrowUp, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCloudArrowUp,
+  faQuestion,
+  faTrash,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 import UploadImage from "@/assets/images/undraw_upload.svg";
 import ButtonLoading from "@/components/common/ButtonLoading";
 import * as DocumentPicker from "expo-document-picker";
@@ -29,7 +34,6 @@ const TemplateTab = ({ navigation, route, title, template }) => {
   const [visibleInfo, setVisibleInfo] = useState(false);
   const [confirmAlert, setConfirmAlert] = useState(false);
   const [loading, setLoading] = useState(false);
-  const previewUrl = baseURL + template.previewPath;
   const toggleInfo = () => {
     setVisibleInfo(!visibleInfo);
   };
@@ -57,24 +61,19 @@ const TemplateTab = ({ navigation, route, title, template }) => {
           size: asset.size,
           name: asset.name,
         };
-        saveTemplate(file);
+
+        const { data } = await EventTemplateAPI.uploadTemplate(file, eventId);
+
+        setEventTemplate({ fullPreviewPath: data });
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const saveTemplate = async (file) => {
-    try {
-      const response = await EventTemplateAPI.uploadTemplate(file, eventId);
-    } catch (error) {
-      console.error(error.message, error.code);
-    }
-  };
-
   const removeTemplate = async () => {
     try {
-      await EventAPI.removeTemplate(eventIdd);
+      await EventTemplateAPI.removeTemplate(eventId);
 
       setEventTemplate(null);
     } catch (error) {
@@ -129,9 +128,39 @@ const TemplateTab = ({ navigation, route, title, template }) => {
         >
           {eventTemplate ? (
             <>
-              <View style={{ height: 260 }}>
-                <PdfViewer source={{ uri: previewUrl }} useGoogleDriveViewer />
+              <View
+                style={{
+                  // borderWidth: 1,
+                  borderColor: primaryColor,
+                  borderStyle: "dashed",
+                  gap: 10,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() =>
+                    setConfirmAlert({
+                      open: true,
+                      title: "Tem certeza disto?",
+                      message: `Deseja realmente remover este template?`,
+                      onConfirm: () => removeTemplate(),
+                    })
+                  }
+                  style={{
+                    ...styles.actionIcon,
+                    alignSelf: "flex-end",
+                    backgroundColor: primaryColor,
+                  }}
+                >
+                  <FontAwesomeIcon icon={faX} color="#FFF" size={18} />
+                </TouchableOpacity>
+                <View style={{ height: 260 }}>
+                  <PdfViewer
+                    source={{ uri: eventTemplate.fullPreviewPath }}
+                    useGoogleDriveViewer
+                  />
+                </View>
               </View>
+
               <Section>Certificados</Section>
               <View
                 style={{

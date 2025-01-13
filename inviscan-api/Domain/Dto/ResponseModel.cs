@@ -14,12 +14,13 @@ namespace Domain.DTO
 			};
 		}
 
-		public static ResponseModel Success(HttpStatusCode code = HttpStatusCode.OK)
+		public static ResponseModel Success(HttpStatusCode code = HttpStatusCode.OK, string data = null)
 		{
 			return new ResponseModel
 			{
 				Succeed = true,
 				StatusCode = code,
+				Data = data,
 			};
 		}
 	}
@@ -29,7 +30,7 @@ namespace Domain.DTO
 		public bool Succeed { get; set; }
 		public T Data { get; set; }
 		public string Message { get; set; }
-		public object Response => Succeed ? Data : Message;
+		public object Result => Succeed ? Data : Message;
 		public HttpStatusCode StatusCode { get; set; }
 		public int Code => (int)StatusCode;
 

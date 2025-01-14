@@ -13,11 +13,14 @@ const ConfirmAlert = ({
   toggle,
   loading,
   message,
+  shouldToggle = true,
   title = "Confirmar?",
 }) => {
   const handleConfirm = async () => {
     await onConfirm();
-    toggle();
+    if (shouldToggle) {
+      toggle();
+    }
   };
 
   if (!open) return null;

@@ -27,20 +27,27 @@ import ConfirmAlert from "@/components/common/ConfirmAlert";
 import { EventAPI } from "@/services/EventAPI";
 import CustomText from "@/components/common/CustomText";
 import { Ionicons } from "@expo/vector-icons";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { useDispatch } from "react-redux";
+import { toast } from "@/redux/snackBar";
 
 const TemplateTab = ({ navigation, route, title, template }) => {
   const [eventId] = useState(route.params.eventId);
   const [eventTemplate, setEventTemplate] = useState(template);
   const [visibleInfo, setVisibleInfo] = useState(false);
-  const [confirmAlert, setConfirmAlert] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [confirmAlert, setConfirmAlert] = useState({});
+  const [loading, setLoading] = useState({
+    send: false,
+    download: false,
+  });
   const toggleInfo = () => {
     setVisibleInfo(!visibleInfo);
   };
+  const dispatch = useDispatch();
 
   const pickTemplate = async () => {
     try {
-      setLoading(true);
+      setConfirmAlert({ ...confirmAlert, loading: true });
       const result = await DocumentPicker.getDocumentAsync({
         type: [
           "application/msword",
@@ -67,27 +74,47 @@ const TemplateTab = ({ navigation, route, title, template }) => {
         setEventTemplate({ fullPreviewPath: data });
       }
     } finally {
-      setLoading(false);
+      setConfirmAlert({ ...confirmAlert, loading: false });
     }
   };
 
   const removeTemplate = async () => {
     try {
+      setConfirmAlert({ ...confirmAlert, loading: true });
+
       await EventTemplateAPI.removeTemplate(eventId);
 
       setEventTemplate(null);
-    } catch (error) {
-      console.error(error.message, error.code);
+    } finally {
+      setConfirmAlert({ ...confirmAlert, loading: false });
     }
   };
 
   const downloadCertificates = async () => {
-    const { data } = await EventAPI.downloadCertificates(eventId);
-    savefile(data);
+    setLoading({ ...loading, download: true });
+    try {
+      const { data } = await EventAPI.downloadCertificates(eventId);
+
+      savefile(data);
+    } finally {
+      setLoading({ ...loading, download: false });
+    }
   };
 
   const sendCertificates = async () => {
-    const { data } = await EventAPI.sendCertificates(eventId);
+    setLoading({ ...loading, send: true });
+
+    setConfirmAlert({ ...confirmAlert, open: false });
+
+    try {
+      await EventAPI.sendCertificates(eventId);
+
+      dispatch(
+        toast({ text: "Certificados enviados com sucesso", type: "sucess" })
+      );
+    } finally {
+      setLoading({ ...loading, send: false });
+    }
   };
 
   const savefile = async (file) => {
@@ -187,24 +214,21 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                       color={primaryColor}
                       size={22}
                     /> */}
-                    <Ionicons
-                      name="mail-outline"
-                      color={primaryColor}
-                      size={26}
-                    />
+                    {loading.send ? (
+                      <LoadingSpinner />
+                    ) : (
+                      <Ionicons
+                        name="mail-outline"
+                        color={primaryColor}
+                        size={26}
+                      />
+                    )}
                   </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   style={styles.action}
-                  onPress={() =>
-                    setConfirmAlert({
-                      open: true,
-                      title: "Tem certeza disto?",
-                      message: `Deseja realmente baixar os certificado para os participantes com checkin?`,
-                      onConfirm: () => downloadCertificates(),
-                    })
-                  }
+                  onPress={() => downloadCertificates()}
                 >
                   <CustomText style={styles.actionText}>Baixar</CustomText>
                   <View style={styles.actionIcon}>
@@ -213,11 +237,15 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                       color={primaryColor}
                       size={22}
                     /> */}
-                    <Ionicons
-                      name="download-outline"
-                      color={primaryColor}
-                      size={26}
-                    />
+                    {loading.download ? (
+                      <LoadingSpinner />
+                    ) : (
+                      <Ionicons
+                        name="download-outline"
+                        color={primaryColor}
+                        size={26}
+                      />
+                    )}
                   </View>
                 </TouchableOpacity>
 
@@ -246,7 +274,7 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                 title={confirmAlert.title}
                 message={confirmAlert.message}
                 onConfirm={confirmAlert.onConfirm}
-                loading={loading}
+                loading={confirmAlert.loading}
               />
             </>
           ) : (
@@ -267,7 +295,6 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                 </MutedText>
               </View>
               <ButtonLoading
-                loading={loading}
                 onPress={pickTemplate}
                 innerComponent={
                   <View

@@ -16,17 +16,24 @@ const Tab = createBottomTabNavigator();
 
 export default function EventScreen({ route, navigation }) {
   const { eventId } = route.params;
-  const [info, setInfo] = useState();
+  const [info, setInfo] = useState(null);
+  const [guests, setGuests] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [paddingHorizontal] = useState(20);
-  const [guests, setGuests] = useState();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    const getData = async () => {
+  const getData = async () => {
+    setLoading(true);
+    try {
       const { data } = await EventAPI.get(eventId);
       setInfo(data);
       setGuests([...data.guests]);
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     getData();
   }, []);
 
@@ -62,7 +69,7 @@ export default function EventScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    if (guests) {
+    if (guests && info) {
       setInfo({
         ...info,
         guestsCount: guests.length,
@@ -143,6 +150,7 @@ export default function EventScreen({ route, navigation }) {
         >
           {(props) => (
             <EventScannerTab
+              dataLoading={loading}
               guests={guests}
               updateUncheckin={updateUncheckin}
               updateCheckin={checkin}
@@ -172,6 +180,8 @@ export default function EventScreen({ route, navigation }) {
           {(props) => (
             <EventGuestsTab
               {...props}
+              dataLoading={loading}
+              getData={getData}
               guests={guests}
               updateUncheckin={updateUncheckin}
               updateCheckin={checkin}

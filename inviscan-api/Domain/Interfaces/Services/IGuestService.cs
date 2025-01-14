@@ -7,5 +7,10 @@ namespace Domain.Interfaces.Services
 		ResponseModel<object> Add(GuestDTO guest);
 
 		void SetStudentGuestType(ref GuestDTO guest);
-	}
+
+        void SendQRCode(Guid eventId, Guid id);
+
+        void SendQRCode(Guid eventId, Guid[] ids);
+
+    }
 }

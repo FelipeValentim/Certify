@@ -5,8 +5,16 @@
       "PackagePath": "staticwebassets\\default\\avatar.png"
     },
     {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\default\\logo.png",
+      "PackagePath": "staticwebassets\\default\\logo.png"
+    },
+    {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\html\\grateful.html",
       "PackagePath": "staticwebassets\\html\\grateful.html"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\html\\qrcode.html",
+      "PackagePath": "staticwebassets\\html\\qrcode.html"
     },
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\071b9b52-ce91-4a3a-af6d-3469321defe4\\photo.png",

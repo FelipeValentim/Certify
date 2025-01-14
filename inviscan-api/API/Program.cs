@@ -51,7 +51,8 @@ builder.Services.AddTransient<IEventService, EventService>();
 builder.Services.AddTransient<IEventTemplateService, EventTemplateService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IGuestService, GuestService>();
-
+builder.Services.AddTransient<IFormService, FormService>();
+builder.Services.AddTransient<IQRCodeService, QRCodeService>();
 
 builder.Services.AddHttpContextAccessor();
 

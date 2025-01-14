@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "gAfO/aj4wkPLehRipk3l/RCHhJ6M4T2jtCxatWWBCHM=",
+  "Hash": "urSAtNvj3Pm3Buebw/2HiDNyEEG0wRgqE1O4a+EdRYo=",
   "Source": "API",
   "BasePath": "_content/API",
   "Mode": "Default",
@@ -355,6 +355,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\2584b71a-ab66-4455-9822-c444ad4b0fc0\\photo.png"
+    },
+    {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\ba928668-9146-4f0d-b090-600a44e8305e\\photo.png",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "storage/6e633ea6-35d4-4714-8d71-a5cfa5f1cec0/ba928668-9146-4f0d-b090-600a44e8305e/photo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\ba928668-9146-4f0d-b090-600a44e8305e\\photo.png"
     },
     {
       "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\preview.pdf",

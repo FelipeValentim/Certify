@@ -31,6 +31,7 @@ import {
   faCheckToSlot,
   faChevronRight,
   faClockRotateLeft,
+  faRefresh,
   faTrashCan,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
@@ -184,6 +185,8 @@ function GuestsTab({
   addGuest,
   navigation,
   route,
+  dataLoading,
+  getData,
 }) {
   const [filteredGuests, setFilteredGuests] = useState([]);
   const [snackBar, setSnackBar] = useState({});
@@ -544,6 +547,10 @@ function GuestsTab({
       <Header
         navigation={navigation}
         route={route}
+        rightButtonComponent={
+          <FontAwesomeIcon icon={faRefresh} color="#FFF" size={18} />
+        }
+        rightButtonAction={getData}
         component={
           selectedItems.length > 0 && (
             <SelectionHeader
@@ -559,7 +566,7 @@ function GuestsTab({
         }
       />
       <Container style={styles.container}>
-        {!guests ? (
+        {dataLoading ? (
           <Loading color={primaryColor} size={24} />
         ) : (
           <>

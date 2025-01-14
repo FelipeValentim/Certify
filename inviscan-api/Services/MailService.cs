@@ -3,6 +3,7 @@ using Domain.Interfaces.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using MimeKit.Utils;
 
 namespace Services
 {
@@ -21,18 +22,27 @@ namespace Services
 
 			message.Subject = mailMessage.Subject;
 
-			var bodyBuilder = new BodyBuilder
-			{
-				HtmlBody = mailMessage.Html
-			};
+			var html = mailMessage.Html;
 
-			foreach (var attachment in mailMessage.Attachments)
+			var bodyBuilder = new BodyBuilder();
+			
+            foreach (var attachment in mailMessage.Attachments)
 			{
 				bodyBuilder.Attachments.Add(attachment.Name, attachment.Content, ContentType.Parse(attachment.MimeType));
 			}
 
-			message.Body = bodyBuilder.ToMessageBody();
+            foreach (var embedded in mailMessage.Embedded)
+			{
+                var embed = bodyBuilder.LinkedResources.Add(embedded.Name, embedded.Data, ContentType.Parse(embedded.MimeType));
 
+                embed.ContentId = MimeUtils.GenerateMessageId();
+
+                html = html.Replace(embedded.Placeholder, "cid:" + embed.ContentId);
+            }
+
+			bodyBuilder.HtmlBody = html;
+
+            message.Body = bodyBuilder.ToMessageBody();
 
 			using (var client = new SmtpClient())
 			{

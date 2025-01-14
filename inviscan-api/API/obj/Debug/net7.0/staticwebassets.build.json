@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ORWc+969RbNApFM+llLoVOqgox5nxRZFmvezv3t8mLo=",
+  "Hash": "gAfO/aj4wkPLehRipk3l/RCHhJ6M4T2jtCxatWWBCHM=",
   "Source": "API",
   "BasePath": "_content/API",
   "Mode": "Default",
@@ -34,6 +34,23 @@
       "OriginalItemSpec": "wwwroot\\default\\avatar.png"
     },
     {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\default\\logo.png",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "default/logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\default\\logo.png"
+    },
+    {
       "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\html\\grateful.html",
       "SourceId": "API",
       "SourceType": "Discovered",
@@ -49,6 +66,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\html\\grateful.html"
+    },
+    {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\html\\qrcode.html",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "html/qrcode.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\html\\qrcode.html"
     },
     {
       "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\071b9b52-ce91-4a3a-af6d-3469321defe4\\photo.png",

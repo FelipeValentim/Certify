@@ -4,6 +4,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Services;
 
 namespace InviScan.Controllers
 {
@@ -11,51 +12,37 @@ namespace InviScan.Controllers
 	[ApiController]
 	[Route("[controller]")]
 	public class FormController : Controller
-    {
-        private readonly IEventRepository _eventRepository;
+	{
 		private readonly IGuestService _guestService;
+		private readonly IFormService _formService;
+		public FormController(IGuestService guestService, IFormService formService)
+		{
+			_guestService = guestService;
+			_formService = formService;
+		}
 
-		public FormController(IEventRepository eventRepository, IGuestService guestService)
-        {
-            _eventRepository = eventRepository;
-            _guestService = guestService;
-        }
 
+		[HttpGet("Guest/{eventId}")]
+		public ActionResult FormGuest(Guid eventId)
+		{
+			var response = _formService.GenerateForm(eventId);
 
-        [HttpGet("Guest/{eventId}")]
-        public ActionResult FormGuest(Guid eventId)
-        {
-            var eventItem = _eventRepository.Get(x => x.Id == eventId, includeProperties: "User");
-
-            if (eventItem == null)
-            {
-                return View("Error");
-            }
-
-            var item = new EventViewModel
-            {
-                Id = eventItem.Id,
-                Date = eventItem.Date,
-                StartTime = eventItem.StartTime,
-                EndTime = eventItem.EndTime,
-                Name = eventItem.Name,
-                Photo = eventItem.Photo,
-                User = new UserViewModel
-                {
-                    Id = eventItem.User.Id,
-                    Name = eventItem.User.Name,
-				}
-            };
-
-            return View("NewGuest", item);
-        }
+			if (response.Succeed)
+			{
+				return View("NewGuest", response.Result);
+			}
+			else
+			{
+				return View("~/Views/Shared/Error.cshtml", response.Result);
+			}
+		}
 
 		[HttpPost("NewGuest")]
 		public ActionResult NewGuest(GuestDTO model)
 		{
-            _guestService.SetStudentGuestType(ref model);
+			_guestService.SetStudentGuestType(ref model);
 
-            var response = _guestService.Add(model);
+			var response = _guestService.Add(model);
 
 			return StatusCode(response.Code, response.Result);
 		}

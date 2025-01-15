@@ -10,34 +10,18 @@ namespace API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ITokenService _tokenService;
 
-        public AccountController(IUserService userService, ITokenService tokenService)
+        public AccountController(IUserService userService)
         {
             _userService = userService;
-            _tokenService = tokenService;
         }
 
         [HttpPost("Login")]
         public IActionResult Login(AccountViewModel model)
         {
-            try
-            { 
-                var user = _userService.Login(model.Email, model.Password);
+            var response = _userService.Login(model.Email, model.Password);
 
-                if (user == null)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Usuário ou senha incorreto.");
-                }
-
-                var token = _tokenService.GenerateToken(user);
-
-                return StatusCode(StatusCodes.Status200OK, token);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return StatusCode(response.Code, response.Data);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Services
 			_guestTypeRepository = guestTypeRepository;
 		}
 
-		public IEnumerable<GuestType> GetGuestTypes()
+		public IEnumerable<GuestType> GetAll()
 		{
 			return _guestTypeRepository.GetAll();
 		}

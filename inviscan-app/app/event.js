@@ -74,7 +74,7 @@ export default function EventScreen({ route, navigation }) {
         ...info,
         guestsCount: guests.length,
         checkinCount: guests.filter((x) => x.checkinDate).length,
-        dropCount: guests.filter((x) => !x.checkinDate).length,
+        pendingCount: guests.filter((x) => !x.checkinDate).length,
       });
     }
   }, [guests]);

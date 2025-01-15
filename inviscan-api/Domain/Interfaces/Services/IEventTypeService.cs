@@ -4,7 +4,7 @@ namespace Domain.Interfaces.Services
 {
     public interface IEventTypeService
     {
-        IEnumerable<EventType> GetEventTypes();
+        IEnumerable<EventType> GetAll();
 
     }
 }

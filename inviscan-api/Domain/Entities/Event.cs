@@ -30,7 +30,7 @@ namespace Domain.Entities
 		public Guid? EventTemplateId { get; set; }
 		public EventTemplate EventTemplate { get; set; }
 
-		public ICollection<Guest> Guests { get; set; }
+		public virtual IEnumerable<Guest> Guests { get; set; }
 
 		public Event() : base()
         {

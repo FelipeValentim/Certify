@@ -1,6 +1,9 @@
-﻿using Domain.Entities;
+﻿using Domain.DTO;
+using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace Services
 {
@@ -8,27 +11,39 @@ namespace Services
     {
         private readonly IUserProfileRepository _userProfileRepository;
         private readonly IHashService _hashService;
-        public UserService(IUserProfileRepository userProfileRepository, IHashService hashService) 
+        private readonly ITokenService _tokenService;
+
+        public UserService(IUserProfileRepository userProfileRepository, IHashService hashService, ITokenService tokenService)
         {
             _userProfileRepository = userProfileRepository;
             _hashService = hashService;
+            _tokenService = tokenService;
         }
 
-        public UserProfile Login(string email, string password)
+        public ResponseModel Login(string email, string password)
         {
-            UserProfile user = _userProfileRepository.Get(x => x.Email.ToUpper() == email.ToUpper());
-
-            if (user != null)
+            try
             {
-                var isCorrect = _hashService.VerifyPassword(password, user.PasswordHash);
+                UserProfile user = _userProfileRepository.Get(x => x.Email.ToUpper() == email.ToUpper());
 
-                if (isCorrect)
+                if (user != null)
                 {
-                    return user;
-                }
-            }
+                    var isCorrect = _hashService.VerifyPassword(password, user.PasswordHash);
 
-            return null;
+                    if (isCorrect)
+                    {
+                        var token = _tokenService.GenerateToken(user);
+
+                        return ResponseModel.Success(token);
+                    }
+                }
+
+                return ResponseModel.Error(HttpStatusCode.Unauthorized, "Usuário ou senha incorreto.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
     }
 }

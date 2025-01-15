@@ -5,6 +5,7 @@ namespace Domain.Interfaces.Services
 {
     public interface IEventService
 	{
+
         ResponseModel<object> Add(EventDTO model);
 
 		ResponseModel<FileDTO> DownloadCertificates(Guid eventId);
@@ -13,7 +14,13 @@ namespace Domain.Interfaces.Services
 
 		Event Get(Guid id);
 
-		int CountGuests(Guid eventId);
+        Event GetRelated(Guid id);
 
-	}
+		IEnumerable<Event> GetEvents();
+
+        int CountGuests(Guid eventId);
+
+        ResponseModel Delete(Guid eventId);
+
+    }
 }

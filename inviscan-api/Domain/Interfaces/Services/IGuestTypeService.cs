@@ -4,7 +4,7 @@ namespace Domain.Interfaces.Services
 {
     public interface IGuestTypeService
 	{
-        IEnumerable<GuestType> GetGuestTypes();
+        IEnumerable<GuestType> GetAll();
 		GuestType GetGuestTypeByName(string name);
 		GuestType GetGuestTypeById(Guid id);
 

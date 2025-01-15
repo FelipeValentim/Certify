@@ -7,6 +7,7 @@ using InviScan.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace API.Controllers
 {
@@ -15,145 +16,60 @@ namespace API.Controllers
     [Route("[controller]")]
     public class GuestController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IGuestRepository _guestRepository;
-		private readonly IGuestService _guestService;
+        private readonly IGuestService _guestService;
 
-		public GuestController(IHttpContextAccessor httpContextAccessor, IGuestRepository guestRepository, IStorageService storageService, IGuestService guestService)
+        public GuestController(IGuestService guestService)
         {
-            _guestRepository = guestRepository;
-            _httpContextAccessor = httpContextAccessor;
             _guestService = guestService;
-        }
-
-        [HttpGet("GetGuests/{eventId}")]
-        public IActionResult GetGuests(Guid eventId)
-        {
-            try
-            {
-                var guests = _guestRepository.GetGuests(eventId);
-
-                return StatusCode(StatusCodes.Status200OK, guests);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
         }
 
         [HttpPut("Checkin/{id}")]
         public IActionResult Checkin(Guid id)
         {
-            try
-            {
-				var guest = _guestRepository.GetByID(id);
+            var response = _guestService.Checkin(id);
 
-				if (guest == null)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
-                }
-
-                if (guest.CheckinDate.HasValue)
-                {
-                    return StatusCode(StatusCodes.Status409Conflict, "Já foi realizado checkin para este convidado.");
-                }
-
-                _guestRepository.Checkin(id);
-
-                return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return StatusCode(response.Code, response.Data);
         }
 
         [HttpPut("Uncheckin/{id}")]
         public IActionResult Uncheckin(Guid id)
         {
-            try
-            {
-                var guest = _guestRepository.GetByID(id);
+            var response = _guestService.Uncheckin(id);
 
-                if (guest == null)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Convidado não existe.");
-                }
-
-                if (!guest.CheckinDate.HasValue)
-                {
-                    return StatusCode(StatusCodes.Status409Conflict, "Já foi desfeito o checkin para este convidado.");
-                }
-
-                _guestRepository.Uncheckin(id);
-
-                return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return StatusCode(response.Code, response.Data);
         }
 
         [HttpPut("Checkin")]
         public IActionResult Checkin(Guid[] ids)
         {
-            try
-            {
-                _guestRepository.Checkin(ids);
+            var response = _guestService.Checkin(ids);
 
-                return StatusCode(StatusCodes.Status200OK, "Checkin realizado com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return StatusCode(response.Code, response.Data);
         }
 
 
         [HttpPut("Uncheckin")]
         public IActionResult Uncheckin(Guid[] ids)
         {
-            try
-            {
-                _guestRepository.Uncheckin(ids);
+            var response = _guestService.Uncheckin(ids);
 
-                return StatusCode(StatusCodes.Status200OK, "Checkin desfeito com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return StatusCode(response.Code, response.Data);
         }
 
         [HttpDelete("Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            try
-            {
-                _guestRepository.Delete(id);
+            var response = _guestService.Delete(id);
 
-                return StatusCode(StatusCodes.Status200OK, "Deleção realizada com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return StatusCode(response.Code, response.Data);
         }
 
         [HttpDelete("Delete")]
         public IActionResult Delete(Guid[] ids)
         {
-            try
-            {
-                _guestRepository.Delete(ids);
+            var response = _guestService.Delete(ids);
 
-                return StatusCode(StatusCodes.Status200OK, "Deleção realizada com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return StatusCode(response.Code, response.Data);
         }
 
         [HttpPost("NewGuest")]
@@ -161,8 +77,8 @@ namespace API.Controllers
         {
             var response = _guestService.Add(model);
 
-			return StatusCode(response.Code, response.Data);
-		}
+            return StatusCode(response.Code, response.Data);
+        }
 
-	}
+    }
 }

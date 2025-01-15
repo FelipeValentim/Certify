@@ -8,9 +8,11 @@ namespace Domain.DTO
 
 		public string Name { get; set; }
 
-		public string Photo { get; set; }
+        public string Photo { get; set; }
 
-		public DateTime Date { get; set; }
+        public FileDTO PhotoFile { get; set; }
+
+        public DateTime Date { get; set; }
 
 		public TimeSpan StartTime { get; set; }
 
@@ -18,7 +20,9 @@ namespace Domain.DTO
 
 		public int? Pax { get; set; }
 
-		public UserDTO User { get; set; }
+        public Guid EventTypeId { get; set; }
+
+        public UserDTO User { get; set; }
 
 	}
 }

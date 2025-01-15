@@ -23,7 +23,7 @@ namespace Domain.Entities
 
 		public Guest() : base()
         {
-            Photo = $"/storage/default_avatar.png";
+            Photo = $"/default/avatar.png";
         }
 
     }

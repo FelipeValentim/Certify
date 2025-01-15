@@ -1,7 +1,7 @@
 import ButtonLoading from "@/components/common/ButtonLoading";
 
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet, Image } from "react-native";
 import Header from "@/components/common/Header";
 import {
   InputNumber,
@@ -12,10 +12,13 @@ import {
   ImagePicker,
   SelectInput,
 } from "@/components/common/CustomInput";
-import { Container } from "@/components/common/CustomElements";
+import {
+  Container,
+  CustomScrollView,
+} from "@/components/common/CustomElements";
 import { EventTypeAPI } from "@/services/EventTypeAPI";
 import Loading from "@/components/common/Loading";
-import { primaryColor } from "@/constants/Default";
+import { baseURL, primaryColor } from "@/constants/Default";
 import { toast } from "@/redux/snackBar";
 import { useDispatch } from "react-redux";
 import { EventAPI } from "@/services/EventAPI";
@@ -23,8 +26,7 @@ import { EventAPI } from "@/services/EventAPI";
 function NewEvent({ route, navigation }) {
   const dispatch = useDispatch();
   const [event, setEvent] = useState({
-    photo:
-      "https://cdn.prod.website-files.com/648285b892d25284328a8a37/66e45432593b00dd787a616e_Calendar.jpg",
+    fullPhotoUrl: `${baseURL}/default/lecture.png`,
     date: null,
     startTime: null,
     endTime: null,
@@ -80,9 +82,10 @@ function NewEvent({ route, navigation }) {
 
           const { data } = await EventAPI.newEvent(event);
 
-          event.id = data;
+          event.id = data.id;
+          event.photoFullUrl = data.photoFullUrl;
           event.eventType = {
-            name: eventTypes.find((x) => x.value === event.eventTypeId).label,
+            name: eventTypes.find((x) => x.id === event.eventTypeId).name,
           };
 
           addEvent(event);
@@ -120,12 +123,14 @@ function NewEvent({ route, navigation }) {
       {!eventTypes ? (
         <Loading color={primaryColor} size={24} />
       ) : (
-        <ScrollView>
+        <CustomScrollView>
           <Container style={styles.container}>
             <View style={styles.content}>
               <ImagePicker
-                photo={event.photo}
-                onPicker={(base64) => setEvent({ ...event, photo: base64 })}
+                photo={
+                  event.photoFile ? event.photoFile.base64 : event.fullPhotoUrl
+                }
+                onPicker={(file) => setEvent({ ...event, photoFile: file })}
               />
 
               {/* <Text style={styles.name}>{event.name}</Text> */}
@@ -185,13 +190,13 @@ function NewEvent({ route, navigation }) {
               <ButtonLoading
                 loading={loading}
                 onPress={save}
-                style={[styles.button]}
+                style={styles.button}
               >
                 Salvar
               </ButtonLoading>
             </View>
           </Container>
-        </ScrollView>
+        </CustomScrollView>
       )}
     </Fragment>
   );
@@ -217,7 +222,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   button: {
-    width: 200,
+    width: "100%",
     marginTop: 40,
   },
 });

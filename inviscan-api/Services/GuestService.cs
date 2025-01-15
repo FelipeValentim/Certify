@@ -1,4 +1,5 @@
-﻿using Domain.DTO;
+﻿using Domain.Constants;
+using Domain.DTO;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -98,9 +99,9 @@ namespace Services
                 };
 
                 // Upload da foto, se necessário
-                if (!string.IsNullOrEmpty(model.Photo))
+                if (model.PhotoFile != null)
                 {
-                    guest.Photo = _storageService.UploadFile(model.Photo, guest.EventId, guest.Id);
+                    guest.Photo = _storageService.UploadFile(model.PhotoFile, $"{guest.EventId}/{guest.Id}");
                 }
 
                 // Inserir o convidado no repositório
@@ -109,7 +110,7 @@ namespace Services
                 SendQRCode(guest.EventId, guest.Id);
 
                 // Retornar resposta de sucesso
-                return ResponseModel<object>.Success(new { id = guest.Id, photo = guest.Photo }, HttpStatusCode.OK);
+                return ResponseModel<object>.Success(new { id = guest.Id, photoFullUrl = $"{Default.URL}{guest.Photo}" }, HttpStatusCode.OK);
             }
             catch (Exception ex)
             {

@@ -144,7 +144,7 @@ export default function HomeScreen({ navigation, route }) {
                 <Image
                   style={styles.photo}
                   source={{
-                    uri: event.photo,
+                    uri: event.photoFullUrl,
                   }}
                 />
                 <View style={styles.info}>

@@ -46,7 +46,7 @@ const EventTab = ({ navigation, route, info, title }) => {
               <Image
                 style={styles.photo}
                 source={{
-                  uri: info.photo,
+                  uri: info.photoFullUrl,
                 }}
               />
               <CustomText style={styles.name}>{info.name}</CustomText>

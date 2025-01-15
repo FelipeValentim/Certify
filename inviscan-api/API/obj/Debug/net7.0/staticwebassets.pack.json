@@ -5,8 +5,24 @@
       "PackagePath": "staticwebassets\\default\\avatar.png"
     },
     {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\default\\congress.png",
+      "PackagePath": "staticwebassets\\default\\congress.png"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\default\\lecture.png",
+      "PackagePath": "staticwebassets\\default\\lecture.png"
+    },
+    {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\default\\logo.png",
       "PackagePath": "staticwebassets\\default\\logo.png"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\default\\tcc.png",
+      "PackagePath": "staticwebassets\\default\\tcc.png"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\default\\workshop.png",
+      "PackagePath": "staticwebassets\\default\\workshop.png"
     },
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\html\\grateful.html",
@@ -77,6 +93,14 @@
       "PackagePath": "staticwebassets\\storage\\0d6cf2ad-1e00-4936-a529-1efbeb95bc77\\teste.zip"
     },
     {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\607b6b02-b926-4ee8-89f5-5e6dde33f92e\\preview.pdf",
+      "PackagePath": "staticwebassets\\storage\\607b6b02-b926-4ee8-89f5-5e6dde33f92e\\preview.pdf"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\607b6b02-b926-4ee8-89f5-5e6dde33f92e\\template.docx",
+      "PackagePath": "staticwebassets\\storage\\607b6b02-b926-4ee8-89f5-5e6dde33f92e\\template.docx"
+    },
+    {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\2584b71a-ab66-4455-9822-c444ad4b0fc0\\photo.png",
       "PackagePath": "staticwebassets\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\2584b71a-ab66-4455-9822-c444ad4b0fc0\\photo.png"
     },
@@ -91,6 +115,30 @@
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\template.docx",
       "PackagePath": "staticwebassets\\storage\\6e633ea6-35d4-4714-8d71-a5cfa5f1cec0\\template.docx"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\7abd10e3-1fb6-4be7-aaab-065186425142\\044dbdb2ef724cd3ac7735256635a3ea.jpeg",
+      "PackagePath": "staticwebassets\\storage\\7abd10e3-1fb6-4be7-aaab-065186425142\\044dbdb2ef724cd3ac7735256635a3ea.jpeg"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\7abd10e3-1fb6-4be7-aaab-065186425142\\1005f4a1-6ba5-47b4-9647-3891f72fda4e\\f739df24bdd0473f8cc4b274a2ca7d6c.jpeg",
+      "PackagePath": "staticwebassets\\storage\\7abd10e3-1fb6-4be7-aaab-065186425142\\1005f4a1-6ba5-47b4-9647-3891f72fda4e\\f739df24bdd0473f8cc4b274a2ca7d6c.jpeg"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\7abd10e3-1fb6-4be7-aaab-065186425142\\9c8bd872-f5ca-4c32-b8b5-c1cf813cb599\\23f320beab1c4d65a28e0d97bba1aa16.jpeg",
+      "PackagePath": "staticwebassets\\storage\\7abd10e3-1fb6-4be7-aaab-065186425142\\9c8bd872-f5ca-4c32-b8b5-c1cf813cb599\\23f320beab1c4d65a28e0d97bba1aa16.jpeg"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\7abd10e3-1fb6-4be7-aaab-065186425142\\c635732d-d33c-4dae-a3e6-1e9dcc773a4e\\cfd5221a29774dd7a4ab8c033d9dea8a.jpeg",
+      "PackagePath": "staticwebassets\\storage\\7abd10e3-1fb6-4be7-aaab-065186425142\\c635732d-d33c-4dae-a3e6-1e9dcc773a4e\\cfd5221a29774dd7a4ab8c033d9dea8a.jpeg"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\7dba5fac-7d02-460d-92d7-a408f802f2b4\\42907c0b4ff9464b889588199a7d77d7.jpeg",
+      "PackagePath": "staticwebassets\\storage\\7dba5fac-7d02-460d-92d7-a408f802f2b4\\42907c0b4ff9464b889588199a7d77d7.jpeg"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\95589677-91c5-4ba4-b215-ff46df6a5b22\\2fa338b07cb94f919d2702afeaf2f3a8.jpeg",
+      "PackagePath": "staticwebassets\\storage\\95589677-91c5-4ba4-b215-ff46df6a5b22\\2fa338b07cb94f919d2702afeaf2f3a8.jpeg"
     },
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\certificate_example.png",

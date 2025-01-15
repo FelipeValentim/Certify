@@ -1,14 +1,9 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.DTO;
 
 namespace Domain.Interfaces.Services
 {
     public interface IUserService
     {
-        UserProfile Login(string email, string password);
+        ResponseModel Login(string email, string password);
     }
 }

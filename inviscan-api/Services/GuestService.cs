@@ -5,6 +5,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Crypto;
 using Services.Helper;
 using Spire.Doc;
 using System;
@@ -173,6 +174,133 @@ namespace Services
             else
             {
                 throw new Exception("Não existe GuestType com esse ID.");
+            }
+        }
+
+
+        public ResponseModel Checkin(Guid id)
+        {
+            try
+            {
+                var guest = _guestRepository.GetByID(id);
+
+                if (guest == null)
+                {
+                    return ResponseModel.Error(HttpStatusCode.BadRequest, "Convidado não existe.");
+                }
+
+                if (guest.CheckinDate.HasValue)
+                {
+                    return ResponseModel.Error(HttpStatusCode.Conflict, "Já foi realizado checkin para este convidado.");
+                }
+
+                guest.CheckinDate = DateTime.Now;
+
+                _guestRepository.Update(guest);
+
+                return ResponseModel.Success("Checkin realizado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        public ResponseModel Checkin(Guid[] ids)
+        {
+            try
+            {
+                var guests = _guestRepository.GetAll(x => ids.Any(id => x.Id == id));
+
+                foreach (var guest in guests)
+                {
+                    guest.CheckinDate = DateTime.Now;
+
+                    _guestRepository.Update(guest);
+                }
+
+                return ResponseModel.Success("Checkin realizado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        public ResponseModel Delete(Guid id)
+        {
+            try
+            {
+                _guestRepository.Delete(id);
+
+                return ResponseModel.Success("Checkin realizado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        public ResponseModel Delete(Guid[] ids)
+        {
+            try
+            {
+                _guestRepository.Delete(ids);
+
+                return ResponseModel.Success("Checkin realizado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        public ResponseModel Uncheckin(Guid id)
+        {
+            try
+            {
+                var guest = _guestRepository.GetByID(id);
+
+                if (guest == null)
+                {
+                    return ResponseModel.Error(HttpStatusCode.BadRequest, "Convidado não existe.");
+                }
+
+                if (!guest.CheckinDate.HasValue)
+                {
+                    return ResponseModel.Error(HttpStatusCode.Conflict, "Já foi desfeito o checkin para este convidado.");
+                }
+
+                guest.CheckinDate = null;
+
+                _guestRepository.Update(guest);
+
+                return ResponseModel.Success("Checkin desfeito com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        public ResponseModel Uncheckin(Guid[] ids)
+        {
+            try
+            {
+                var guests = _guestRepository.GetAll(x => ids.Any(id => x.Id == id));
+
+                foreach (var guest in guests)
+                {
+                    guest.CheckinDate = null;
+
+                    _guestRepository.Update(guest);
+                }
+
+                return ResponseModel.Success("Checkin desfeito com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }

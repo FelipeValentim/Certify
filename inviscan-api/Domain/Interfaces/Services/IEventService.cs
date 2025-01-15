@@ -5,7 +5,7 @@ namespace Domain.Interfaces.Services
 {
     public interface IEventService
 	{
-		ResponseModel SaveTemplate(FileDTO file, Guid eventId);
+        ResponseModel<object> Add(EventDTO model);
 
 		ResponseModel<FileDTO> DownloadCertificates(Guid eventId);
 

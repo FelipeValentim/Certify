@@ -18,24 +18,9 @@ namespace API.Models
 
 		[JsonPropertyName("photo")]
 		public string Photo { get; set; }
-		[JsonPropertyName("defaultPhoto")]
-		public bool DefaultPhoto { get; set; }
 
-		[JsonPropertyName("fullPhotoUrl")]
-		public string FullPhotoUrl
-		{
-			get
-			{
-				if (!string.IsNullOrEmpty(Photo))
-				{
-					// Adiciona o domínio à URL relativa
-					return $"{Default.URL}{Photo}";
-				}
-
-				// Retorna nulo ou uma URL padrão caso não tenha foto
-				return $"{Default.URL}/default_avatar.png"; // Opcional: imagem padrão
-			}
-		}
+		[JsonPropertyName("photoFullUrl")]
+		public string PhotoFullUrl => $"{Default.URL}{Photo}"; // Opcional: imagem padrão
 
 		[JsonPropertyName("checkinDate")]
 		public DateTime? CheckinDate { get; set; }

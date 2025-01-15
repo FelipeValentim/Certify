@@ -7,12 +7,8 @@ import {
   Dimensions,
   Pressable,
   Image,
-  FlatList,
   Text,
-  Modal,
-  StatusBar,
   TouchableOpacity,
-  ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -402,9 +398,15 @@ export const ImagePicker = ({ onPicker, photo }) => {
       quality: 1,
       base64: true,
     });
-
     if (!result.canceled) {
-      onPicker(`data:image/png;base64,${result.assets[0].base64}`);
+      const asset = result.assets[0];
+      const file = {
+        size: asset.fileSize,
+        name: asset.fileName,
+        mimeType: asset.mimeType,
+        base64: `data:${asset.mimeType};base64,${asset.base64}`, // Inclui o prefixo "data:"
+      };
+      onPicker(file);
     }
   };
 

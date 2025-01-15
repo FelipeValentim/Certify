@@ -75,7 +75,7 @@ namespace Services
 
 				_documentService.GeneratePreview(file, relativePath);
 
-				var path = _storageService.UploadFile(file, eventId);
+				var path = _storageService.UploadTemplate(file, eventId);
 
 				var eventTemplateEntity = new EventTemplate
 				{
@@ -89,7 +89,7 @@ namespace Services
 
 				_eventRepository.Update(entity);
 
-				return ResponseModel.Success(data: $"{Default.URL}{relativePath}");
+				return ResponseModel.Success(payload: $"{Default.URL}{relativePath}");
 			}
 			catch (Exception ex)
 			{

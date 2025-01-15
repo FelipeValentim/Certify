@@ -4,6 +4,8 @@ using Domain.Interfaces.Services;
 using Domain.Interfaces.Repositories;
 using API.Models;
 using Domain.Entities;
+using Services;
+using Domain.DTO;
 
 namespace API.Controllers
 {
@@ -79,52 +81,11 @@ namespace API.Controllers
 
 
 		[HttpPost("NewEvent")]
-		public IActionResult NewEvent(EventViewModel model)
+		public IActionResult NewEvent(EventDTO model)
 		{
-			try
-			{
-				var userId = _userContextService.UserGuid;
+            var response = _eventService.Add(model);
 
-				if (string.IsNullOrEmpty(model.Name))
-                {
-					return StatusCode(StatusCodes.Status400BadRequest, "Nome é obrigatório.");
-				}
-
-				if (model.Date.Date < DateTime.Now.Date)
-				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Data inválida.");
-				}
-
-				if (model.StartTime >= model.EndTime)
-				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Horário inicial não pode ser maior que horário final.");
-				}
-
-				if (model.EventTypeId == Guid.Empty)
-				{
-					return StatusCode(StatusCodes.Status400BadRequest, "Tipo de evento é obrigatório.");
-				}
-
-				Event newEvent = new Event
-				{
-					Date = model.Date,
-                    StartTime = model.StartTime,
-                    EndTime = model.EndTime,
-                    Pax = model.Pax,
-					Name = model.Name,
-					Photo = model.Photo,
-                    EventTypeId = model.EventTypeId,
-                    UserId = userId,
-				};
-
-                _eventRepository.Insert(newEvent);
-
-				return StatusCode(StatusCodes.Status200OK, newEvent.Id);
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-			}
+            return StatusCode(response.Code, response.Data);
 		}
 
 		[HttpGet("GetEvent/{id}")]

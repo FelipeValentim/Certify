@@ -13,7 +13,10 @@ namespace API.Models
 		[JsonPropertyName("photo")]
 		public string Photo { get; set; }
 
-		[JsonPropertyName("date")]
+		[JsonPropertyName("photoFullUrl")]
+		public string PhotoFullUrl => $"{Default.URL}{Photo}";
+
+        [JsonPropertyName("date")]
 		public DateTime Date { get; set; }
 
 		[JsonPropertyName("startTime")]
@@ -24,8 +27,6 @@ namespace API.Models
 
 		[JsonPropertyName("pax")]
 		public int? Pax { get; set; }
-
-
 
 		[JsonPropertyName("eventTypeId")]
 		public Guid EventTypeId { get; set; }

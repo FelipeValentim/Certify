@@ -14,13 +14,13 @@ namespace Domain.DTO
 			};
 		}
 
-		public static ResponseModel Success(HttpStatusCode code = HttpStatusCode.OK, string data = null)
+		public static ResponseModel Success(HttpStatusCode code = HttpStatusCode.OK, string payload = null)
 		{
 			return new ResponseModel
 			{
 				Succeed = true,
 				StatusCode = code,
-				Data = data,
+				Payload = payload,
 			};
 		}
 	}
@@ -28,9 +28,9 @@ namespace Domain.DTO
 	public class ResponseModel<T> 
 	{
 		public bool Succeed { get; set; }
-		public T Data { get; set; }
+		public T Payload { get; set; }
 		public string Message { get; set; }
-		public object Result => Succeed ? Data : Message;
+		public object Data => Succeed ? Payload : Message;
 		public HttpStatusCode StatusCode { get; set; }
 		public int Code => (int)StatusCode;
 
@@ -46,12 +46,12 @@ namespace Domain.DTO
 			};
 		}
 
-		public static ResponseModel<T> Success(T data, HttpStatusCode code = HttpStatusCode.OK)
+		public static ResponseModel<T> Success(T payload, HttpStatusCode code = HttpStatusCode.OK)
 		{
 			return new ResponseModel<T>
 			{
 				Succeed = true,
-				Data = data,
+				Payload = payload,
 				StatusCode = code,
 			};
 		}

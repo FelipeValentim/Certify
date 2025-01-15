@@ -513,7 +513,7 @@ function GuestsTab({
                 <Image
                   style={styles.photo}
                   source={{
-                    uri: item.fullPhotoUrl,
+                    uri: item.photoFullUrl,
                   }}
                 />
               )}

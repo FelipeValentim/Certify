@@ -15,7 +15,10 @@ namespace Domain.DTO
 		[JsonPropertyName("photo")]
 		public string Photo { get; set; }
 
-		[JsonPropertyName("guestTypeId")]
+        [JsonPropertyName("photoFile")]
+        public FileDTO PhotoFile { get; set; }
+
+        [JsonPropertyName("guestTypeId")]
 		public Guid GuestTypeId { get; set; }
 
 		[JsonPropertyName("eventId")]

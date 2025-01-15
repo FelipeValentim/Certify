@@ -40,8 +40,7 @@ function NewGuest({ route, navigation }) {
   const [guestTypes, setGuestTypes] = useState();
   const [guest, setGuest] = useState({
     eventId: route.params.eventId,
-    fullPhotoUrl: `${baseURL}/storage/default_avatar.png`,
-    new: true,
+    photoFullUrl: `${baseURL}/default/avatar.png`,
   });
   const [errors, setErrors] = React.useState({
     name: undefined,
@@ -82,8 +81,7 @@ function NewGuest({ route, navigation }) {
 
           const { data } = response;
           guest.id = data.id;
-          // guest.photo = null; TODO
-          // guest.fullPhotoUrl = `${baseURL}${guest.photo}`;
+          guest.photoFullUrl = data.photoFullUrl;
           addGuest(guest);
           navigation.goBack();
         } catch (error) {
@@ -122,10 +120,10 @@ function NewGuest({ route, navigation }) {
           <Container style={styles.container}>
             <View style={styles.content}>
               <ImagePicker
-                photo={guest.photo ?? guest.fullPhotoUrl}
-                onPicker={(base64) =>
-                  setGuest({ ...guest, photo: base64, defaultPhoto: false })
+                photo={
+                  guest.photoFile ? guest.photoFile.base64 : guest.photoFullUrl
                 }
+                onPicker={(file) => setGuest({ ...guest, photoFile: file })}
               />
 
               {/* <Text style={styles.name}>{guest.name}</Text> */}
@@ -168,7 +166,7 @@ function NewGuest({ route, navigation }) {
               <ButtonLoading
                 loading={loading}
                 onPress={save}
-                style={[styles.button]}
+                style={styles.button}
               >
                 Salvar
               </ButtonLoading>
@@ -194,7 +192,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   button: {
-    width: 200,
+    width: "100%",
     marginTop: 40,
   },
 });

@@ -68,12 +68,12 @@ function Guest({ route, navigation }) {
         <Loading color={primaryColor} size={24} />
       ) : (
         <CustomScrollView>
-          <Container>
+          <Container style={styles.container}>
             <View style={styles.content}>
               <Image
                 style={styles.photo}
                 source={{
-                  uri: guest.fullPhotoUrl,
+                  uri: guest.photoFullUrl,
                 }}
               />
               <View style={{ alignItems: "center" }}>
@@ -118,7 +118,7 @@ function Guest({ route, navigation }) {
                 <ButtonLoading
                   onPress={() => checkin(guest.id)}
                   loading={loading}
-                  style={[styles.button]}
+                  style={styles.button}
                 >
                   Checkin
                 </ButtonLoading>
@@ -132,6 +132,9 @@ function Guest({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
   content: {
     alignItems: "center",
     flex: 1,
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   button: {
-    width: 200,
+    width: "100%",
   },
 });
 

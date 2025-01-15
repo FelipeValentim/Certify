@@ -33,7 +33,7 @@ namespace API.Controllers
         {
             try
             {
-				var eventTypes = _eventTypeService.GetEventTypes();
+				var eventTypes = _eventTypeService.GetAll();
 
 				var items = eventTypes.Select(e => new EventTypeViewModel
                 {

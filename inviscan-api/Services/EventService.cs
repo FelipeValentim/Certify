@@ -40,13 +40,6 @@ namespace Services
             _userContextService = userContextService;
         }
 
-        private string GeneratePreviewPath(Guid eventId)
-        {
-            var relativePath = $"/storage/{eventId}/preview.pdf";
-
-            return relativePath;
-        }
-
         public ResponseModel<FileDTO> DownloadCertificates(Guid eventId)
         {
             var eventItem = _eventRepository.Get(x => x.Id == eventId, includeProperties: "EventTemplate, EventType");
@@ -253,6 +246,17 @@ namespace Services
             return _eventRepository.GetByID(id);
         }
 
+        public Event GetRelated(Guid id)
+        {
+            var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "EventTemplate");
+
+            var guests = _guestRepository.GetGuests(eventItem.Id);
+
+            eventItem.Guests = guests;
+
+            return eventItem;
+        }
+
         public int CountGuests(Guid eventId)
         {
             return _guestRepository.Count(x => x.EventId == eventId);
@@ -279,10 +283,16 @@ namespace Services
                     return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Horário inicial não pode ser maior que horário final.");
                 }
 
+                if (model.Pax.HasValue && model.Pax.Value <= 0)
+                {
+                    return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Convidados precisa ser maior que 0.");
+                }
+
                 if (model.EventTypeId == Guid.Empty)
                 {
                     return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Tipo de evento é obrigatório.");
                 }
+
 
                 Event newEvent = new Event
                 {
@@ -309,7 +319,27 @@ namespace Services
                 return ResponseModel<object>.Error(HttpStatusCode.InternalServerError, ex.Message);
 
             }
+        }
 
+        public IEnumerable<Event> GetEvents()
+        {
+            var userId = _userContextService.UserGuid;
+
+            return _eventRepository.GetEvents(userId);
+        }
+
+        public ResponseModel Delete(Guid eventId)
+        {
+            try
+            {
+                _eventRepository.Delete(eventId);
+
+                return ResponseModel.Success("Operação realizada com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
     }
 }

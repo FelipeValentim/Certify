@@ -105,8 +105,6 @@ namespace Infrastructure.Repositories
 					entity.DeletedDate = DateTime.Now;
 					Update(entity);  // Atualiza a entidade com a data de exclusão
 				}
-
-				Update(entity);
 			}
 		}
 

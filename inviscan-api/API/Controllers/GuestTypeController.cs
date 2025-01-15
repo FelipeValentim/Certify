@@ -32,7 +32,7 @@ namespace API.Controllers
         {
             try
             {
-                var guestTypes = _guestTypeService.GetGuestTypes();
+                var guestTypes = _guestTypeService.GetAll();
 
 				var items = guestTypes.Select(e => new GuestTypeViewModel
                 {

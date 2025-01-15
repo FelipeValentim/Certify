@@ -14,7 +14,7 @@ namespace Domain.DTO
 			};
 		}
 
-		public static ResponseModel Success(HttpStatusCode code = HttpStatusCode.OK, string payload = null)
+		public static new ResponseModel Success(string payload = null, HttpStatusCode code = HttpStatusCode.OK)
 		{
 			return new ResponseModel
 			{

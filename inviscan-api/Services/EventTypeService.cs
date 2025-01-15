@@ -13,7 +13,7 @@ namespace Services
 			_eventTypeRepository = eventTypeRepository;
 		}
 
-		public IEnumerable<EventType> GetEventTypes()
+		public IEnumerable<EventType> GetAll()
 		{
 			return _eventTypeRepository.GetAll();
 		}

@@ -1,18 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Repository;
-using System.Security.Claims;
-using InviScan;
-using Xceed.Words.NET;
-using Microsoft.Extensions.Logging;
-using Xceed.Document.NET;
-using System.Text.RegularExpressions;
 using Domain.Interfaces.Services;
-using Domain.Identity;
-using Domain.Interfaces.Repositories;
 using API.Models;
-using Domain.Entities;
-using Services;
 
 namespace API.Controllers
 {

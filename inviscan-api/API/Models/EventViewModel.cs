@@ -1,6 +1,7 @@
 ﻿using Domain.Constants;
 using Domain.Entities;
 using Domain.Enum;
+using Services.Helper;
 using System.Text.Json.Serialization;
 
 namespace API.Models
@@ -38,9 +39,15 @@ namespace API.Models
 		public Guid? EventTemplateId { get; set; }
 
 		[JsonPropertyName("formURL")]
-		public string FormURL => $"{Default.URL}/form/guest/{Id}";
+		public string FormURL => $"{Default.URL}/form/guest/{HasherId.Encode(Id)}";
 
-		[JsonPropertyName("eventTemplate")]
+        [JsonPropertyName("formCheckinURL")]
+        public string FormCheckinURL => $"{Default.URL}/form/checkin/{HasherId.Encode(Id, Salt.Salt2)}";
+
+        [JsonPropertyName("QRCode")]
+        public string QRCode => $"{Default.URL}/event/qrcode/{Id}";
+
+        [JsonPropertyName("eventTemplate")]
 		public EventTemplateViewModel EventTemplate { get; set; }
 
 		[JsonPropertyName("guestsCount")]

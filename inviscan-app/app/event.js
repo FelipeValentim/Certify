@@ -8,7 +8,6 @@ import EventTemplateTab from "./templateTab";
 import EventScannerTab from "./eventScanner";
 import { Ionicons } from "@expo/vector-icons";
 import { EventAPI } from "@/services/EventAPI";
-import { getCurrentDateFormatted } from "@/helper/date";
 import { View, Animated } from "react-native";
 import { useFocusEffect } from "expo-router";
 

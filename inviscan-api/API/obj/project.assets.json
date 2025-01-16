@@ -59,6 +59,19 @@
           }
         }
       },
+      "CSharpVitamins.ShortGuid/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/CSharpVitamins.ShortGuid.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/CSharpVitamins.ShortGuid.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "DocX/3.0.1": {
         "type": "package",
         "dependencies": {
@@ -210,6 +223,19 @@
           "runtimes/win-x86/native/libHarfBuzzSharp.dll": {
             "assetType": "native",
             "rid": "win-x86"
+          }
+        }
+      },
+      "Hashids.net/1.7.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/Hashids.net.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Hashids.net.dll": {
+            "related": ".xml"
           }
         }
       },
@@ -2711,9 +2737,11 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "CSharpVitamins.ShortGuid": "2.0.0",
           "DocX": "3.0.1",
           "Domain": "1.0.0",
           "FreeSpire.Doc": "12.2.0",
+          "Hashids.net": "1.7.0",
           "Konscious.Security.Cryptography.Argon2": "1.3.1",
           "MailKit": "4.9.0",
           "Microsoft.AspNetCore.Hosting.Server.Abstractions": "2.2.0",
@@ -2796,6 +2824,22 @@
         "lib/netstandard2.0/BouncyCastle.Cryptography.dll",
         "lib/netstandard2.0/BouncyCastle.Cryptography.xml",
         "packageIcon.png"
+      ]
+    },
+    "CSharpVitamins.ShortGuid/2.0.0": {
+      "sha512": "NUMSSw0Eyfxl+pDzflR5kOdbmy4wkqhvXU3Yx0SGMRjOip/zQpSgdAjYtGbq8gnds1rieS3l+G5JmMAdMc+iTw==",
+      "type": "package",
+      "path": "csharpvitamins.shortguid/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "csharpvitamins.shortguid.2.0.0.nupkg.sha512",
+        "csharpvitamins.shortguid.nuspec",
+        "lib/net40/CSharpVitamins.ShortGuid.dll",
+        "lib/net40/CSharpVitamins.ShortGuid.xml",
+        "lib/netstandard2.0/CSharpVitamins.ShortGuid.dll",
+        "lib/netstandard2.0/CSharpVitamins.ShortGuid.xml"
       ]
     },
     "DocX/3.0.1": {
@@ -3006,6 +3050,25 @@
         "runtimes/win10-arm64/nativeassets/uap10.0/libHarfBuzzSharp.dll",
         "runtimes/win10-x64/nativeassets/uap10.0/libHarfBuzzSharp.dll",
         "runtimes/win10-x86/nativeassets/uap10.0/libHarfBuzzSharp.dll"
+      ]
+    },
+    "Hashids.net/1.7.0": {
+      "sha512": "TuQ8ns5c+eeIOHSgJdwCLb0nWzKqn2gCPSLFoz6nWdhw3tS5Wa43qrwRXT4UJT7XVgHqKssacVU1SGlAOWjeIg==",
+      "type": "package",
+      "path": "hashids.net/1.7.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "hashids.net.1.7.0.nupkg.sha512",
+        "hashids.net.nuspec",
+        "hashids.png",
+        "lib/net6.0/Hashids.net.dll",
+        "lib/net6.0/Hashids.net.xml",
+        "lib/net7.0/Hashids.net.dll",
+        "lib/net7.0/Hashids.net.xml",
+        "lib/netstandard2.0/Hashids.net.dll",
+        "lib/netstandard2.0/Hashids.net.xml"
       ]
     },
     "itext/9.0.0": {

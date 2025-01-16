@@ -17,10 +17,16 @@ namespace Services
 			_eventRepository = eventRepository;
 		}
 
-		public ResponseModel<EventDTO> GenerateForm(Guid eventId)
+		public ResponseModel<EventDTO> GenerateForm(string eventId)
 		{
+			var id = new Guid(eventId);
 
-			var eventItem = _eventRepository.Get(x => x.Id == eventId, includeProperties: "User");
+            if (id == Guid.Empty)
+            {
+                return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento inválido.");
+            }
+
+            var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User");
 
 			if (eventItem == null)
 			{

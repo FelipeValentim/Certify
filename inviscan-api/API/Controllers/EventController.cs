@@ -6,6 +6,7 @@ using API.Models;
 using Domain.Entities;
 using Services;
 using Domain.DTO;
+using Services.Helper;
 
 namespace API.Controllers
 {
@@ -127,6 +128,15 @@ namespace API.Controllers
             var result = _eventService.SendCertificates(eventId);
 
             return StatusCode(result.Code, result.Data);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("QRCode/{eventId}")]
+        public ActionResult GenerateCheckinQRCode(Guid eventId)
+        {
+            var response = _eventService.GenerateCheckinQRCode(eventId);
+
+            return File(response.Data, response.MimeType);
         }
     }
 }

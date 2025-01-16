@@ -4,6 +4,9 @@ namespace Domain.Interfaces.Services
 {
 	public interface IQRCodeService
     {
-        byte[] GenerateQRCode(Guid id);
-	}
+        FileDTO GenerateQRCode(Guid id);
+
+        FileDTO GenerateQRCode(string value);
+
+    }
 }

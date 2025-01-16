@@ -26,9 +26,10 @@ namespace Services
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IMailService _mailService;
         private readonly IUserContextService _userContextService;
+        private readonly IQRCodeService _qrCodeService;
 
         public EventService(IEventRepository eventRepository, IStorageService storageService, IDocumentService documentService, IWebHostEnvironment webHostEnvironment,
-            IEventTemplateRepository eventTemplateRepository, IGuestRepository guestRepository, IMailService mailService, IUserContextService userContextService)
+            IEventTemplateRepository eventTemplateRepository, IGuestRepository guestRepository, IMailService mailService, IUserContextService userContextService, IQRCodeService qrCodeService)
         {
             _eventRepository = eventRepository;
             _storageService = storageService;
@@ -38,6 +39,7 @@ namespace Services
             _guestRepository = guestRepository;
             _mailService = mailService;
             _userContextService = userContextService;
+            _qrCodeService = qrCodeService;
         }
 
         public ResponseModel<FileDTO> DownloadCertificates(Guid eventId)
@@ -340,6 +342,15 @@ namespace Services
             {
                 return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+
+        public FileDTO GenerateCheckinQRCode(Guid eventId)
+        {
+            var url = $"{Default.URL}/form/checkin/{HasherId.Encode(eventId, Salt.Salt2)}";
+
+            var response = _qrCodeService.GenerateQRCode(url);
+
+            return response;
         }
     }
 }

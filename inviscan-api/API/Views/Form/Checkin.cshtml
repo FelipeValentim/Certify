@@ -1,0 +1,449 @@
+﻿@using Domain.DTO;
+@model EventDTO;
+
+<html>
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .formbold-main-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+        }
+
+        .title {
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .formbold-form-wrapper {
+            margin: 0 auto;
+            max-width: 95%;
+            width: 100%;
+            background: white;
+        }
+
+        .formbold-img {
+            display: block;
+            border-radius: 50%;
+            margin: auto;
+            height: 200px;
+            width: 200px;
+            object-fit: cover;
+        }
+
+        .event-img {
+            height: 120px;
+            width: 120px;
+        }
+
+
+        .formbold-img-container {
+            padding: 1rem;
+        }
+
+        .formbold-form-input {
+            width: 100%;
+            padding: 13px 22px;
+            border-radius: 5px;
+            border: 1px solid #dde3ec;
+            background: #ffffff;
+            font-weight: 500;
+            font-size: 16px;
+            color: #536387;
+            outline: none;
+            resize: none;
+        }
+
+            .formbold-form-input:focus {
+                border-color: #7B55E0;
+                box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            .formbold-form-input.feedback-error {
+                border-color: #dd2150;
+            }
+
+        .formbold-form-label {
+            color: #07074d;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 24px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+            .formbold-form-label span {
+                color: #536387;
+                font-size: 12px;
+                line-height: 18px;
+                display: inline-block;
+            }
+
+        .formbold-mb-3 {
+            margin-bottom: 15px;
+        }
+
+        .formbold-mb-6 {
+            margin-bottom: 30px;
+        }
+
+        .formbold-radio-flex {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .formbold-radio-label {
+            font-size: 14px;
+            line-height: 24px;
+            color: #07074d;
+            position: relative;
+            padding-left: 25px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .formbold-input-radio {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .formbold-radio-checkmark {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            height: 18px;
+            width: 18px;
+            background-color: #ffffff;
+            border: 1px solid #dde3ec;
+            border-radius: 50%;
+        }
+
+        .formbold-radio-label
+        .formbold-input-radio:checked ~ .formbold-radio-checkmark {
+            background-color: #7B55E0;
+        }
+
+        .formbold-radio-checkmark:after {
+            content: '';
+            position: absolute;
+            display: none;
+        }
+
+        .formbold-radio-label
+        .formbold-input-radio:checked ~ .formbold-radio-checkmark:after {
+            display: block;
+        }
+
+        .formbold-radio-label .formbold-radio-checkmark:after {
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ffffff;
+            transform: translate(-50%, -50%);
+        }
+
+        .formbold-btn {
+            position: relative;
+            text-align: center;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 5px;
+            /*padding: 14px 25px;*/
+            height: 3rem;
+            border: none;
+            font-weight: 500;
+            background-color: #7B55E0;
+            color: white;
+            cursor: pointer;
+            margin: 25px 0;
+        }
+
+            .formbold-btn:hover {
+                box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+            }
+
+        .photo-container {
+            position: relative;
+        }
+
+        .edit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #7B55E060;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background 0.3s ease-in-out;
+        }
+
+            .edit:hover {
+                background: #7B55E0;
+            }
+
+        .display-none {
+            display: none !important;
+        }
+
+        .spinner-container{
+            position: absolute;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #FFFFFF;
+            animation: spin 1s ease infinite;
+        }
+
+        @@keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loadingSpinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #6a64f1;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .center-absolute-position{
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .text-align-center{
+            text-align: center;
+        }
+
+        .mt-5{
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Learn More: https://formbold.com -->
+    <div class="formbold-form-wrapper">
+        <div class="formbold-img-container">
+            <img src="@Model.Photo" class="formbold-img event-img">
+        </div>
+
+        <form id="guestForm">
+
+
+            <label for="qusOne" class="formbold-form-label title">
+                Bem vindo ao evento <strong>@Model.Name</strong>.
+            </label>
+            <label for="qusOne" class="formbold-form-label title">
+                Para garantir sua presença, por favor, forneça o código do convite abaixo.
+            </label>
+            <input type="hidden" name="eventId" value="@Model.Id" />
+
+
+
+            <div class="formbold-mb-6 mt-5">
+
+                <input type="file" id="photoInput" accept="image/*" class="formbold-form-input display-none" />
+                <div class="formbold-img-container">
+                <label for="name" class="formbold-form-label text-align-center">Sua foto</label>
+                    <div class="formbold-img photo-container">
+                        <img id="photoPreview" class="formbold-img" src="https://simply-novel-shiner.ngrok-free.app/default/avatar.png" alt="Preview da Imagem" />
+                        <label for="photoInput" class="edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="25px" width="25px" version="1.1" id="Capa_1" viewBox="0 0 282.837 282.837" xml:space="preserve">
+                            <g>
+                            <path d="M19.539,246.006c-1.412-1.413-2.995-2.159-4.576-2.159c-2.361,0-4.33,1.676-5.266,4.482l-9.24,27.723   c-0.701,2.103-0.591,3.95,0.309,5.201c0.736,1.021,1.959,1.584,3.443,1.584c0.79,0,1.655-0.155,2.571-0.461l27.722-9.241   c2.36-0.786,3.907-2.267,4.355-4.167c0.448-1.9-0.273-3.916-2.032-5.675L19.539,246.006z" />
+                            <path d="M280.205,48.279L234.553,2.627C232.86,0.934,230.599,0,228.189,0c-2.41,0-4.67,0.934-6.363,2.627L51.892,172.561   c-3.212,3.212-6.993,9.33-8.429,13.638l-7.417,22.252c-1.503,4.508,0.008,10.909,3.368,14.27l20.697,20.697   c2.403,2.403,6.48,3.957,10.388,3.957c0,0,0,0,0.001,0c1.404,0,2.71-0.198,3.881-0.589l22.253-7.417   c4.309-1.436,10.426-5.217,13.637-8.428L280.205,61.007C283.714,57.498,283.714,51.788,280.205,48.279z M252.535,70.896   L166.8,156.631c-2.929,2.929-6.768,4.393-10.607,4.393s-7.678-1.465-10.606-4.393c-5.858-5.857-5.858-15.355,0-21.213   l85.735-85.735c5.857-5.857,15.355-5.857,21.213,0C258.393,55.54,258.393,65.038,252.535,70.896z" />
+                                    </g>
+                                </svg>
+                        </label>
+                    </div>
+                </div>
+                <input type="hidden" id="photo" name="photo" />
+            </div>
+
+            <div class="formbold-mb-3">
+                <label for="name" class="formbold-form-label">Codigo*</label>
+
+                <input type="text"
+                       name="name"
+                       id="name"
+                       onblur="validateField('name')"
+                       class="formbold-form-input" />
+            </div>
+
+            <button type="submit" class="formbold-btn">
+                <span id="submit-text">Buscar</span>  
+                <div class="spinner-container center-absolute-position">
+                    <div id="loadingSpinner" class="spinner display-none"></div>
+                </div>
+            </button>
+
+            </>
+        </form>
+    </div>
+
+    <script>
+        const toast = (text) => {
+            Toastify({
+                text: text,
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top",
+                position: "center",
+                style: {
+                    background: "linear-gradient(to right, #6a64f1, #9c64f1)",
+                },
+            }).showToast();
+        }
+
+        const resetForm = () => {
+            form.reset();
+            photoPreview.src = "https://simply-novel-shiner.ngrok-free.app/default/avatar.png";
+        }
+
+        function validateField(fieldId, errorMessage) {
+            const field = document.getElementById(fieldId);
+
+            if (!field.value.trim()) {
+                field.classList.add('feedback-error');
+            } else {
+                field.classList.remove('feedback-error');
+            }
+        }
+
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const submitText = document.getElementById('submit-text');
+
+
+        // Validação em tempo real ao digitar
+        const nameField = document.getElementById('name');
+        const emailField = document.getElementById('email');
+
+        nameField.addEventListener('input', () => validateField('name', 'Por favor, insira seu nome.'));
+        emailField.addEventListener('input', () => validateField('email', 'Por favor, insira seu email.'));
+
+        const form = document.getElementById('guestForm');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+
+            // Campos que precisam de validação
+            const requiredFields = [
+                'name',
+                'email'
+            ];
+
+            // Valida todos os campos obrigatórios
+            let isValid = true;
+            requiredFields.forEach((id) => {
+                const field = document.getElementById(id);
+                if (!field.value.trim()) {
+                    validateField(id);
+                    isValid = false;
+                }
+            });
+
+            // Se algum campo estiver inválido, exibe uma mensagem geral e não prossegue
+            if (!isValid) {
+                toast("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            loadingSpinner.classList.remove('display-none');
+            submitText.classList.add('display-none');
+
+
+            const formData = new FormData(form);
+            const model = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                eventId: formData.get('eventId'),
+                photo: formData.get('photo'),
+            };
+            try {
+                const response = await fetch('/Form/NewGuest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(model)
+                });
+                if (response.ok) {
+                    toast("Convidado cadastrado com sucesso");
+
+                    resetForm();
+                } else {
+                    const errorMessage = await response.text();
+
+                    toast(errorMessage);
+                }
+            } catch (error) {
+                toast(error.message);
+            } finally {
+                loadingSpinner.classList.add('display-none');
+                submitText.classList.remove('display-none');
+            }
+        });
+
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const photoBase64Input = document.getElementById('photo');
+
+        photoInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    // Exibe o preview da imagem
+                    photoPreview.src = e.target.result;
+
+                    // Armazena o Base64 no campo oculto
+                    photoBase64Input.value = e.target.result.split(',')[1];
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

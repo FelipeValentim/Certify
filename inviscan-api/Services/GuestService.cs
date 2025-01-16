@@ -138,13 +138,14 @@ namespace Services
                                        .Replace("{data}", eventItem.Date.ToString("d 'de' MMMM 'de' yyyy"))
                                        .Replace("{horarioinicial}", eventItem.StartTime.ToString(@"hh\:mm"))
                                        .Replace("{horariofinal}", eventItem.EndTime.ToString(@"hh\:mm"));
+                        
 
 
             var guests = _guestRepository.GetAll(u => ids.Contains(u.Id));
 
             foreach (var guest in guests)
             {
-                var qrCodeBytes = _qrCodeService.GenerateQRCode(guest.Id);
+                var qrCode = _qrCodeService.GenerateQRCode(guest.Id);
 
                 var mailMessage = new MailMessageDTO();
 
@@ -152,11 +153,12 @@ namespace Services
 
                 mailMessage.Subject = $"Convite - {eventItem.Name}";
 
-                var html = htmlTemplate.Replace("{convidado}", guest.Name);
+                var html = htmlTemplate.Replace("{convidado}", guest.Name)
+                                       .Replace("{accesscode}", HasherId.Encode(guest.Id, Salt.GuestGUID));
 
                 mailMessage.Html = html;
 
-                mailMessage.AddEmbedded(qrCodeBytes, "image/png", "Convite - QRCode", "{qrcode}");
+                mailMessage.AddEmbedded(qrCode.Data, qrCode.MimeType, "Convite - QRCode", "{qrcode}");
 
                 _mailService.SendMailCheckfy(mailMessage);
             }

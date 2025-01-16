@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "3eR6jfP7Xv6I9/G0cLNvbaJ7EAJCOLyVotoLtvO8Lu9uOeZPAyRdGrdAmTewOPf+ZssZBPDJeNvHFPpD9eeKfw==",
+  "dgSpecHash": "4AsuwCzp05XfZnEa1iZ/ZipQym8lvWyccxTmkQKLgG50MeDt4CibGD9DWMK0SRmDo98PHZWbrk/sq2ZWUfgq6g==",
   "success": true,
   "projectFilePath": "C:\\Projects\\event-checkin\\inviscan-api\\API\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Sahrutar\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\bouncycastle.cryptography\\2.5.0\\bouncycastle.cryptography.2.5.0.nupkg.sha512",
+    "C:\\Users\\Sahrutar\\.nuget\\packages\\csharpvitamins.shortguid\\2.0.0\\csharpvitamins.shortguid.2.0.0.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\docx\\3.0.1\\docx.3.0.1.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\freespire.doc\\12.2.0\\freespire.doc.12.2.0.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\google.apis\\1.68.0\\google.apis.1.68.0.nupkg.sha512",
@@ -15,6 +16,7 @@
     "C:\\Users\\Sahrutar\\.nuget\\packages\\google.apis.drive.v3\\1.68.0.3627\\google.apis.drive.v3.1.68.0.3627.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\google.apis.oauth2.v2\\1.68.0.1869\\google.apis.oauth2.v2.1.68.0.1869.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\harfbuzzsharp\\2.6.1.5\\harfbuzzsharp.2.6.1.5.nupkg.sha512",
+    "C:\\Users\\Sahrutar\\.nuget\\packages\\hashids.net\\1.7.0\\hashids.net.1.7.0.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\itext\\9.0.0\\itext.9.0.0.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\itext.commons\\9.0.0\\itext.commons.9.0.0.nupkg.sha512",
     "C:\\Users\\Sahrutar\\.nuget\\packages\\itext7\\9.0.0\\itext7.9.0.0.nupkg.sha512",

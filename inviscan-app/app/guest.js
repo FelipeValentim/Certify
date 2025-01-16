@@ -10,7 +10,6 @@ import { GuestAPI } from "@/services/GuestAPI";
 import React, { Fragment, useState } from "react";
 import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import { getCurrentDateFormatted } from "@/helper/date";
 import Header from "@/components/common/Header";
 import {
   Container,

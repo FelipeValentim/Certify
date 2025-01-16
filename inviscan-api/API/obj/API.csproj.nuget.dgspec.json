@@ -325,6 +325,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "CSharpVitamins.ShortGuid": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
             "DocX": {
               "target": "Package",
               "version": "[3.0.1, )"
@@ -332,6 +336,10 @@
             "FreeSpire.Doc": {
               "target": "Package",
               "version": "[12.2.0, )"
+            },
+            "Hashids.net": {
+              "target": "Package",
+              "version": "[1.7.0, )"
             },
             "Konscious.Security.Cryptography.Argon2": {
               "target": "Package",

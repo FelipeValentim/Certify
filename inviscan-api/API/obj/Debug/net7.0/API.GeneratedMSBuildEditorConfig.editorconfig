@@ -16,6 +16,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Projects\event-checkin\inviscan-api\API
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Projects/event-checkin/inviscan-api/API/Views/Form/Checkin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxDaGVja2luLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projects/event-checkin/inviscan-api/API/Views/Form/NewGuest.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxOZXdHdWVzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

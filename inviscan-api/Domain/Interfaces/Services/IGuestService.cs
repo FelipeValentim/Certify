@@ -1,4 +1,5 @@
 ﻿using Domain.DTO;
+using Domain.Entities;
 
 namespace Domain.Interfaces.Services
 {
@@ -11,8 +12,10 @@ namespace Domain.Interfaces.Services
         void SendQRCode(Guid eventId, Guid id);
 
         void SendQRCode(Guid eventId, Guid[] ids);
-
+        ResponseModel<GuestDTO> Get(Guid id);
+        ResponseModel<GuestDTO> Get(string id);
         ResponseModel Checkin(Guid id);
+        ResponseModel Checkin(string id);
         ResponseModel Uncheckin(Guid id);
         ResponseModel Checkin(Guid[] ids);
         ResponseModel Uncheckin(Guid[] ids);

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -28,6 +29,7 @@ builder.Services.AddControllersWithViews();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Repositórios
 builder.Services.AddTransient<IUserProfileRepository, UserProfileRepository>();
@@ -53,6 +55,7 @@ builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IGuestService, GuestService>();
 builder.Services.AddTransient<IFormService, FormService>();
 builder.Services.AddTransient<IQRCodeService, QRCodeService>();
+builder.Services.AddTransient<IMappingService, MappingService>();
 
 builder.Services.AddHttpContextAccessor();
 

@@ -23,10 +23,10 @@ namespace Services
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IQRCodeService _qrCodeService;
         private readonly IMailService _mailService;
-
+        private readonly IMappingService _mappingService;
 
         public GuestService(IGuestRepository guestRepository, IEventService eventService, IStorageService storageService, IGuestTypeService guestTypeService,
-            IWebHostEnvironment webHostEnvironment, IMailService mailService, IQRCodeService qrCodeService)
+            IWebHostEnvironment webHostEnvironment, IMailService mailService, IQRCodeService qrCodeService, IMappingService mappingService)
         {
             _guestRepository = guestRepository;
             _eventService = eventService;
@@ -35,6 +35,7 @@ namespace Services
             _webHostEnvironment = webHostEnvironment;
             _mailService = mailService;
             _qrCodeService = qrCodeService;
+            _mappingService = mappingService;
         }
 
         public ResponseModel<object> Add(GuestDTO model)
@@ -208,7 +209,14 @@ namespace Services
             }
         }
 
-        public ResponseModel Checkin(Guid[] ids)
+        public ResponseModel Checkin(string id)
+        {
+            var guid = new Guid(id);
+
+            return Checkin(guid);
+        }
+
+            public ResponseModel Checkin(Guid[] ids)
         {
             try
             {
@@ -304,6 +312,27 @@ namespace Services
             {
                 return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+
+        public ResponseModel<GuestDTO> Get(Guid id)
+        {
+            var guest = _guestRepository.GetByID(id);
+
+            if (guest == null)
+            {
+                return ResponseModel<GuestDTO>.Error(HttpStatusCode.BadRequest, "Convidado não existe.");
+            }
+
+            var dto = _mappingService.Map<GuestDTO>(guest);
+
+            return ResponseModel<GuestDTO>.Success(dto);
+        }
+
+        public ResponseModel<GuestDTO> Get(string id)
+        {
+            var guid = new Guid(id);
+
+            return Get(guid);
         }
     }
 }

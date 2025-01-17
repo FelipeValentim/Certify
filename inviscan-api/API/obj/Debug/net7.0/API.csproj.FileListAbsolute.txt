@@ -127,3 +127,4 @@ C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\runtimes\win\lib\net
 C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
 C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\CSharpVitamins.ShortGuid.dll
 C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\Hashids.net.dll
+C:\Projects\event-checkin\inviscan-api\API\bin\Debug\net7.0\AutoMapper.dll

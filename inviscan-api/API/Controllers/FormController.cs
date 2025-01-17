@@ -4,7 +4,9 @@ using Domain.DTO;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Services.Attributes;
+using Services.Helper;
 
 namespace InviScan.Controllers
 {
@@ -50,6 +52,24 @@ namespace InviScan.Controllers
             var response = _formService.GenerateForm(eventId);
 
             return View(response.Succeed ? "Checkin" : "~/Views/Shared/Error.cshtml", response.Data);
+        }
+
+        [DecodeHash(Salt.GuestGUID)]
+        [HttpGet("Guest/Search/{accesscode}")]
+        public ActionResult SearchGuest(string accesscode)
+        {
+            var response = _guestService.Get(accesscode);
+
+            return StatusCode(response.Code, response.Data);
+        }
+
+        [DecodeHash(Salt.GuestGUID)]
+        [HttpPut("Guest/Checkin/{accesscode}")]
+        public ActionResult CheckinGuest(string accesscode)
+        {
+            var response = _guestService.Checkin(accesscode);
+
+            return StatusCode(response.Code, response.Data);
         }
 
     }

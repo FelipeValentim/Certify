@@ -4,6 +4,10 @@ namespace Domain.Interfaces.Services
 {
 	public interface IFormService
 	{
-		ResponseModel<EventDTO> GenerateForm(string eventId);
-	}
+		ResponseModel<EventDTO> GenerateRegistrationForm(string eventId);
+        ResponseModel<EventDTO> GenerateCheckinForm(string eventId);
+
+        ResponseModel<object> AddGuest(GuestDTO model);
+
+    }
 }

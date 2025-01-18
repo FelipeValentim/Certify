@@ -298,7 +298,7 @@ namespace Services
 
                 Event newEvent = new Event
                 {
-                    Date = model.Date,
+                    Date = model.Date.Date,
                     StartTime = model.StartTime,
                     EndTime = model.EndTime,
                     Pax = model.Pax,

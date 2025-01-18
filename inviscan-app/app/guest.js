@@ -1,14 +1,9 @@
 import ButtonLoading from "@/components/common/ButtonLoading";
 import Loading from "@/components/common/Loading";
-import {
-  backgroundColor,
-  httpStatus,
-  primaryColor,
-  screenHeight,
-} from "@/constants/Default";
+import { httpStatus, primaryColor } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
 import React, { Fragment, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import Header from "@/components/common/Header";
 import {
@@ -18,13 +13,15 @@ import {
   H3,
   MutedText,
 } from "@/components/common/CustomElements";
-import CustomText from "@/components/common/CustomText";
+// import CustomText from "@/components/common/CustomText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { format } from "date-fns";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { toast } from "@/redux/snackBar";
+// import * as Clipboard from "expo-clipboard";
+// import { Ionicons } from "@expo/vector-icons";
 
 function Guest({ route, navigation }) {
   const dispatch = useDispatch();
@@ -37,7 +34,7 @@ function Guest({ route, navigation }) {
         setLoading(true);
         await GuestAPI.checkin(id);
         dispatch(
-          toast({ text: "Checkin realizado com sucesso", type: "sucess" })
+          toast({ text: "Checkin realizado com sucesso", type: "success" })
         );
         updateCheckin([id]);
       }
@@ -105,6 +102,24 @@ function Guest({ route, navigation }) {
                   <Text>Pendente</Text>
                 </View>
               )}
+              {/* <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  marginTop: 10,
+                }}
+                onPress={async () => {
+                  await Clipboard.setStringAsync(guest.accessCode);
+                  dispatch(
+                    toast({
+                      text: "Código copiado com sucesso",
+                      type: "success",
+                    })
+                  );
+                }}
+              >
+                <CustomText numberOfLines={1}>{guest.accessCode}</CustomText>
+                <Ionicons name="clipboard-outline" color={"#000"} size={20} />
+              </TouchableOpacity> */}
               <View style={styles.qrCode}>
                 <QRCode
                   value={guest.id}

@@ -16,8 +16,11 @@ import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons";
 import EventQRCode from "@/components/EventQRCode";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "@/redux/snackBar";
+import { useDispatch } from "react-redux";
 
 const EventTab = ({ navigation, route, info, title }) => {
+  const dispatch = useDispatch();
   const [visibleQRCode, setVisibleQRCode] = useState(false);
 
   const toggleInfo = () => {
@@ -89,13 +92,24 @@ const EventTab = ({ navigation, route, info, title }) => {
                     )}
                   </CustomText>
                 </View>
+                <View style={{ flexDirection: "row", gap: 10 }}>
+                  <Ionicons name="people-outline" color={"#000"} size={20} />
+                  <CustomText>{info.pax ?? "Sem limites"}</CustomText>
+                </View>
+
                 <TouchableOpacity
                   style={{
                     flexDirection: "row",
                   }}
-                  onPress={async () =>
-                    await Clipboard.setStringAsync(info.formURL)
-                  }
+                  onPress={async () => {
+                    await Clipboard.setStringAsync(info.formURL);
+                    dispatch(
+                      toast({
+                        text: "Link copiado com sucesso",
+                        type: "success",
+                      })
+                    );
+                  }}
                 >
                   <CustomText numberOfLines={1}>{info.formURL}</CustomText>
                   <Ionicons name="clipboard-outline" color={"#000"} size={20} />

@@ -85,6 +85,7 @@ namespace API.Controllers
                     Name = eventItem.Name,
                     Photo = eventItem.Photo,
                     EventTemplateId = eventItem.EventTemplateId,
+                    Pax = eventItem.Pax,
                     EventTemplate = eventItem.EventTemplateId.HasValue
                     ? new EventTemplateViewModel
                     {

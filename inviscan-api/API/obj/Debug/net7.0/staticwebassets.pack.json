@@ -25,6 +25,14 @@
       "PackagePath": "staticwebassets\\default\\workshop.png"
     },
     {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\error\\undraw_location-search.svg",
+      "PackagePath": "staticwebassets\\error\\undraw_location-search.svg"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\error\\undraw_page-not-found.svg",
+      "PackagePath": "staticwebassets\\error\\undraw_page-not-found.svg"
+    },
+    {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\html\\grateful.html",
       "PackagePath": "staticwebassets\\html\\grateful.html"
     },
@@ -139,6 +147,10 @@
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\95589677-91c5-4ba4-b215-ff46df6a5b22\\2fa338b07cb94f919d2702afeaf2f3a8.jpeg",
       "PackagePath": "staticwebassets\\storage\\95589677-91c5-4ba4-b215-ff46df6a5b22\\2fa338b07cb94f919d2702afeaf2f3a8.jpeg"
+    },
+    {
+      "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\ac6951fe-827b-40b2-956f-041576d33402\\90af8328-426a-464a-b021-701b006bd5ff\\8bc57480922446369cad6ee80b6d2608.jpeg",
+      "PackagePath": "staticwebassets\\storage\\ac6951fe-827b-40b2-956f-041576d33402\\90af8328-426a-464a-b021-701b006bd5ff\\8bc57480922446369cad6ee80b6d2608.jpeg"
     },
     {
       "Id": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\ac6951fe-827b-40b2-956f-041576d33402\\e647544617f647578902f8ce1c80c6b2.jpeg",

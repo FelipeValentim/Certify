@@ -346,6 +346,20 @@
             }).showToast();
         }
 
+        const toastError = (text) => {
+            Toastify({
+                text: text,
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top",
+                position: "center",
+                style: {
+                    background: "linear-gradient(to right, #dd2150, #b5172f)",
+                },
+            }).showToast();
+        }
+
         const resetForm = () => {
             form.reset();
             photoPreview.src = "https://simply-novel-shiner.ngrok-free.app/default/avatar.png";
@@ -396,7 +410,7 @@
 
             // Se algum campo estiver inválido, exibe uma mensagem geral e não prossegue
             if (!isValid) {
-                toast("Por favor, preencha todos os campos obrigatórios.");
+                toastError("Por favor, preencha todos os campos obrigatórios.");
                 return;
             }
 
@@ -426,10 +440,10 @@
                 } else {
                     const errorMessage = await response.text();
 
-                    toast(errorMessage);
+                    toastError(errorMessage);
                 }
             } catch (error) {
-                toast(error.message);
+                toastError(error.message);
             } finally {
                 loadingSpinner.classList.add('display-none');
                 submitText.classList.remove('display-none');

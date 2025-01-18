@@ -1,16 +1,18 @@
 ﻿using Domain.Constants;
 using Domain.Entities;
 using Domain.Enum;
+using Services.Helper;
 using System.Text.Json.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace API.Models
 {
 
 	public class GuestViewModel : ViewModelBase
 	{
+		[JsonPropertyName("accessCode")]
+		public string AccessCode => HasherId.Encode(Id, Salt.GuestGUID);
 
-		[JsonPropertyName("name")]
+        [JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		[JsonPropertyName("email")]

@@ -30,7 +30,7 @@ namespace InviScan.Controllers
         [HttpGet("Guest/{eventId}")]
         public ActionResult FormGuest(string eventId)
         {
-            var response = _formService.GenerateForm(eventId);
+            var response = _formService.GenerateRegistrationForm(eventId);
 
             return View(response.Succeed ? "NewGuest" : "~/Views/Shared/Error.cshtml", response.Data);
         }
@@ -38,9 +38,7 @@ namespace InviScan.Controllers
         [HttpPost("NewGuest")]
         public ActionResult NewGuest(GuestDTO model)
         {
-            _guestService.SetStudentGuestType(ref model);
-
-            var response = _guestService.Add(model);
+            var response = _formService.AddGuest(model);
 
             return StatusCode(response.Code, response.Data);
         }
@@ -49,7 +47,7 @@ namespace InviScan.Controllers
         [HttpGet("Checkin/{eventId}")]
         public ActionResult FormCheckin(string eventId)
         {
-            var response = _formService.GenerateForm(eventId);
+            var response = _formService.GenerateCheckinForm(eventId);
 
             return View(response.Succeed ? "Checkin" : "~/Views/Shared/Error.cshtml", response.Data);
         }

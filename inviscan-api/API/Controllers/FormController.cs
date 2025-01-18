@@ -17,20 +17,18 @@ namespace InviScan.Controllers
     {
         private readonly IGuestService _guestService;
         private readonly IFormService _formService;
-        private readonly IEventService _eventService;
 
-        public FormController(IGuestService guestService, IFormService formService, IEventService eventService)
+        public FormController(IGuestService guestService, IFormService formService)
         {
             _guestService = guestService;
             _formService = formService;
-            _eventService = eventService;
         }
 
         [DecodeHash]
         [HttpGet("Guest/{eventId}")]
         public ActionResult FormGuest(string eventId)
         {
-            var response = _formService.GenerateRegistrationForm(eventId);
+            ResponseModel<EventDTO> response = _formService.GenerateRegistrationForm(eventId);
 
             return View(response.Succeed ? "NewGuest" : "~/Views/Shared/Error.cshtml", response.Data);
         }
@@ -38,7 +36,7 @@ namespace InviScan.Controllers
         [HttpPost("NewGuest")]
         public ActionResult NewGuest(GuestDTO model)
         {
-            var response = _formService.AddGuest(model);
+            ResponseModel<object> response = _formService.AddGuest(model);
 
             return StatusCode(response.Code, response.Data);
         }
@@ -47,7 +45,7 @@ namespace InviScan.Controllers
         [HttpGet("Checkin/{eventId}")]
         public ActionResult FormCheckin(string eventId)
         {
-            var response = _formService.GenerateCheckinForm(eventId);
+            ResponseModel<EventDTO> response = _formService.GenerateCheckinForm(eventId);
 
             return View(response.Succeed ? "Checkin" : "~/Views/Shared/Error.cshtml", response.Data);
         }
@@ -56,7 +54,7 @@ namespace InviScan.Controllers
         [HttpGet("Guest/Search/{accesscode}")]
         public ActionResult SearchGuest(string accesscode)
         {
-            var response = _guestService.Get(accesscode);
+            ResponseModel<GuestDTO> response = _guestService.Get(accesscode);
 
             return StatusCode(response.Code, response.Data);
         }
@@ -65,7 +63,7 @@ namespace InviScan.Controllers
         [HttpPut("Guest/Checkin/{accesscode}")]
         public ActionResult CheckinGuest(string accesscode)
         {
-            var response = _guestService.Checkin(accesscode);
+            ResponseModel response = _formService.CheckinGuest(accesscode);
 
             return StatusCode(response.Code, response.Data);
         }

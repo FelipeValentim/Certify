@@ -1,0 +1,25 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "services/AccountAPI.js",
+    "app/+not-found.js",
+    "app/+html.js",
+    "app/_main.js",
+    "app/auth/_layout.js",
+    "app/auth/register.js",
+    "app/auth/index.js",
+    "components/common/ModalContainer.js",
+    "components/common/CustomInput.js"
+  ]
+}

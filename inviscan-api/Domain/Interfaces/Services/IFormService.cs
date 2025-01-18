@@ -8,6 +8,6 @@ namespace Domain.Interfaces.Services
         ResponseModel<EventDTO> GenerateCheckinForm(string eventId);
 
         ResponseModel<object> AddGuest(GuestDTO model);
-
+        ResponseModel CheckinGuest(string accesscode);
     }
 }

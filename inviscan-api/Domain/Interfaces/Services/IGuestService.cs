@@ -14,8 +14,8 @@ namespace Domain.Interfaces.Services
         void SendQRCode(Guid eventId, Guid[] ids);
         ResponseModel<GuestDTO> Get(Guid id);
         ResponseModel<GuestDTO> Get(string id);
-        ResponseModel Checkin(Guid id);
-        ResponseModel Checkin(string id);
+        ResponseModel Checkin(Guid id, bool form = false);
+        ResponseModel Checkin(string id, bool form = false);
         ResponseModel Uncheckin(Guid id);
         ResponseModel Checkin(Guid[] ids);
         ResponseModel Uncheckin(Guid[] ids);

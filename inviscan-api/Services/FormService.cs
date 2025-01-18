@@ -104,5 +104,12 @@ namespace Services
 
             return ResponseModel<EventDTO>.Success(dto);
         }
+
+        public ResponseModel CheckinGuest(string accesscode)
+        {
+            var response = _guestService.Checkin(accesscode, true);
+
+            return response;
+        }
     }
 }

@@ -184,7 +184,7 @@ namespace Services
         }
 
 
-        public ResponseModel Checkin(Guid id)
+        public ResponseModel Checkin(Guid id, bool form = false)
         {
             try
             {
@@ -200,6 +200,21 @@ namespace Services
                     return ResponseModel.Error(HttpStatusCode.Conflict, "Já foi realizado checkin para este convidado.");
                 }
 
+                if (form)
+                {
+                    var eventItem = _eventService.Get(guest.EventId);
+
+                    if (DateTime.Now < eventItem.Date.Add(eventItem.StartTime))
+                    {
+                        return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
+                    }
+
+                    if (DateTime.Now > eventItem.Date.Add(eventItem.EndTime))
+                    {
+                        return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
+                    }
+                }
+
                 guest.CheckinDate = DateTime.Now;
 
                 _guestRepository.Update(guest);
@@ -212,11 +227,11 @@ namespace Services
             }
         }
 
-        public ResponseModel Checkin(string id)
+        public ResponseModel Checkin(string id, bool form = false)
         {
             var guid = new Guid(id);
 
-            return Checkin(guid);
+            return Checkin(guid, form);
         }
 
         public ResponseModel Checkin(Guid[] ids)

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "AqqG7sjNMgmH9vtpXEHqNfaYnbCrKo0gFZDhvFVwLtY=",
+  "Hash": "uLFtJUK5bVDr4gENMR46OvFyF1qUatEKzkMGye4uMn4=",
   "Source": "API",
   "BasePath": "_content/API",
   "Mode": "Default",
@@ -117,6 +117,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\default\\workshop.png"
+    },
+    {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\error\\undraw_location-search.svg",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "error/undraw_location-search.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\error\\undraw_location-search.svg"
+    },
+    {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\error\\undraw_page-not-found.svg",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "error/undraw_page-not-found.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\error\\undraw_page-not-found.svg"
     },
     {
       "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\html\\grateful.html",
@@ -610,6 +644,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\storage\\95589677-91c5-4ba4-b215-ff46df6a5b22\\2fa338b07cb94f919d2702afeaf2f3a8.jpeg"
+    },
+    {
+      "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\ac6951fe-827b-40b2-956f-041576d33402\\90af8328-426a-464a-b021-701b006bd5ff\\8bc57480922446369cad6ee80b6d2608.jpeg",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "storage/ac6951fe-827b-40b2-956f-041576d33402/90af8328-426a-464a-b021-701b006bd5ff/8bc57480922446369cad6ee80b6d2608.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\storage\\ac6951fe-827b-40b2-956f-041576d33402\\90af8328-426a-464a-b021-701b006bd5ff\\8bc57480922446369cad6ee80b6d2608.jpeg"
     },
     {
       "Identity": "C:\\Projects\\event-checkin\\inviscan-api\\API\\wwwroot\\storage\\ac6951fe-827b-40b2-956f-041576d33402\\e647544617f647578902f8ce1c80c6b2.jpeg",

@@ -38,7 +38,7 @@ namespace Services
             _mappingService = mappingService;
         }
 
-        public ResponseModel<object> Add(GuestDTO model)
+        public ResponseModel<object> Add(GuestDTO model, bool form = false)
         {
             try
             {
@@ -72,10 +72,13 @@ namespace Services
                     return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Evento é obrigatório.");
                 }
 
-                //if (DateTime.Now > eventItem.Date.Add(eventItem.EndTime)) // Já passou o horário final do evento
-                //{
-                //	return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Não é permitido adicionar mais convidados (evento finalizado).");
-                //}
+                if (form)
+                {
+                    if (DateTime.Now > eventItem.Date.Add(eventItem.StartTime)) // Já passou o horário inicial do evento
+                    {
+                        return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Prazo de cadastro para o evento finalizado.");
+                    }
+                }
 
                 if (eventItem.Pax.HasValue) // Tem limite de convidados
                 {
@@ -139,7 +142,7 @@ namespace Services
                                        .Replace("{data}", eventItem.Date.ToString("d 'de' MMMM 'de' yyyy"))
                                        .Replace("{horarioinicial}", eventItem.StartTime.ToString(@"hh\:mm"))
                                        .Replace("{horariofinal}", eventItem.EndTime.ToString(@"hh\:mm"));
-                        
+
 
 
             var guests = _guestRepository.GetAll(u => ids.Contains(u.Id));
@@ -216,7 +219,7 @@ namespace Services
             return Checkin(guid);
         }
 
-            public ResponseModel Checkin(Guid[] ids)
+        public ResponseModel Checkin(Guid[] ids)
         {
             try
             {

@@ -5,7 +5,7 @@ namespace Domain.Interfaces.Services
 {
     public interface IGuestService
 	{
-		ResponseModel<object> Add(GuestDTO guest);
+		ResponseModel<object> Add(GuestDTO guest, bool form = false);
 
 		void SetStudentGuestType(ref GuestDTO guest);
 

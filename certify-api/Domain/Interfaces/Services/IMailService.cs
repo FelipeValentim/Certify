@@ -4,6 +4,8 @@ namespace Domain.Interfaces.Services
 {
     public interface IMailService
 	{
-        ResponseModel SendMailCheckfy(MailMessageDTO mailMessage);
-	}
+        Task<ResponseModel> SendMailCheckfyAsync(MailMessageDTO mailMessage);
+
+        Task<ResponseModel> SendMailCheckfyAsync(IEnumerable<MailMessageDTO> mailMessages);
+    }
 }

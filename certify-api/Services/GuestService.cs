@@ -106,7 +106,7 @@ namespace Services
                 // Upload da foto, se necessário
                 if (model.PhotoFile != null)
                 {
-                    guest.Photo = _storageService.UploadFile(model.PhotoFile, $"{guest.EventId}/{guest.Id}");
+                    guest.Photo = _storageService.UploadFile(model.PhotoFile, $"{guest.EventId}/{guest.Id}").GetAwaiter().GetResult();
                 }
 
                 // Inserir o convidado no repositório
@@ -115,7 +115,7 @@ namespace Services
                 SendQRCode(guest.EventId, guest.Id);
 
                 // Retornar resposta de sucesso
-                return ResponseModel<object>.Success(new { id = guest.Id, photoFullUrl = $"{Default.URL}{guest.Photo}" }, HttpStatusCode.OK);
+                return ResponseModel<object>.Success(new { id = guest.Id, photoFullUrl = $"{UrlManager.API}{guest.Photo}" }, HttpStatusCode.OK);
             }
             catch (Exception ex)
             {
@@ -164,7 +164,7 @@ namespace Services
 
                 mailMessage.AddEmbedded(qrCode.Data, qrCode.MimeType, "Convite - QRCode", "{qrcode}");
 
-                _mailService.SendMailCheckfy(mailMessage);
+                _mailService.SendMailCheckfyAsync(mailMessage);
             }
         }
 

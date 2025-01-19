@@ -1,5 +1,6 @@
 import React from "react";
 import LoginScreen from "./login";
+import RegisterScreen from "./register";
 import HomeScreen from "./home";
 import EventScreen from "./event";
 import GuestScreen from "./guest";
@@ -127,11 +128,18 @@ const Main = () => {
                   />
                 </>
               ) : (
-                <Stack.Screen
-                  name={routes.login}
-                  options={{ title: routes.login }}
-                  component={LoginScreen}
-                />
+                <>
+                  <Stack.Screen
+                    name={routes.login}
+                    options={{ title: routes.login }}
+                    component={LoginScreen}
+                  />
+                  <Stack.Screen
+                    name={routes.register}
+                    options={{ title: routes.register }}
+                    component={RegisterScreen}
+                  />
+                </>
               )}
             </Stack.Navigator>
           </NavigationContainer>

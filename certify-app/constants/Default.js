@@ -38,4 +38,5 @@ export const routes = {
   newGuest: "Novo Convidado",
   newEvent: "Novo Evento",
   login: "Login",
+  register: "Cadastrar",
 };

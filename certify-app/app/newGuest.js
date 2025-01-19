@@ -1,26 +1,10 @@
 import ButtonLoading from "@/components/common/ButtonLoading";
-import {
-  backgroundColor,
-  baseURL,
-  primaryColor,
-  screenHeight,
-} from "@/constants/Default";
+import { baseURL, primaryColor } from "@/constants/Default";
 import React, { Fragment, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Image,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import Header from "@/components/common/Header";
 import {
-  InputNumber,
   Input,
-  InputDate,
-  InputTime,
-  SelectPicker,
   ImagePicker,
   SelectInput,
 } from "@/components/common/CustomInput";

@@ -12,7 +12,7 @@ namespace API.Models
 		public string PreviewPath { get; set; }
 
 		[JsonPropertyName("fullPreviewPath")]
-		public string FullPreviewPath => $"{Default.URL}{PreviewPath}";
+		public string FullPreviewPath => $"{UrlManager.Storage}{PreviewPath}";
 
 	}
 }

@@ -9,7 +9,7 @@ namespace Services
 {
 	public class MailService : IMailService
 	{
-		public ResponseModel SendMailCheckfy(MailMessageDTO mailMessage)
+		public async Task<ResponseModel> SendMailCheckfyAsync(MailMessageDTO mailMessage)
 		{
 			var message = new MimeMessage();
 
@@ -50,12 +50,22 @@ namespace Services
 
 				client.Authenticate("checkfy.helper@gmail.com", "yssv xjdf nzdo wkrc"); /*yssv xjdf nzdo wkrc*/
 
-				client.Send(message);
+				await client.SendAsync(message);
 
 				client.Disconnect(true);
 			}
 
 			return ResponseModel.Success();
 		}
-	}
+
+        public async Task<ResponseModel> SendMailCheckfyAsync(IEnumerable<MailMessageDTO> mailMessages)
+        {
+            foreach (MailMessageDTO mailMessage in mailMessages)
+            {
+				await SendMailCheckfyAsync(mailMessage);
+            }
+
+            return ResponseModel.Success();
+        }
+    }
 }

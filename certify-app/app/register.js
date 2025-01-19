@@ -1,4 +1,10 @@
-import { H1, H3 } from "@/components/common/CustomElements";
+import ButtonLoading from "@/components/common/ButtonLoading";
+import {
+  Container,
+  CustomScrollView,
+  H1,
+  H3,
+} from "@/components/common/CustomElements";
 
 import { Input, InputPassword } from "@/components/common/CustomInput";
 import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
@@ -12,48 +18,67 @@ import {
 } from "react-native";
 
 export default function RegisterScreen() {
-  const [user, setUser] = React.useState({ userName: "", password: "" });
+  const [user, setUser] = React.useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   return (
     <ImageBackground
-      source={require("@/assets/images/background-login.svg")}
+      source={require("@/assets/images/background-login.png")}
       style={styles.backgroundImage}
     >
-      <View style={styles.container}>
-        <View>
-          <H1 style={styles.h1}>Olá</H1>
-          <H3 style={styles.h2}>Faça o registro</H3>
-        </View>
+      <CustomScrollView
+        style={{ backgroundColor: "transparent" }}
+        contentContainerStyle={{
+          flex: 1,
+        }}
+      >
+        <Container style={styles.container}>
+          <View>
+            <H1 style={styles.h1}>Olá</H1>
+            <H3 style={styles.h2}>Faça o registro</H3>
+          </View>
 
-        <View>
-          <Input
-            value={user.userName}
-            onChangeText={(text) => setUser({ ...user, userName: text })}
-            placeholder="Nome"
-          ></Input>
-          <InputPassword
-            value={user.password}
-            onChangeText={(text) => setUser({ ...user, password: text })}
-            placeholder="Senha"
-          ></InputPassword>
-        </View>
+          <View>
+            <Input
+              value={user.name}
+              onChangeText={(text) => setUser({ ...user, name: text })}
+              placeholder="Nome"
+            ></Input>
+            <Input
+              value={user.email}
+              onChangeText={(text) => setUser({ ...user, name: text })}
+              placeholder="Email"
+            ></Input>
+            <InputPassword
+              value={user.password}
+              onChangeText={(text) => setUser({ ...user, password: text })}
+              placeholder="Senha"
+            ></InputPassword>
+            <InputPassword
+              value={user.password}
+              onChangeText={(text) => setUser({ ...user, password: text })}
+              placeholder="Senha"
+            ></InputPassword>
+          </View>
 
-        <Pressable style={styles.button}>
-          <Text style={styles.textButton}>Login</Text>
-        </Pressable>
-      </View>
+          <ButtonLoading>Cadastrar</ButtonLoading>
+        </Container>
+      </CustomScrollView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: screenHeight,
+    backgroundColor: "transparent",
     padding: 16,
     display: "flex",
     gap: 32,
     justifyContent: "center",
-    alignContent: "center",
   },
   h1: {
     alignSelf: "center",
@@ -61,19 +86,6 @@ const styles = StyleSheet.create({
   h2: {
     alignSelf: "center",
     fontWeight: "normal",
-  },
-  button: {
-    backgroundColor: primaryColor,
-    borderRadius: 32,
-    padding: 8,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textButton: {
-    color: "#FFF",
-    fontSize: 16,
-    fontFamily: "PoppinsBold",
   },
   backgroundImage: {
     width: screenWidth,

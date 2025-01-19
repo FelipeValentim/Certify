@@ -59,7 +59,7 @@ namespace Services
             var guestItems = _guestRepository.GetAll(x => x.EventId == eventId && x.CheckinDate.HasValue, includeProperties: "GuestType");
             var eventTemplateItem = _eventTemplateRepository.GetByID(eventItem.EventTemplateId.Value);
 
-            string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, eventTemplateItem.Path.TrimStart('/'));
+            var templatePath = $"{UrlManager.Storage}{eventTemplateItem.Path}";
 
             // Criação do MemoryStream para armazenar o ZIP
             var zipMemoryStream = new MemoryStream();
@@ -168,7 +168,7 @@ namespace Services
             var guestItems = _guestRepository.GetAll(x => x.EventId == eventId && x.CheckinDate.HasValue, includeProperties: "GuestType");
             var eventTemplateItem = _eventTemplateRepository.GetByID(eventItem.EventTemplateId.Value);
 
-            string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, eventTemplateItem.Path.TrimStart('/'));
+            var templatePath = $"{UrlManager.Storage}{eventTemplateItem.Path}";
 
             // Criação do MemoryStream para armazenar o ZIP
 
@@ -177,6 +177,8 @@ namespace Services
             string htmlTemplate = File.ReadAllText(htmlPath);
 
             htmlTemplate = htmlTemplate.Replace("{evento}", eventItem.Name);
+
+            List<MailMessageDTO> mailMessages = new List<MailMessageDTO>();
 
             foreach (var guest in guestItems)
             {
@@ -236,9 +238,12 @@ namespace Services
 
                     mailMessage.Html = htmlTemplate;
 
-                    _mailService.SendMailCheckfy(mailMessage);
+                    mailMessages.Add(mailMessage);
                 }
             }
+
+            _mailService.SendMailCheckfyAsync(mailMessages);
+
             return ResponseModel.Success();
 
         }
@@ -309,12 +314,12 @@ namespace Services
 
                 if (model.PhotoFile != null)
                 {
-                    newEvent.Photo = _storageService.UploadFile(model.PhotoFile, $"{newEvent.Id}");
+                    newEvent.Photo = _storageService.UploadFile(model.PhotoFile, $"{newEvent.Id}").GetAwaiter().GetResult();
                 }
 
                 _eventRepository.Insert(newEvent);
 
-                return ResponseModel<object>.Success(new { id = newEvent.Id, photoFullUrl = $"{Default.URL}{newEvent.Photo}" });
+                return ResponseModel<object>.Success(new { id = newEvent.Id, photoFullUrl = $"{UrlManager.Storage}{newEvent.Photo}" });
             }
             catch (Exception ex)
             {
@@ -346,7 +351,7 @@ namespace Services
 
         public FileDTO GenerateCheckinQRCode(Guid eventId)
         {
-            var url = $"{Default.URL}/form/checkin/{HasherId.Encode(eventId, Salt.Salt2)}";
+            var url = $"{UrlManager.API}/form/checkin/{HasherId.Encode(eventId, Salt.Salt2)}";
 
             var response = _qrCodeService.GenerateQRCode(url);
 

@@ -71,16 +71,19 @@ namespace Services
 					return ResponseModel.Error(HttpStatusCode.NotFound, "Evento já possui template.");
 				}
 
-				var relativePath = GeneratePreviewPath(eventId);
 
-				_documentService.GeneratePreview(file, relativePath);
+				var previewFile = _documentService.ConvertDocumentToPdf(file);
 
-				var path = _storageService.UploadTemplate(file, eventId);
+                previewFile.Path = GeneratePreviewPath(eventId);
+
+                _storageService.UploadFile(previewFile).GetAwaiter().GetResult();
+
+                var path = _storageService.UploadTemplate(file, eventId).GetAwaiter().GetResult();
 
 				var eventTemplateEntity = new EventTemplate
 				{
 					Path = path,
-					PreviewPath = relativePath
+					PreviewPath = previewFile.Path
 				};
 
 				_eventTemplateRepository.Insert(eventTemplateEntity);
@@ -89,7 +92,7 @@ namespace Services
 
 				_eventRepository.Update(entity);
 
-				return ResponseModel.Success(payload: $"{Default.URL}{relativePath}");
+				return ResponseModel.Success(payload: $"{UrlManager.Storage}{eventTemplateEntity.PreviewPath}");
 			}
 			catch (Exception ex)
 			{

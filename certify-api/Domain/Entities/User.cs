@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class UserProfile : EntityBase
+    public class UserProfile : AuditableEntity
     {
         public string Email { get; set; }
 
@@ -26,7 +26,6 @@ namespace Domain.Entities
             ConcurrencyStamp = Guid.NewGuid();
 
             SecurityStamp = Guid.NewGuid();
-
         }
     }
 

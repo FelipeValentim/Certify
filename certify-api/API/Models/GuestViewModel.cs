@@ -22,7 +22,7 @@ namespace API.Models
 		public string Photo { get; set; }
 
 		[JsonPropertyName("photoFullUrl")]
-		public string PhotoFullUrl => $"{Default.URL}{Photo}"; // Opcional: imagem padrão
+		public string PhotoFullUrl => $"{UrlManager.Storage}{Photo}"; // Opcional: imagem padrão
 
 		[JsonPropertyName("checkinDate")]
 		public DateTime? CheckinDate { get; set; }

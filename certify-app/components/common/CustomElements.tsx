@@ -13,6 +13,7 @@ import CustomText from "./CustomText";
 interface TextProps {
   children: React.ReactNode;
   style?: StyleProp<TextStyle>;
+  onPress?: () => void;
 }
 
 interface ViewProps {
@@ -26,28 +27,56 @@ interface ScrollViewProps {
   contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
-export const H1: React.FC<TextProps> = ({ children, style = {} }) => {
-  return <Text style={[styles.h1, style]}>{children}</Text>;
+export const H1: React.FC<TextProps> = ({ children, style = {}, onPress }) => {
+  return (
+    <Text onPress={onPress} style={[styles.h1, style]}>
+      {children}
+    </Text>
+  );
 };
 
-export const H2: React.FC<TextProps> = ({ children, style = {} }) => {
-  return <Text style={[styles.h2, style]}>{children}</Text>;
+export const H2: React.FC<TextProps> = ({ children, style = {}, onPress }) => {
+  return (
+    <Text onPress={onPress} style={[styles.h2, style]}>
+      {children}
+    </Text>
+  );
 };
 
-export const H3: React.FC<TextProps> = ({ children, style = {} }) => {
-  return <Text style={[styles.h3, style]}>{children}</Text>;
+export const H3: React.FC<TextProps> = ({ children, style = {}, onPress }) => {
+  return (
+    <Text onPress={onPress} style={[styles.h3, style]}>
+      {children}
+    </Text>
+  );
 };
 
-export const H4: React.FC<TextProps> = ({ children, style = {} }) => {
-  return <Text style={[styles.h4, style]}>{children}</Text>;
+export const H4: React.FC<TextProps> = ({ children, style = {}, onPress }) => {
+  return (
+    <Text onPress={onPress} style={[styles.h4, style]}>
+      {children}
+    </Text>
+  );
 };
 
-export const H5: React.FC<TextProps> = ({ children, style = {} }) => {
-  return <Text style={[styles.h5, style]}>{children}</Text>;
+export const H5: React.FC<TextProps> = ({ children, style = {}, onPress }) => {
+  return (
+    <Text onPress={onPress} style={[styles.h5, style]}>
+      {children}
+    </Text>
+  );
 };
 
-export const MutedText: React.FC<TextProps> = ({ children, style = {} }) => {
-  return <Text style={[styles.muted, style]}>{children}</Text>;
+export const MutedText: React.FC<TextProps> = ({
+  children,
+  style = {},
+  onPress,
+}) => {
+  return (
+    <Text onPress={onPress} style={[styles.muted, style]}>
+      {children}
+    </Text>
+  );
 };
 
 export const Container: React.FC<ViewProps> = ({ children, style = {} }) => {

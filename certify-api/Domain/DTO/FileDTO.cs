@@ -17,6 +17,9 @@ namespace Domain.DTO
 		public string MimeType { get; set; }
 
 		[JsonPropertyName("size")]
-		public int Size { get; set; }
-	}
+		public long Size { get; set; }
+
+        [JsonPropertyName("path")]
+        public string Path { get; set; }
+    }
 }

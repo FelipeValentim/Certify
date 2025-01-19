@@ -1,8 +1,21 @@
-import { H1, H3 } from "@/components/common/CustomElements";
+import { H1, H3, H4 } from "@/components/common/CustomElements";
 import { Input, InputPassword } from "@/components/common/CustomInput";
-import { primaryColor, screenHeight, screenWidth } from "@/constants/Default";
+import {
+  backgroundColor,
+  primaryColor,
+  routes,
+  screenHeight,
+  screenWidth,
+} from "@/constants/Default";
 import React from "react";
-import { StyleSheet, View, Text, ImageBackground } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  TouchableOpacity,
+  Pressable,
+  Text,
+} from "react-native";
 import { AccountAPI } from "@/services/AccountAPI";
 import { setToken } from "@/storage/AsyncStorage";
 
@@ -11,8 +24,9 @@ import ButtonLoading from "@/components/common/ButtonLoading";
 import { signIn } from "@/redux/token";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons";
+import CustomText from "@/components/common/CustomText";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const [user, setUser] = React.useState({ email: "", password: "" });
@@ -104,10 +118,18 @@ export default function LoginScreen() {
               error={errors.password}
             ></InputPassword>
           </View>
-
           <ButtonLoading loading={loading} onPress={login}>
             Login
           </ButtonLoading>
+          {/* <H4 style={{ textAlign: "center", ...styles.shadowText }}>
+            Não tem conta?{" "}
+            <H4
+              onPress={() => navigation.navigate(routes.register)}
+              style={{ color: primaryColor }}
+            >
+              Cadastre-se
+            </H4>
+          </H4> */}
         </View>
       </ImageBackground>
     </View>
@@ -134,5 +156,10 @@ const styles = StyleSheet.create({
   },
   qrCode: {
     alignSelf: "center",
+  },
+  shadowText: {
+    textShadowColor: "#fff", // Cor da sombra mais clara
+    textShadowOffset: { width: 1, height: 1 }, // Deslocamento menor
+    textShadowRadius: 2, // Raio de desfoque menor
   },
 });

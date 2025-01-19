@@ -15,7 +15,7 @@ namespace API.Models
 		public string Photo { get; set; }
 
 		[JsonPropertyName("photoFullUrl")]
-		public string PhotoFullUrl => $"{Default.URL}{Photo}";
+		public string PhotoFullUrl => $"{UrlManager.Storage}{Photo}";
 
         [JsonPropertyName("date")]
 		public DateTime Date { get; set; }
@@ -39,13 +39,13 @@ namespace API.Models
 		public Guid? EventTemplateId { get; set; }
 
 		[JsonPropertyName("formURL")]
-		public string FormURL => $"{Default.URL}/form/guest/{HasherId.Encode(Id)}";
+		public string FormURL => $"{UrlManager.API}/form/guest/{HasherId.Encode(Id)}";
 
         [JsonPropertyName("formCheckinURL")]
-        public string FormCheckinURL => $"{Default.URL}/form/checkin/{HasherId.Encode(Id, Salt.Salt2)}";
+        public string FormCheckinURL => $"{UrlManager.API}/form/checkin/{HasherId.Encode(Id, Salt.Salt2)}";
 
         [JsonPropertyName("QRCode")]
-        public string QRCode => $"{Default.URL}/event/qrcode/{Id}";
+        public string QRCode => $"{UrlManager.API}/event/qrcode/{Id}";
 
         [JsonPropertyName("eventTemplate")]
 		public EventTemplateViewModel EventTemplate { get; set; }

@@ -4,10 +4,9 @@ namespace Domain.Interfaces.Services
 {
 	public interface IStorageService
 	{
-        string UploadFile(FileDTO file, string path);
-
-		string UploadTemplate(FileDTO file, Guid eventId);
-
-
-	}
+        Task<string> UploadFile(FileDTO file, string path);
+        Task<string> UploadFile(FileDTO file);
+        Task<string> UploadTemplate(FileDTO file, Guid eventId);
+        Task<Stream> GetFileStream(string path);
+    }
 }

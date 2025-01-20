@@ -22,11 +22,13 @@ export const primaryColor = "#7B55E0";
 export const backgroundColor = "#F5F0FF";
 export const redColor = "#dd2150";
 
-export const remote = {
+const remote = {
   active: true,
-  url: "https://simply-novel-shiner.ngrok-free.app",
+  url: "https://certify-1wqq.onrender.com",
 };
-export const baseURL = remote.active ? remote.url : "https://localhost:7093";
+export const baseURL = remote.active
+  ? remote.url
+  : "https://simply-novel-shiner.ngrok-free.app";
 
 export const screenHeight = Dimensions.get("window").height;
 export const screenWidth = Dimensions.get("window").width;

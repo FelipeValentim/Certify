@@ -39,5 +39,13 @@ namespace Services.Helper
 
             return new MemoryStream(bytes);
         }
+
+        public static byte[] ConvertToBytes(this string base64)
+        {
+            if (base64.Contains(","))
+                base64 = base64.Split(',')[1];
+
+            return Convert.FromBase64String(base64);
+        }
     }
 }

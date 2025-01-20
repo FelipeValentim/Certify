@@ -20,13 +20,6 @@ namespace Services
         static string bucketName = "certify";  // Nome do seu bucket R2
         static string endpoint = $"https://{accountId}.r2.cloudflarestorage.com";  // Endpoint do seu R2 (substitua <account_id> pelo seu ID de conta)
 
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public StorageService(IWebHostEnvironment webHostEnvironment)
-        {
-            _webHostEnvironment = webHostEnvironment;
-        }
-
-
         public async Task<string> UploadFile(FileDTO file, string path)
         {
             // 1. Verifica se a string base64 é válida

@@ -42,67 +42,87 @@ namespace Services
 
         public ResponseModel<EventDTO> GenerateRegistrationForm(string eventId)
         {
-            var id = new Guid(eventId);
-
-            if (id == Guid.Empty)
+            try
             {
-                return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento inválido.");
-            }
 
-            var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User");
+                var id = new Guid(eventId);
 
-            if (eventItem == null)
-            {
-                return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento não existe");
-            }
-
-            if (DateTime.Now > eventItem.Date.Add(eventItem.StartTime))
-            {
-                return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Prazo de cadastro para o evento finalizado.");
-            }
-
-            if (eventItem.Pax.HasValue)
-            {
-                if (_eventService.CountGuests(eventItem.Id) >= eventItem.Pax)
+                if (id == Guid.Empty)
                 {
-                    return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Não há mais convites disponíveis para o evento.");
+                    return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento inválido.");
                 }
+
+                var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User");
+
+                if (eventItem == null)
+                {
+                    return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento não existe");
+                }
+
+                if (DateTime.Now > eventItem.Date.Add(eventItem.StartTime))
+                {
+                    return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Prazo de cadastro para o evento finalizado.");
+                }
+
+                if (eventItem.Pax.HasValue)
+                {
+                    if (_eventService.CountGuests(eventItem.Id) >= eventItem.Pax)
+                    {
+                        return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Não há mais convites disponíveis para o evento.");
+                    }
+                }
+
+                var dto = _mappingService.Map<EventDTO>(eventItem);
+
+                return ResponseModel<EventDTO>.Success(dto);
             }
+            catch (Exception ex)
+            {
+                return ResponseModel<EventDTO>.Error(HttpStatusCode.InternalServerError, ex.Message);
 
-            var dto = _mappingService.Map<EventDTO>(eventItem);
-
-            return ResponseModel<EventDTO>.Success(dto);
+            }
         }
 
         public ResponseModel<EventDTO> GenerateCheckinForm(string eventId)
         {
-            var id = new Guid(eventId);
-
-            if (id == Guid.Empty)
+            try
             {
-                return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento inválido.");
+
+                var id = new Guid(eventId);
+
+                if (id == Guid.Empty)
+                {
+                    return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento inválido.");
+                }
+
+                var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User");
+
+                if (eventItem == null)
+                {
+                    return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento não existe");
+                }
+
+                if (DateTime.Now < eventItem.Date.Add(eventItem.StartTime))
+                {
+                    return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
+                }
+
+                if (DateTime.Now > eventItem.Date.Add(eventItem.EndTime))
+                {
+                    return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
+                }
+
+                var dto = _mappingService.Map<EventDTO>(eventItem);
+
+
+                return ResponseModel<EventDTO>.Success(dto);
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, ex.Message);
+
             }
 
-            var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User");
-
-            if (eventItem == null)
-            {
-                return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento não existe");
-            }
-
-            if (DateTime.Now < eventItem.Date.Add(eventItem.StartTime))
-            {
-                return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
-            }
-
-            if (DateTime.Now > eventItem.Date.Add(eventItem.EndTime))
-            {
-                return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
-            }
-
-            var dto = _mappingService.Map<EventDTO>(eventItem);
-
-            return ResponseModel<EventDTO>.Success(dto);
         }
 
         public ResponseModel CheckinGuest(string accesscode)

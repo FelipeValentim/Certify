@@ -58,7 +58,7 @@ builder.Services.AddTransient<IImageManager, ImageManager>();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddDbContext<CertifyDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Certify")));
+builder.Services.AddDbContext<CertifyDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Certify")));
 
 builder.Services.AddAuthentication(x =>
 {

@@ -4,6 +4,7 @@
     {
 		public const string Storage = "https://meucertificado.uk";
 
-        public const string API = "https://simply-novel-shiner.ngrok-free.app";
+        public const string API = "https://certify-1wqq.onrender.com";
+        //public const string API = "https://simply-novel-shiner.ngrok-free.app";
     }
 }

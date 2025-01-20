@@ -59,6 +59,7 @@ builder.Services.AddTransient<IImageManager, ImageManager>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<CertifyDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Certify")));
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Apenas para PostgreSQL
 
 builder.Services.AddAuthentication(x =>
 {

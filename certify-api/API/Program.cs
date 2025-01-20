@@ -54,6 +54,7 @@ builder.Services.AddTransient<IGuestService, GuestService>();
 builder.Services.AddTransient<IFormService, FormService>();
 builder.Services.AddTransient<IQRCodeService, QRCodeService>();
 builder.Services.AddTransient<IMappingService, MappingService>();
+builder.Services.AddTransient<IImageManager, ImageManager>();
 
 builder.Services.AddHttpContextAccessor();
 

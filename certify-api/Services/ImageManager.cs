@@ -1,8 +1,10 @@
 ﻿using Domain.DTO;
 using Domain.Interfaces.Services;
 using Services.Helper;
-using System.Drawing;
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace Services
 {
@@ -20,78 +22,68 @@ namespace Services
                 return file;
             }
 
-            Stream stream = null;
+            // Decodifica a imagem Base64 para um byte array
+            var imageData = file.Base64.ConvertToBytes();
 
-            // Convertendo a Base64 para Stream
-            using (var image = Image.FromStream(file.Base64.ConvertToStream()))
+            // Carrega a imagem com ImageSharp
+            using (var image = Image.Load(imageData))
             {
-                // Ajustar qualidade da imagem
-                var quality = 90L; // Começa com 90%
-                var encoderParameters = new EncoderParameters(1);
-                var encoder = GetEncoderByMimeType(file.MimeType); // Obter encoder com base no MimeType
-                if (encoder == null)
-                {
-                    return file; // Retorna o arquivo original se o encoder não for encontrado
-                }
+                // Define a qualidade inicial
+                int quality = 90;
 
-                // Criando o stream fora do bloco 'using' para evitar o erro de stream fechado
-                using (var compressStream = new MemoryStream())
+                // Define um stream para a imagem comprimida
+                using (var outputStream = new MemoryStream())
                 {
                     do
                     {
-                        encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, quality);
+                        outputStream.SetLength(0); // Limpa o stream para nova compressão
 
-                        // Salvar imagem com a qualidade ajustada
-                        image.Save(compressStream, encoder, encoderParameters);
+                        // Define os parâmetros de qualidade
+                        var encoder = GetEncoderByMimeType(file.MimeType, quality);
 
-                        // Se o tamanho do arquivo comprimido for menor ou igual ao limite
-                        if (compressStream.Length <= maxSize || quality <= 10)
+                        // Salva a imagem no stream com os parâmetros de compressão
+                        image.Save(outputStream, encoder);
+
+                        // Se o tamanho da imagem estiver dentro do limite, finaliza
+                        if (outputStream.Length <= maxSize || quality <= 10)
                         {
-                            // Salvar o conteúdo do compressStream em stream
-                            stream = new MemoryStream(compressStream.ToArray());
                             break;
                         }
 
-                        // Reduzir a qualidade para mais compressão
+                        // Reduz a qualidade para maior compressão
                         quality -= 10;
+                    }
+                    while (quality > 10);
 
-                        // Limpar o MemoryStream para a próxima compressão
-                        compressStream.SetLength(0);
-
-                    } while (quality > 10); // Evitar qualidade muito baixa
+                    // Atualiza as informações do arquivo com a imagem comprimida
+                    file.Base64 = Convert.ToBase64String(outputStream.ToArray());
+                    file.Size = outputStream.Length;
                 }
             }
-
-            // Atualizar informações do arquivo comprimido
-            file.Base64 = stream.ConvertToBase64(); // Converter de volta para Base64
 
             return file;
         }
 
-        private ImageCodecInfo GetEncoderByMimeType(string mimeType)
+        private IImageEncoder GetEncoderByMimeType(string mimeType, int quality)
         {
-            ImageFormat format = null;
             if (mimeType.Equals("image/jpeg", StringComparison.OrdinalIgnoreCase) ||
                 mimeType.Equals("image/jpg", StringComparison.OrdinalIgnoreCase))
             {
-                format = ImageFormat.Jpeg;
-            }
-            else if (mimeType.Equals("image/png", StringComparison.OrdinalIgnoreCase))
-            {
-                format = ImageFormat.Png;
-            }
-
-            if (format == null) return null;
-
-            var codecs = ImageCodecInfo.GetImageDecoders();
-            foreach (var codec in codecs)
-            {
-                if (codec.FormatID == format.Guid)
+                return new JpegEncoder
                 {
-                    return codec;
-                }
+                    Quality = quality
+                };
             }
-            return null;
+
+            if (mimeType.Equals("image/png", StringComparison.OrdinalIgnoreCase))
+            {
+                return new PngEncoder
+                {
+                    CompressionLevel = PngCompressionLevel.BestCompression
+                };
+            }
+
+            throw new Exception("Formato da imagem não é suportado para compressão.");
         }
     }
 }

@@ -1,16 +1,18 @@
-﻿using Domain.Interfaces.Services;
+﻿using Domain.DTO;
+using Domain.Interfaces.Services;
 using QRCoder;
-using System.Drawing.Imaging;
-using System.Drawing;
-using Domain.Interfaces.Repositories;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 using Microsoft.AspNetCore.Hosting;
-using Domain.DTO;
 
 namespace Services
 {
     public class QRCodeService : IQRCodeService
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
+
         public QRCodeService(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
@@ -18,107 +20,60 @@ namespace Services
 
         public FileDTO GenerateQRCode(Guid id)
         {
-            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
-            {
-                // Gerar os dados do QR Code
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(id.ToString(), QRCodeGenerator.ECCLevel.Q);
-
-                using (QRCode qrCode = new QRCode(qrCodeData))
-                {
-                    // Criar o QR Code como Bitmap
-                    using (var qrCodeBitmap = qrCode.GetGraphic(20))
-                    {
-                        string logoPath = Path.Combine(_webHostEnvironment.WebRootPath, "default", "logo.png");
-
-                        // Carregar a logo
-                        using (var logo = Image.FromFile(logoPath))
-                        {
-                            // Calcular o tamanho da logo em relação ao QR Code
-                            int logoSize = qrCodeBitmap.Width / 5; // A logo será 1/5 do tamanho do QR Code
-                            var logoResized = new Bitmap(logo, new Size(logoSize, logoSize));
-
-                            // Combinar a logo com o QR Code
-                            using (var graphics = Graphics.FromImage(qrCodeBitmap))
-                            {
-                                // Definir a posição central para a logo
-                                int x = (qrCodeBitmap.Width - logoSize) / 2;
-                                int y = (qrCodeBitmap.Height - logoSize) / 2;
-
-                                // Desenhar a logo no centro do QR Code
-                                graphics.DrawImage(logoResized, x, y, logoSize, logoSize);
-                            }
-
-                            // Salvar o QR Code com a logo em um MemoryStream
-                            using (var ms = new MemoryStream())
-                            {
-                                qrCodeBitmap.Save(ms, ImageFormat.Png);
-
-                                var name = Guid.NewGuid();
-
-                                var file = new FileDTO()
-                                {
-                                    MimeType = "image/png",
-                                    Name = $"{name.ToString("N")}.png",
-                                    Data = ms.ToArray(),
-                                };
-
-                                return file; // Retornar como array de bytes
-                            }
-                        }
-                    }
-                }
-            }
+            return GenerateQRCodeInternal(id.ToString());
         }
 
         public FileDTO GenerateQRCode(string value)
         {
-            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            return GenerateQRCodeInternal(value);
+        }
+
+        private FileDTO GenerateQRCodeInternal(string value)
+        {
+            // Gerar os dados do QR Code
+            using (var qrGenerator = new QRCodeGenerator())
             {
-                // Gerar os dados do QR Code
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(value, QRCodeGenerator.ECCLevel.Q);
 
-                using (QRCode qrCode = new QRCode(qrCodeData))
+                // Converter QR Code em matriz de pixels
+                PngByteQRCode pngByteQRCode = new PngByteQRCode(qrCodeData);
+                byte[] qrCodeImage = pngByteQRCode.GetGraphic(20);
+
+                using (var qrCodeImageSharp = Image.Load<Rgba32>(qrCodeImage))
                 {
-                    // Criar o QR Code como Bitmap
-                    using (var qrCodeBitmap = qrCode.GetGraphic(20))
+                    string logoPath = Path.Combine(_webHostEnvironment.WebRootPath, "default", "logo.png");
+
+                    if (File.Exists(logoPath))
                     {
-                        string logoPath = Path.Combine(_webHostEnvironment.WebRootPath, "default", "logo.png");
-
-                        // Carregar a logo
-                        using (var logo = Image.FromFile(logoPath))
+                        // Carregar a logo usando ImageSharp
+                        using (var logo = Image.Load<Rgba32>(logoPath))
                         {
-                            // Calcular o tamanho da logo em relação ao QR Code
-                            int logoSize = qrCodeBitmap.Width / 5; // A logo será 1/5 do tamanho do QR Code
-                            var logoResized = new Bitmap(logo, new Size(logoSize, logoSize));
+                            // Redimensionar a logo para 1/5 do tamanho do QR Code
+                            int logoSize = qrCodeImageSharp.Width / 5;
+                            logo.Mutate(x => x.Resize(logoSize, logoSize));
 
-                            // Combinar a logo com o QR Code
-                            using (var graphics = Graphics.FromImage(qrCodeBitmap))
-                            {
-                                // Definir a posição central para a logo
-                                int x = (qrCodeBitmap.Width - logoSize) / 2;
-                                int y = (qrCodeBitmap.Height - logoSize) / 2;
+                            // Combinar a logo no centro do QR Code
+                            int x = (qrCodeImageSharp.Width - logoSize) / 2;
+                            int y = (qrCodeImageSharp.Height - logoSize) / 2;
 
-                                // Desenhar a logo no centro do QR Code
-                                graphics.DrawImage(logoResized, x, y, logoSize, logoSize);
-                            }
-
-                            // Salvar o QR Code com a logo em um MemoryStream
-                            using (var ms = new MemoryStream())
-                            {
-                                qrCodeBitmap.Save(ms, ImageFormat.Png);
-
-                                var name = Guid.NewGuid();
-
-                                var file = new FileDTO()
-                                {
-                                    MimeType = "image/png",
-                                    Name = $"{name.ToString("N")}.png",
-                                    Data = ms.ToArray(),
-                                };
-
-                                return file; // Retornar como array de bytes
-                            }
+                            qrCodeImageSharp.Mutate(ctx => ctx.DrawImage(logo, new Point(x, y), 1f));
                         }
+                    }
+
+                    // Salvar o QR Code final como PNG em um MemoryStream
+                    using (var ms = new MemoryStream())
+                    {
+                        qrCodeImageSharp.Save(ms, new PngEncoder());
+
+                        // Retornar o QR Code como um arquivo
+                        var file = new FileDTO
+                        {
+                            MimeType = "image/png",
+                            Name = $"{Guid.NewGuid():N}.png",
+                            Data = ms.ToArray()
+                        };
+
+                        return file;
                     }
                 }
             }

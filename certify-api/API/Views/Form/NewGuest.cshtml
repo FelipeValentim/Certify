@@ -1,4 +1,5 @@
 ﻿@using Domain.DTO;
+@using Domain.Constants;
 @model EventDTO;
 
 <html>
@@ -262,7 +263,7 @@
     <!-- Learn More: https://formbold.com -->
     <div class="formbold-form-wrapper">
         <div class="formbold-img-container">
-            <img src="@Model.Photo" class="formbold-img event-img">
+            <img src="@($"{UrlManager.API}{Model.Photo}")" class="formbold-img event-img">
         </div>
 
         <form id="guestForm">

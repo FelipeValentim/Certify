@@ -4,11 +4,7 @@ using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Crypto;
 using Services.Helper;
-using Spire.Doc;
-using System;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -24,9 +20,10 @@ namespace Services
         private readonly IQRCodeService _qrCodeService;
         private readonly IMailService _mailService;
         private readonly IMappingService _mappingService;
+        private readonly IImageManager _imageManager;
 
         public GuestService(IGuestRepository guestRepository, IEventService eventService, IStorageService storageService, IGuestTypeService guestTypeService,
-            IWebHostEnvironment webHostEnvironment, IMailService mailService, IQRCodeService qrCodeService, IMappingService mappingService)
+            IWebHostEnvironment webHostEnvironment, IMailService mailService, IQRCodeService qrCodeService, IMappingService mappingService, IImageManager imageManager)
         {
             _guestRepository = guestRepository;
             _eventService = eventService;
@@ -36,6 +33,7 @@ namespace Services
             _mailService = mailService;
             _qrCodeService = qrCodeService;
             _mappingService = mappingService;
+            _imageManager = imageManager;
         }
 
         public ResponseModel<object> Add(GuestDTO model, bool form = false)
@@ -106,6 +104,8 @@ namespace Services
                 // Upload da foto, se necessário
                 if (model.PhotoFile != null)
                 {
+                    model.PhotoFile = _imageManager.CompressImage(model.PhotoFile);
+
                     guest.Photo = _storageService.UploadFile(model.PhotoFile, $"{guest.EventId}/{guest.Id}").GetAwaiter().GetResult();
                 }
 
@@ -115,7 +115,7 @@ namespace Services
                 SendQRCode(guest.EventId, guest.Id);
 
                 // Retornar resposta de sucesso
-                return ResponseModel<object>.Success(new { id = guest.Id, photoFullUrl = $"{UrlManager.API}{guest.Photo}" }, HttpStatusCode.OK);
+                return ResponseModel<object>.Success(new { id = guest.Id, photoFullUrl = $"{UrlManager.Storage}{guest.Photo}" }, HttpStatusCode.OK);
             }
             catch (Exception ex)
             {

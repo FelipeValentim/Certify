@@ -29,5 +29,15 @@ namespace Services.Helper
 
             return Convert.ToBase64String(bytes);
         }
+
+        public static Stream ConvertToStream(this string base64)
+        {
+            if (base64.Contains(","))
+                base64 = base64.Split(',')[1];
+
+            var bytes = Convert.FromBase64String(base64);
+
+            return new MemoryStream(bytes);
+        }
     }
 }

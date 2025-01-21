@@ -1,4 +1,6 @@
-﻿namespace Services.Helper
+﻿using System.Globalization;
+
+namespace Services.Helper
 {
 	public static class ExtensionMethods
 	{
@@ -11,6 +13,24 @@
 		{
 			return value?.Replace(" ", character) ?? string.Empty;
 		}
+
+        public static string ToBrazilDateInWords(this DateTime date)
+        {
+            var formattedDate = date.ToString("dd 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR"));
+
+            // Torna a primeira letra do mês maiúscula
+            return formattedDate.Capitalize();
+        }
+
+        public static string Capitalize(this string input, CultureInfo culture = null)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return input; // Retorna o input como está se for nulo ou vazio.
+            }
+
+            return char.ToUpper(input[0]) + input.Substring(1);
+        }
 
         public static string ConvertToBase64(this Stream stream)
         {

@@ -140,7 +140,7 @@ namespace Services
             string htmlTemplate = File.ReadAllText(htmlPath);
 
             htmlTemplate = htmlTemplate.Replace("{evento}", eventItem.Name)
-                                       .Replace("{data}", eventItem.Date.ToString("d 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR")))
+                                       .Replace("{data}", eventItem.Date.ToBrazilDateInWords())
                                        .Replace("{horarioinicial}", eventItem.StartTime.ToString(@"hh\:mm"))
                                        .Replace("{horariofinal}", eventItem.EndTime.ToString(@"hh\:mm"));
 

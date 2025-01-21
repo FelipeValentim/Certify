@@ -13,7 +13,7 @@ namespace Services
 		{
 			var message = new MimeMessage();
 
-			message.From.Add(new MailboxAddress("Checkfy", "checkfy.helper@gmail.com"));
+			message.From.Add(new MailboxAddress("Certify", "checkfy.helper@gmail.com"));
 
 			foreach (var to in mailMessage.To)
 			{

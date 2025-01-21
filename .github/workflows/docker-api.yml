@@ -14,11 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Copiar o .dockerignore para o local correto antes do build
-      - name: Copy .dockerignore
-        run: |
-          cp certify-api/.dockerignore API/
-
       # Login no DockerHub
       - name: Log in to DockerHub
         run: |
@@ -27,7 +22,7 @@ jobs:
       # Build da imagem Docker
       - name: Build Docker Image
         run: |
-          docker build -t docker-certify -f API/Dockerfile .
+          docker build -t docker-certify -f certify-api/API/Dockerfile certify-api
 
       # Tag da imagem
       - name: Tag Docker Image

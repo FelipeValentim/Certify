@@ -4,7 +4,7 @@
 	{
 		public AuditableEntity() : base() 
 		{
-			CreatedDate = DateTime.Now;
+			CreatedDate = DateTime.UtcNow;
 
 			DeletedDate = null;
 		}

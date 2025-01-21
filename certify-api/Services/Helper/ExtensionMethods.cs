@@ -47,5 +47,16 @@ namespace Services.Helper
 
             return Convert.FromBase64String(base64);
         }
+
+        public static DateTime ConvertToBrazilTime(this DateTime dateTime)
+        {
+            // Define o fuso horário do Brasil (Horário de Brasília)
+            TimeZoneInfo brazilTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+
+            // Converte a data e hora para o horário do Brasil
+            DateTime brazilTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime.ToUniversalTime(), brazilTimeZone);
+
+            return brazilTime;
+        }
     }
 }

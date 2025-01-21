@@ -7,6 +7,7 @@ using HeyRed.Mime;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Services.Helper;
+using System.Globalization;
 using System.IO.Compression;
 using System.IO.Pipes;
 using System.Net;
@@ -89,7 +90,7 @@ namespace Services
                         document.ReplaceText(options);
 
                         options.SearchValue = "{data}";
-                        options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy");
+                        options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR"));
                         document.ReplaceText(options);
 
                         options.SearchValue = "{tipoconvidado}";
@@ -144,7 +145,7 @@ namespace Services
             {
                 Base64 = base64,
                 MimeType = mimeType,
-                Name = $"cert_{eventItem.Name.RemoveWhiteSpace()}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.{MimeTypesMap.GetExtension(mimeType)}"
+                Name = $"cert_{eventItem.Name.RemoveWhiteSpace()}_{DateTime.UtcNow.ConvertToBrazilTime().ToString("yyyyMMdd_HHmmss")}.{MimeTypesMap.GetExtension(mimeType)}"
             };
 
             // Passo 6: Retornar o arquivo ZIP como resposta
@@ -203,7 +204,7 @@ namespace Services
                     document.ReplaceText(options);
 
                     options.SearchValue = "{data}";
-                    options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy");
+                    options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR"));
                     document.ReplaceText(options);
 
                     options.SearchValue = "{tipoconvidado}";
@@ -280,9 +281,9 @@ namespace Services
                     return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Nome é obrigatório.");
                 }
 
-                if (model.Date.Date < DateTime.Now.Date)
+                if (model.Date.Add(model.StartTime) < DateTime.UtcNow.ConvertToBrazilTime())
                 {
-                    return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Data inválida.");
+                    return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "A data e horário inicial já passaram.");
                 }
 
                 if (model.StartTime >= model.EndTime)

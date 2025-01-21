@@ -281,7 +281,7 @@ namespace Services
                     return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Nome é obrigatório.");
                 }
 
-                if (model.Date.Add(model.StartTime) < DateTime.UtcNow.ConvertToBrazilTime())
+                if (DateTime.UtcNow.ConvertToBrazilTime() > model.Date.Date.Add(model.StartTime))
                 {
                     return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "A data e horário inicial já passaram.");
                 }

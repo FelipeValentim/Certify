@@ -90,7 +90,7 @@ namespace Services
                         document.ReplaceText(options);
 
                         options.SearchValue = "{data}";
-                        options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR"));
+                        options.NewValue = eventItem.Date.ToBrazilDateInWords();
                         document.ReplaceText(options);
 
                         options.SearchValue = "{tipoconvidado}";
@@ -204,7 +204,7 @@ namespace Services
                     document.ReplaceText(options);
 
                     options.SearchValue = "{data}";
-                    options.NewValue = eventItem.Date.ToString("d 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR"));
+                    options.NewValue = eventItem.Date.ToBrazilDateInWords();
                     document.ReplaceText(options);
 
                     options.SearchValue = "{tipoconvidado}";

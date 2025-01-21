@@ -1,6 +1,7 @@
 ﻿@using Domain.DTO;
 @using Domain.Constants;
 @using System.Globalization
+@using Services.Helper;
 @model EventDTO;
 
 <html>
@@ -274,7 +275,7 @@
                 Você foi convidado por <strong>@Model.User.Name</strong> para o evento <strong>@Model.Name</strong>.
             </label>
             <label for="qusOne" class="formbold-form-label title">
-                O evento ocorrerá no dia <strong>@Model.Date.ToString("dd 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR"))</strong>, das <strong>@Model.StartTime.ToString(@"hh\:mm")</strong> às <strong>@Model.EndTime.ToString(@"hh\:mm")</strong>.
+                O evento ocorrerá no dia <strong>@Model.Date.ToBrazilDateInWords()</strong>, das <strong>@Model.StartTime.ToString(@"hh\:mm")</strong> às <strong>@Model.EndTime.ToString(@"hh\:mm")</strong>.
             </label>
             <label for="qusOne" class="formbold-form-label title">
                 Para participar, por favor, preencha o formulário abaixo.

@@ -227,21 +227,23 @@ function GuestsTab({
   }, [guests]);
 
   useEffect(() => {
-    let newGuests = guests;
-    if (selectedStatus.value == 0 && selectedType.value == 0) {
-      setFilteredGuests([...newGuests]);
-    } else {
-      if (selectedStatus.value != 0) {
-        newGuests = newGuests.filter(
-          (x) => x.guestStatus == selectedStatus.value
-        );
+    if (guests) {
+      let newGuests = guests;
+      if (selectedStatus.value == 0 && selectedType.value == 0) {
+        setFilteredGuests([...newGuests]);
+      } else {
+        if (selectedStatus.value != 0) {
+          newGuests = newGuests.filter(
+            (x) => x.guestStatus == selectedStatus.value
+          );
+        }
+        if (selectedType.value != 0) {
+          newGuests = newGuests.filter(
+            (x) => x.guestType.name == selectedType.label
+          );
+        }
+        setFilteredGuests([...newGuests]);
       }
-      if (selectedType.value != 0) {
-        newGuests = newGuests.filter(
-          (x) => x.guestType.name == selectedType.label
-        );
-      }
-      setFilteredGuests([...newGuests]);
     }
   }, [selectedStatus, selectedType]);
 

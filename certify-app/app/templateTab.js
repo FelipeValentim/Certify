@@ -30,8 +30,9 @@ import { Ionicons } from "@expo/vector-icons";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { useDispatch } from "react-redux";
 import { toast } from "@/redux/snackBar";
+import Loading from "@/components/common/Loading";
 
-const TemplateTab = ({ navigation, route, title, template }) => {
+const TemplateTab = ({ navigation, route, dataLoading, template }) => {
   const [eventId] = useState(route.params.eventId);
   const [eventTemplate, setEventTemplate] = useState(template);
   const [visibleInfo, setVisibleInfo] = useState(false);
@@ -146,110 +147,113 @@ const TemplateTab = ({ navigation, route, title, template }) => {
         rightButtonAction={toggleInfo}
       />
       <Container style={styles.container}>
-        <ScrollView
-          contentContainerStyle={{
-            gap: 30,
-            flex: 1,
-            justifyContent: "center",
-          }}
-        >
-          {eventTemplate ? (
-            <>
-              <View
-                style={{
-                  // borderWidth: 1,
-                  borderColor: primaryColor,
-                  borderStyle: "dashed",
-                  gap: 10,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() =>
-                    setConfirmAlert({
-                      open: true,
-                      title: "Tem certeza disto?",
-                      message: `Deseja realmente remover este template?`,
-                      onConfirm: () => removeTemplate(),
-                    })
-                  }
+        {dataLoading ? (
+          <Loading />
+        ) : (
+          <ScrollView
+            contentContainerStyle={{
+              gap: 30,
+              flex: 1,
+              justifyContent: "center",
+            }}
+          >
+            {eventTemplate ? (
+              <>
+                <View
                   style={{
-                    ...styles.actionIcon,
-                    alignSelf: "flex-end",
-                    backgroundColor: primaryColor,
+                    // borderWidth: 1,
+                    borderColor: primaryColor,
+                    borderStyle: "dashed",
+                    gap: 10,
                   }}
                 >
-                  <FontAwesomeIcon icon={faX} color="#FFF" size={18} />
-                </TouchableOpacity>
-                <View style={{ height: 260 }}>
-                  <PdfViewer
-                    source={{ uri: eventTemplate.fullPreviewPath }}
-                    useGoogleDriveViewer
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      setConfirmAlert({
+                        open: true,
+                        title: "Tem certeza disto?",
+                        message: `Deseja realmente remover este template?`,
+                        onConfirm: () => removeTemplate(),
+                      })
+                    }
+                    style={{
+                      ...styles.actionIcon,
+                      alignSelf: "flex-end",
+                      backgroundColor: primaryColor,
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faX} color="#FFF" size={18} />
+                  </TouchableOpacity>
+                  <View style={{ height: 260 }}>
+                    <PdfViewer
+                      source={{ uri: eventTemplate.fullPreviewPath }}
+                      useGoogleDriveViewer
+                    />
+                  </View>
                 </View>
-              </View>
 
-              <Section>Certificados</Section>
-              <View
-                style={{
-                  flexDirection: "row",
-                  gap: 10,
-                }}
-              >
-                <TouchableOpacity
-                  style={styles.action}
-                  onPress={() =>
-                    setConfirmAlert({
-                      open: true,
-                      title: "Tem certeza disto?",
-                      message: `Deseja realmente enviar o certificado para os participantes com checkin?`,
-                      onConfirm: () => sendCertificates(),
-                    })
-                  }
+                <Section>Certificados</Section>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 10,
+                  }}
                 >
-                  <CustomText style={styles.actionText}>Enviar</CustomText>
+                  <TouchableOpacity
+                    style={styles.action}
+                    onPress={() =>
+                      setConfirmAlert({
+                        open: true,
+                        title: "Tem certeza disto?",
+                        message: `Deseja realmente enviar o certificado para os participantes com checkin?`,
+                        onConfirm: () => sendCertificates(),
+                      })
+                    }
+                  >
+                    <CustomText style={styles.actionText}>Enviar</CustomText>
 
-                  <View style={styles.actionIcon}>
-                    {/* <FontAwesomeIcon
+                    <View style={styles.actionIcon}>
+                      {/* <FontAwesomeIcon
                       icon={faEnvelope}
                       color={primaryColor}
                       size={22}
                     /> */}
-                    {loading.send ? (
-                      <LoadingSpinner />
-                    ) : (
-                      <Ionicons
-                        name="mail-outline"
-                        color={primaryColor}
-                        size={26}
-                      />
-                    )}
-                  </View>
-                </TouchableOpacity>
+                      {loading.send ? (
+                        <LoadingSpinner />
+                      ) : (
+                        <Ionicons
+                          name="mail-outline"
+                          color={primaryColor}
+                          size={26}
+                        />
+                      )}
+                    </View>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.action}
-                  onPress={() => downloadCertificates()}
-                >
-                  <CustomText style={styles.actionText}>Baixar</CustomText>
-                  <View style={styles.actionIcon}>
-                    {/* <FontAwesomeIcon
+                  <TouchableOpacity
+                    style={styles.action}
+                    onPress={() => downloadCertificates()}
+                  >
+                    <CustomText style={styles.actionText}>Baixar</CustomText>
+                    <View style={styles.actionIcon}>
+                      {/* <FontAwesomeIcon
                       icon={faDownload}
                       color={primaryColor}
                       size={22}
                     /> */}
-                    {loading.download ? (
-                      <LoadingSpinner />
-                    ) : (
-                      <Ionicons
-                        name="download-outline"
-                        color={primaryColor}
-                        size={26}
-                      />
-                    )}
-                  </View>
-                </TouchableOpacity>
+                      {loading.download ? (
+                        <LoadingSpinner />
+                      ) : (
+                        <Ionicons
+                          name="download-outline"
+                          color={primaryColor}
+                          size={26}
+                        />
+                      )}
+                    </View>
+                  </TouchableOpacity>
 
-                {/* <TouchableOpacity
+                  {/* <TouchableOpacity
                   style={styles.action}
                   onPress={() =>
                     setConfirmAlert({
@@ -265,59 +269,63 @@ const TemplateTab = ({ navigation, route, title, template }) => {
                   </View>
                   <MutedText style={styles.actionText}>Remover</MutedText>
                 </TouchableOpacity> */}
-              </View>
-              <ConfirmAlert
-                open={confirmAlert.open}
-                toggle={() =>
-                  setConfirmAlert({ ...confirmAlert, open: !confirmAlert.open })
-                }
-                title={confirmAlert.title}
-                message={confirmAlert.message}
-                onConfirm={confirmAlert.onConfirm}
-                loading={confirmAlert.loading}
-              />
-            </>
-          ) : (
-            <>
-              <View style={styles.imageContainer}>
-                <UploadImage height={screenHeight / 4} />
-              </View>
+                </View>
+                <ConfirmAlert
+                  open={confirmAlert.open}
+                  toggle={() =>
+                    setConfirmAlert({
+                      ...confirmAlert,
+                      open: !confirmAlert.open,
+                    })
+                  }
+                  title={confirmAlert.title}
+                  message={confirmAlert.message}
+                  onConfirm={confirmAlert.onConfirm}
+                  loading={confirmAlert.loading}
+                />
+              </>
+            ) : (
+              <>
+                <View style={styles.imageContainer}>
+                  <UploadImage height={screenHeight / 4} />
+                </View>
 
-              <View style={{ alignItems: "center" }}>
-                <H2 style={{ color: primaryColor }}>Sem templates!</H2>
-                <MutedText>
-                  Aqui é onde você poderá enviar seu template que será usado
-                  para gerar os certificados. Os formatos permitidos são{" "}
-                  <MutedText style={{ color: primaryColor }}>
-                    doc/docx
+                <View style={{ alignItems: "center" }}>
+                  <H2 style={{ color: primaryColor }}>Sem templates!</H2>
+                  <MutedText>
+                    Aqui é onde você poderá enviar seu template que será usado
+                    para gerar os certificados. Os formatos permitidos são{" "}
+                    <MutedText style={{ color: primaryColor }}>
+                      doc/docx
+                    </MutedText>
+                    .
                   </MutedText>
-                  .
-                </MutedText>
-              </View>
-              <ButtonLoading
-                onPress={pickTemplate}
-                innerComponent={
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "row",
-                      gap: 10,
-                      width: "100%",
-                    }}
-                  >
-                    <H3 style={{ color: "#FFF" }}>Upload</H3>
-                    <FontAwesomeIcon
-                      icon={faCloudArrowUp}
-                      color="#fff"
-                      size={22}
-                    />
-                  </View>
-                }
-              />
-            </>
-          )}
-        </ScrollView>
+                </View>
+                <ButtonLoading
+                  onPress={pickTemplate}
+                  innerComponent={
+                    <View
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        gap: 10,
+                        width: "100%",
+                      }}
+                    >
+                      <H3 style={{ color: "#FFF" }}>Upload</H3>
+                      <FontAwesomeIcon
+                        icon={faCloudArrowUp}
+                        color="#fff"
+                        size={22}
+                      />
+                    </View>
+                  }
+                />
+              </>
+            )}
+          </ScrollView>
+        )}
       </Container>
       <TemplateInfo toggle={toggleInfo} visible={visibleInfo} />
     </React.Fragment>

@@ -17,7 +17,7 @@ namespace Repository
 
 			if (entity != null)
 			{
-				entity.DeletedDate = DateTime.Now;
+				entity.DeletedDate = DateTime.UtcNow;
 
 				Update(entity);
 			}

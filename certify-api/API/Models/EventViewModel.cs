@@ -67,11 +67,11 @@ namespace API.Models
 			{
 				var status = EventStatus.Finished;
 
-				if (DateTime.Now.Date <= Date.Date && DateTime.Now.TimeOfDay < StartTime)
+				if (DateTime.UtcNow.ConvertToBrazilTime() <= Date.Date && DateTime.UtcNow.ConvertToBrazilTime().TimeOfDay < StartTime)
 				{
 					status = EventStatus.Created;
 				}
-				else if (DateTime.Now.Date == Date.Date && DateTime.Now.TimeOfDay >= StartTime && DateTime.Now.TimeOfDay <= EndTime)
+				else if (DateTime.UtcNow.ConvertToBrazilTime().Date == Date.Date && DateTime.UtcNow.ConvertToBrazilTime().TimeOfDay >= StartTime && DateTime.UtcNow.ConvertToBrazilTime().TimeOfDay <= EndTime)
 				{
 					status = EventStatus.Helding;
 				}

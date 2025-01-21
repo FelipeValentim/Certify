@@ -36,7 +36,7 @@ namespace Domain.Entities
         {
             Photo = "/default/lecture.png";
 
-			CreatedDate = DateTime.Now;
+			CreatedDate = DateTime.UtcNow;
 		}
     }
 }

@@ -5,6 +5,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
 using Services.Helper;
+using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -72,7 +73,7 @@ namespace Services
 
                 if (form)
                 {
-                    if (DateTime.Now > eventItem.Date.Add(eventItem.StartTime)) // Já passou o horário inicial do evento
+                    if (DateTime.UtcNow.ConvertToBrazilTime() > eventItem.Date.Add(eventItem.StartTime)) // Já passou o horário inicial do evento
                     {
                         return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Prazo de cadastro para o evento finalizado.");
                     }
@@ -139,7 +140,7 @@ namespace Services
             string htmlTemplate = File.ReadAllText(htmlPath);
 
             htmlTemplate = htmlTemplate.Replace("{evento}", eventItem.Name)
-                                       .Replace("{data}", eventItem.Date.ToString("d 'de' MMMM 'de' yyyy"))
+                                       .Replace("{data}", eventItem.Date.ToString("d 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR")))
                                        .Replace("{horarioinicial}", eventItem.StartTime.ToString(@"hh\:mm"))
                                        .Replace("{horariofinal}", eventItem.EndTime.ToString(@"hh\:mm"));
 
@@ -204,18 +205,18 @@ namespace Services
                 {
                     var eventItem = _eventService.Get(guest.EventId);
 
-                    if (DateTime.Now < eventItem.Date.Add(eventItem.StartTime))
+                    if (DateTime.UtcNow.ConvertToBrazilTime() < eventItem.Date.Add(eventItem.StartTime))
                     {
                         return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
                     }
 
-                    if (DateTime.Now > eventItem.Date.Add(eventItem.EndTime))
+                    if (DateTime.UtcNow.ConvertToBrazilTime() > eventItem.Date.Add(eventItem.EndTime))
                     {
                         return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
                     }
                 }
 
-                guest.CheckinDate = DateTime.Now;
+                guest.CheckinDate = DateTime.UtcNow.ConvertToBrazilTime();
 
                 _guestRepository.Update(guest);
 
@@ -242,7 +243,7 @@ namespace Services
 
                 foreach (var guest in guests)
                 {
-                    guest.CheckinDate = DateTime.Now;
+                    guest.CheckinDate = DateTime.UtcNow.ConvertToBrazilTime();
 
                     _guestRepository.Update(guest);
                 }

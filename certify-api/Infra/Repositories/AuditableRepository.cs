@@ -102,7 +102,7 @@ namespace Infrastructure.Repositories
 				else
 				{
 					// Deleção lógica: apenas marca a data de exclusão
-					entity.DeletedDate = DateTime.Now;
+					entity.DeletedDate = DateTime.UtcNow;
 					Update(entity);  // Atualiza a entidade com a data de exclusão
 				}
 			}
@@ -121,7 +121,7 @@ namespace Infrastructure.Repositories
 
 			foreach (var entity in entities)
 			{
-				entity.DeletedDate = DateTime.Now;
+				entity.DeletedDate = DateTime.UtcNow;
 
 				Update(entity);
 			}

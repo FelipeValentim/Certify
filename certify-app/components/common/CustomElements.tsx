@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -7,8 +7,11 @@ import {
   StyleProp,
   TextStyle,
   ViewStyle,
+  Image,
+  ImageProps,
 } from "react-native";
 import CustomText from "./CustomText";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface TextProps {
   children: React.ReactNode;
@@ -105,6 +108,21 @@ export const CustomScrollView: React.FC<ScrollViewProps> = ({
     >
       {children}
     </ScrollView>
+  );
+};
+
+interface ImageLoadingProps extends ImageProps {
+  // Adicione mais props personalizadas se necessário
+}
+
+export const ImageLoading: React.FC<ImageLoadingProps> = ({ ...props }) => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <>
+      {loading && <LoadingSpinner />}
+      <Image {...props} onLoadEnd={() => setLoading(false)} />
+    </>
   );
 };
 

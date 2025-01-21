@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
+using Services.Helper;
 using Spire.Doc;
 using System.Net;
 using Xceed.Words.NET;
@@ -59,7 +60,7 @@ namespace Services
                     return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento não existe");
                 }
 
-                if (DateTime.Now > eventItem.Date.Add(eventItem.StartTime))
+                if (DateTime.UtcNow.ConvertToBrazilTime() > eventItem.Date.Add(eventItem.StartTime))
                 {
                     return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Prazo de cadastro para o evento finalizado.");
                 }
@@ -102,12 +103,12 @@ namespace Services
                     return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento não existe");
                 }
 
-                if (DateTime.Now < eventItem.Date.Add(eventItem.StartTime))
+                if (DateTime.UtcNow.ConvertToBrazilTime() < eventItem.Date.Add(eventItem.StartTime))
                 {
                     return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
                 }
 
-                if (DateTime.Now > eventItem.Date.Add(eventItem.EndTime))
+                if (DateTime.UtcNow.ConvertToBrazilTime() > eventItem.Date.Add(eventItem.EndTime))
                 {
                     return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
                 }

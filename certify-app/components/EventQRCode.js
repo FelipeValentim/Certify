@@ -10,6 +10,7 @@ import ButtonLoading from "@/components/common/ButtonLoading";
 import {
   CustomScrollView,
   H3,
+  ImageLoading,
   MutedText,
 } from "@/components/common/CustomElements";
 import { screenHeight } from "@/constants/Default";
@@ -104,7 +105,7 @@ const EventQRCode = ({ visible, toggle, qrCode }) => {
               própria, compartilhe o QRCode do evento.
             </MutedText>
             <TouchableOpacity onPress={downloadQRCode}>
-              <Image
+              <ImageLoading
                 style={styles.example}
                 source={{
                   uri: qrCode,

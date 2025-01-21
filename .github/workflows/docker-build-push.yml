@@ -1,0 +1,40 @@
+name: Docker Build, Tag, and Push
+
+on:
+  push:
+    branches:
+      - main # Substitua pela branch desejada
+
+jobs:
+  docker-workflow:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout do código
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Copiar o .dockerignore para o local correto antes do build
+      - name: Copy .dockerignore
+        run: |
+          cp certify-api/.dockerignore API/
+
+      # Login no DockerHub
+      - name: Log in to DockerHub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      # Build da imagem Docker
+      - name: Build Docker Image
+        run: |
+          docker build -t docker-certify -f API/Dockerfile .
+
+      # Tag da imagem
+      - name: Tag Docker Image
+        run: |
+          docker tag docker-certify ${{ secrets.DOCKER_USERNAME }}/docker-certify-app:latest
+
+      # Push da imagem para o DockerHub
+      - name: Push Docker Image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/docker-certify-app:latest

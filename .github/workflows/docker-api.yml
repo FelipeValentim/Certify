@@ -33,3 +33,8 @@ jobs:
       - name: Push Docker Image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/docker-certify-app:latest
+
+      # Passo 6: Acionar o Deploy Hook no Render
+      - name: Trigger Deploy
+        run: |
+          curl -X POST ${{ secrets.DEPLOY_HOOK }}

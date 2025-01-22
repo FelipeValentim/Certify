@@ -58,6 +58,12 @@ namespace Services
             }
 
             var guestItems = _guestRepository.GetAll(x => x.EventId == eventId && x.CheckinDate.HasValue, includeProperties: "GuestType");
+
+            if (guestItems.Count() == 0)
+            {
+                return ResponseModel<FileDTO>.Error(HttpStatusCode.BadRequest, "Evento não possui convidados com checkin.");
+            }
+
             var eventTemplateItem = _eventTemplateRepository.GetByID(eventItem.EventTemplateId.Value);
 
             var templatePath = $"{UrlManager.Storage}{eventTemplateItem.Path}";
@@ -167,6 +173,12 @@ namespace Services
             }
 
             var guestItems = _guestRepository.GetAll(x => x.EventId == eventId && x.CheckinDate.HasValue, includeProperties: "GuestType");
+
+            if (guestItems.Count() == 0)
+            {
+                return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento não possui convidados com checkin.");
+            }
+
             var eventTemplateItem = _eventTemplateRepository.GetByID(eventItem.EventTemplateId.Value);
 
             var templatePath = $"{UrlManager.Storage}{eventTemplateItem.Path}";
@@ -243,7 +255,7 @@ namespace Services
                 }
             }
 
-            _mailService.SendMailCheckfyAsync(mailMessages);
+            _mailService.SendMailCheckfyAsync(mailMessages).GetAwaiter().GetResult();
 
             return ResponseModel.Success();
 

@@ -19,7 +19,7 @@ namespace Services.Helper
             var formattedDate = date.ToString("dd 'de' MMMM 'de' yyyy", new CultureInfo("pt-BR"));
 
             // Torna a primeira letra do mês maiúscula
-            return formattedDate.Capitalize();
+            return formattedDate;
         }
 
         public static string Capitalize(this string input, CultureInfo culture = null)

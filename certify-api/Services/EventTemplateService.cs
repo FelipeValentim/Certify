@@ -16,21 +16,12 @@ namespace Services
 		private readonly IEventTemplateRepository _eventTemplateRepository;
 		private readonly IStorageService _storageService;
 		private readonly IDocumentService _documentService;
-		private readonly IWebHostEnvironment _webHostEnvironment;
-		public EventTemplateService(IEventRepository eventRepository,  IStorageService storageService, IDocumentService documentService, IWebHostEnvironment webHostEnvironment, IEventTemplateRepository eventTemplateRepository)
+		public EventTemplateService(IEventRepository eventRepository,  IStorageService storageService, IDocumentService documentService, IEventTemplateRepository eventTemplateRepository)
 		{
 			_eventRepository = eventRepository;
 			_storageService = storageService;
 			_documentService = documentService;
-			_webHostEnvironment = webHostEnvironment;
 			_eventTemplateRepository = eventTemplateRepository;
-		}
-
-		private string GeneratePreviewPath(Guid eventId)
-		{
-			var relativePath = $"/storage/{eventId}/preview.pdf";
-
-			return relativePath;
 		}
 
 		public ResponseModel UploadTemplate(FileDTO file, Guid eventId)
@@ -71,20 +62,20 @@ namespace Services
 					return ResponseModel.Error(HttpStatusCode.NotFound, "Evento já possui template.");
 				}
 
-
 				var previewFile = _documentService.ConvertDocumentToPdf(file);
 
-                previewFile.Path = GeneratePreviewPath(eventId);
+                previewFile.Path = $"{eventId}";
+                file.Path = $"{eventId}";
 
-                _storageService.UploadFile(previewFile).GetAwaiter().GetResult();
+                var previewPath = _storageService.UploadFile(previewFile, "preview").GetAwaiter().GetResult();
 
-                var path = _storageService.UploadTemplate(file, eventId).GetAwaiter().GetResult();
+                var path = _storageService.UploadFile(file, "template").GetAwaiter().GetResult();
 
 				var eventTemplateEntity = new EventTemplate
 				{
 					Path = path,
-					PreviewPath = previewFile.Path
-				};
+					PreviewPath = previewPath
+                };
 
 				_eventTemplateRepository.Insert(eventTemplateEntity);
 

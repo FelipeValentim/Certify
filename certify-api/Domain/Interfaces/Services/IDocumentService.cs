@@ -6,7 +6,6 @@ namespace Domain.Interfaces.Services
     {
         Stream ConvertDocumentToPdf(Stream documentStream);
 		bool PlaceholderExists(FileDTO file, params string[] placeholders);
-		void GeneratePreview(FileDTO file, string previewPath);
         FileDTO ConvertDocumentToPdf(FileDTO file);
 
     }

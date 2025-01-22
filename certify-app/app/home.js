@@ -30,10 +30,12 @@ import { SegmentedControl } from "@/components/common/SegmentedControl";
 import { Swipeable } from "react-native-gesture-handler";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import ConfirmAlert from "@/components/common/ConfirmAlert";
+import NoData from "@/components/common/NoData";
+import NoFilterData from "@/components/common/NoFilterData";
 
 export default function HomeScreen({ navigation, route }) {
-  const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [events, setEvents] = useState(null);
+  const [filteredEvents, setFilteredEvents] = useState(null);
   const [confirmAlert, setConfirmAlert] = useState({});
   const [selectedSegment, setSelectedSegment] = useState({
     label: "Todos",
@@ -47,7 +49,7 @@ export default function HomeScreen({ navigation, route }) {
   ]);
 
   const getEvents = async () => {
-    setFilteredEvents([]);
+    setFilteredEvents(null);
     const response = await EventAPI.getAll(true);
     setEvents(response.data);
   };
@@ -87,13 +89,15 @@ export default function HomeScreen({ navigation, route }) {
   }, [events]);
 
   useEffect(() => {
-    if (selectedSegment.value == 0) {
-      setFilteredEvents([...events]);
-    } else {
-      const newEvents = events.filter(
-        (x) => x.eventStatus == selectedSegment.value
-      );
-      setFilteredEvents([...newEvents]);
+    if (events) {
+      if (selectedSegment.value == 0) {
+        setFilteredEvents([...events]);
+      } else {
+        const newEvents = events.filter(
+          (x) => x.eventStatus == selectedSegment.value
+        );
+        setFilteredEvents([...newEvents]);
+      }
     }
   }, [selectedSegment]);
 
@@ -181,11 +185,16 @@ export default function HomeScreen({ navigation, route }) {
       />
 
       <Container style={styles.container}>
-        {!filteredEvents ? (
+        {filteredEvents == null ? (
           <Loading color={primaryColor} size={24} />
-        ) : (
+        ) : events && events.length > 0 ? (
           <>
-            <View style={{ alignItems: "center", marginTop: 10 }}>
+            <View
+              style={{
+                alignItems: "center",
+                marginTop: 10,
+              }}
+            >
               <SegmentedControl
                 width={screenWidth - 20}
                 borderRadius={10}
@@ -196,15 +205,22 @@ export default function HomeScreen({ navigation, route }) {
               />
             </View>
 
-            <FlatList
-              data={filteredEvents}
-              initialNumToRender={filteredEvents.length}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderEvent}
-              contentContainerStyle={{ paddingBottom: 50 }}
-            />
+            {filteredEvents && filteredEvents.length > 0 ? (
+              <FlatList
+                data={filteredEvents}
+                initialNumToRender={filteredEvents.length}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderEvent}
+                contentContainerStyle={{ paddingBottom: 50 }}
+              />
+            ) : (
+              <NoFilterData />
+            )}
           </>
+        ) : (
+          <NoData />
         )}
+
         <TouchableOpacity
           style={styles.floatingButton}
           onPress={() =>

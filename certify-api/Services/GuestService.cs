@@ -107,7 +107,9 @@ namespace Services
                 {
                     model.PhotoFile = _imageManager.CompressImage(model.PhotoFile);
 
-                    guest.Photo = _storageService.UploadFile(model.PhotoFile, $"{guest.EventId}/{guest.Id}").GetAwaiter().GetResult();
+                    model.PhotoFile.Path = $"{guest.EventId}/{guest.Id}";
+
+                    guest.Photo = _storageService.UploadFile(model.PhotoFile).GetAwaiter().GetResult();
                 }
 
                 // Inserir o convidado no repositório

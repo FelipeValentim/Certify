@@ -315,7 +315,9 @@ namespace Services
 
                 if (model.PhotoFile != null)
                 {
-                    newEvent.Photo = _storageService.UploadFile(model.PhotoFile, $"{newEvent.Id}").GetAwaiter().GetResult();
+                    model.PhotoFile.Path = $"{newEvent.Id}";
+
+                    newEvent.Photo = _storageService.UploadFile(model.PhotoFile).GetAwaiter().GetResult();
                 }
 
                 _eventRepository.Insert(newEvent);

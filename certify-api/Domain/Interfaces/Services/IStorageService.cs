@@ -4,9 +4,14 @@ namespace Domain.Interfaces.Services
 {
 	public interface IStorageService
 	{
-        Task<string> UploadFile(FileDTO file, string path);
-        Task<string> UploadFile(FileDTO file);
-        Task<string> UploadTemplate(FileDTO file, Guid eventId);
+        /// <summary>
+        /// Função para Upload de um arquivo no Storage.
+        /// </summary>
+        /// <param name="file">Objeto do arquivo</param>
+        /// <param name="name">Nome do arquivo (opcional). Caso não seja passado, será criado um nome com GUID aleatório.</param>
+        /// <returns>Retorna o caminho relativo salvo</returns>
+        /// <exception cref="ArgumentException"></exception>
+        Task<string> UploadFile(FileDTO file, string name = null);
         Task<Stream> GetFileStream(string path);
     }
 }

@@ -7,7 +7,7 @@ import {
   screenWidth,
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -17,12 +17,7 @@ import {
   BackHandler,
 } from "react-native";
 import ConfirmAlert from "../components/common/ConfirmAlert";
-import {
-  Container,
-  CustomScrollView,
-  H1,
-  MutedText,
-} from "@/components/common/CustomElements";
+import { Container } from "@/components/common/CustomElements";
 import { SegmentedControl } from "@/components/common/SegmentedControl";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import {
@@ -41,6 +36,8 @@ import FloatingButton from "@/components/common/FloatingButton";
 import CustomText from "@/components/common/CustomText";
 import { format } from "date-fns";
 import CustomSnackBar from "@/components/common/CustomSnackBar";
+import NoData from "@/components/common/NoData";
+import NoFilterData from "@/components/common/NoFilterData";
 
 const SelectionHeader = ({
   selectedItems,
@@ -188,7 +185,7 @@ function GuestsTab({
   dataLoading,
   getData,
 }) {
-  const [filteredGuests, setFilteredGuests] = useState([]);
+  const [filteredGuests, setFilteredGuests] = useState(null);
   const [snackBar, setSnackBar] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -552,7 +549,10 @@ function GuestsTab({
         rightButtonComponent={
           <FontAwesomeIcon icon={faRefresh} color="#FFF" size={18} />
         }
-        rightButtonAction={getData}
+        rightButtonAction={() => {
+          setFilteredGuests(null);
+          getData();
+        }}
         component={
           selectedItems.length > 0 && (
             <SelectionHeader
@@ -572,34 +572,47 @@ function GuestsTab({
           <Loading color={primaryColor} size={24} />
         ) : (
           <>
-            <View style={{ alignItems: "center", marginVertical: 10, gap: 10 }}>
-              <SegmentedControl
-                width={screenWidth - 20}
-                borderRadius={10}
-                onPress={setSelectedStatus}
-                options={optionsStatus}
-                selectedOption={selectedStatus}
-                containerBackgroundColor="#F5F5F5"
+            {guests && guests.length > 0 ? (
+              <View
+                style={{ alignItems: "center", marginVertical: 10, gap: 10 }}
+              >
+                <SegmentedControl
+                  width={screenWidth - 20}
+                  borderRadius={10}
+                  onPress={setSelectedStatus}
+                  options={optionsStatus}
+                  selectedOption={selectedStatus}
+                  containerBackgroundColor="#F5F5F5"
+                />
+                <SegmentedControl
+                  width={screenWidth - 100}
+                  borderRadius={10}
+                  onPress={setSelectedType}
+                  options={optionsType}
+                  selectedOption={selectedType}
+                  containerBackgroundColor="#F5F5F5"
+                  height={38}
+                />
+
+                {filteredGuests && filteredGuests.length === 0 && (
+                  <NoFilterData />
+                )}
+              </View>
+            ) : (
+              <NoData />
+            )}
+
+            {filteredGuests && (
+              <FlatList
+                initialNumToRender={filteredGuests.length}
+                maxToRenderPerBatch={filteredGuests.length}
+                removeClippedSubviews={false}
+                data={filteredGuests}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={RenderGuest}
+                contentContainerStyle={{ paddingBottom: 50 }}
               />
-              <SegmentedControl
-                width={screenWidth - 100}
-                borderRadius={10}
-                onPress={setSelectedType}
-                options={optionsType}
-                selectedOption={selectedType}
-                containerBackgroundColor="#F5F5F5"
-                height={38}
-              />
-            </View>
-            <FlatList
-              initialNumToRender={filteredGuests.length}
-              maxToRenderPerBatch={filteredGuests.length}
-              removeClippedSubviews={false}
-              data={filteredGuests}
-              keyExtractor={(item) => item.id.toString()} // Corrigir keyExtractor para evitar warnings
-              renderItem={RenderGuest}
-              contentContainerStyle={{ paddingBottom: 50 }}
-            />
+            )}
           </>
         )}
 

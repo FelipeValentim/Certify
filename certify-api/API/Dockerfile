@@ -2,8 +2,12 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 
+# Fontes do Windows no Linux para o DOCX
 RUN sed -i'.bak' 's/$/ contrib/' /etc/apt/sources.list
 RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
+
+# Dependências do GDI+
+RUN apt-get update && apt-get install -y libgdiplus
 
 WORKDIR /app
 EXPOSE 80

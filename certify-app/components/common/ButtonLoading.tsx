@@ -1,11 +1,33 @@
-import { primaryColor } from "@/constants/Default";
 import React, { useEffect, useRef } from "react";
-import { TouchableOpacity, Text, StyleSheet, Animated } from "react-native";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Animated,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
+import { primaryColor } from "@/constants/Default";
 
-function ButtonLoading({
+interface ButtonLoadingProps {
+  children?: React.ReactNode;
+  onPress?: () => void;
+  loading?: boolean;
+  borderRadius?: number;
+  height?: number;
+  padding?: number;
+  color?: string;
+  backgroundColor?: string;
+  loadingColor?: string;
+  style?: StyleProp<ViewStyle>;
+  innerComponent?: React.ReactNode;
+}
+
+const ButtonLoading: React.FC<ButtonLoadingProps> = ({
   children,
   onPress,
-  loading,
+  loading = false,
   borderRadius = 10,
   height = 50,
   padding = 8,
@@ -14,7 +36,7 @@ function ButtonLoading({
   loadingColor = "#FFF",
   style = {},
   innerComponent,
-}) {
+}) => {
   const bounce1 = useRef(new Animated.Value(15)).current;
   const bounce2 = useRef(new Animated.Value(15)).current;
   const bounce3 = useRef(new Animated.Value(15)).current;
@@ -57,8 +79,13 @@ function ButtonLoading({
   const loop = Animated.loop(sequence);
 
   useEffect(() => {
-    loop.start();
-  }, []);
+    if (loading) {
+      loop.start();
+    } else {
+      loop.stop();
+    }
+    return () => loop.stop(); // Limpeza no desmontar
+  }, [loading]);
 
   const styles = StyleSheet.create({
     button: {
@@ -75,7 +102,7 @@ function ButtonLoading({
       color: color,
       fontSize: 16,
       fontFamily: "PoppinsBold",
-    },
+    } as TextStyle,
     loading: {
       position: "absolute",
       backgroundColor: loadingColor,
@@ -86,18 +113,20 @@ function ButtonLoading({
   });
 
   return (
-    <TouchableOpacity style={{ ...styles.button, ...style }} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, style]}
+      onPress={onPress}
+      disabled={loading} // Evita múltiplos cliques durante o loading
+    >
       {loading ? (
         <>
-          <Animated.View
-            style={[styles.loading, { bottom: bounce1 }]}
-          ></Animated.View>
+          <Animated.View style={[styles.loading, { bottom: bounce1 }]} />
           <Animated.View
             style={[
               styles.loading,
               { transform: [{ translateX: 20 }], bottom: bounce2 },
             ]}
-          ></Animated.View>
+          />
           <Animated.View
             style={[
               styles.loading,
@@ -106,7 +135,7 @@ function ButtonLoading({
                 bottom: bounce3,
               },
             ]}
-          ></Animated.View>
+          />
         </>
       ) : innerComponent ? (
         innerComponent
@@ -115,6 +144,6 @@ function ButtonLoading({
       )}
     </TouchableOpacity>
   );
-}
+};
 
 export default ButtonLoading;

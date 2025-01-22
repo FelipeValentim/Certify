@@ -17,7 +17,7 @@ import {
   faTrash,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
-import UploadImage from "@/assets/images/undraw_upload.svg";
+import UploadTemplateSVG from "@/assets/images/undraw_upload.svg";
 import ButtonLoading from "@/components/common/ButtonLoading";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -40,6 +40,7 @@ const TemplateTab = ({ navigation, route, dataLoading, template }) => {
   const [loading, setLoading] = useState({
     send: false,
     download: false,
+    upload: false,
   });
   const toggleInfo = () => {
     setVisibleInfo(!visibleInfo);
@@ -47,8 +48,13 @@ const TemplateTab = ({ navigation, route, dataLoading, template }) => {
   const dispatch = useDispatch();
 
   const pickTemplate = async () => {
+    if (loading.upload) {
+      return;
+    }
+
     try {
-      setConfirmAlert({ ...confirmAlert, loading: true });
+      setLoading({ ...loading, upload: true });
+
       const result = await DocumentPicker.getDocumentAsync({
         type: [
           "application/msword",
@@ -75,11 +81,15 @@ const TemplateTab = ({ navigation, route, dataLoading, template }) => {
         setEventTemplate({ fullPreviewPath: data });
       }
     } finally {
-      setConfirmAlert({ ...confirmAlert, loading: false });
+      setLoading({ ...loading, upload: false });
     }
   };
 
   const removeTemplate = async () => {
+    if (confirmAlert.loading) {
+      return;
+    }
+
     try {
       setConfirmAlert({ ...confirmAlert, loading: true });
 
@@ -92,8 +102,13 @@ const TemplateTab = ({ navigation, route, dataLoading, template }) => {
   };
 
   const downloadCertificates = async () => {
-    setLoading({ ...loading, download: true });
+    if (loading.download) {
+      return;
+    }
+
     try {
+      setLoading({ ...loading, download: true });
+
       const { data } = await EventAPI.downloadCertificates(eventId);
 
       savefile(data);
@@ -103,11 +118,15 @@ const TemplateTab = ({ navigation, route, dataLoading, template }) => {
   };
 
   const sendCertificates = async () => {
-    setLoading({ ...loading, send: true });
-
-    setConfirmAlert({ ...confirmAlert, open: false });
+    if (loading.send) {
+      return;
+    }
 
     try {
+      setLoading({ ...loading, send: true });
+
+      setConfirmAlert({ ...confirmAlert, open: false });
+
       await EventAPI.sendCertificates(eventId);
 
       dispatch(
@@ -287,7 +306,7 @@ const TemplateTab = ({ navigation, route, dataLoading, template }) => {
             ) : (
               <>
                 <View style={styles.imageContainer}>
-                  <UploadImage height={screenHeight / 4} />
+                  <UploadTemplateSVG height={screenHeight / 4} />
                 </View>
 
                 <View style={{ alignItems: "center" }}>
@@ -302,6 +321,7 @@ const TemplateTab = ({ navigation, route, dataLoading, template }) => {
                   </MutedText>
                 </View>
                 <ButtonLoading
+                  loading={loading.upload}
                   onPress={pickTemplate}
                   innerComponent={
                     <View

@@ -23,7 +23,7 @@ export const backgroundColor = "#F5F0FF";
 export const redColor = "#dd2150";
 
 const remote = {
-  active: false,
+  active: true,
   url: "https://certify-1wqq.onrender.com",
 };
 export const baseURL = remote.active

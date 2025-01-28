@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "event-checkin-app",
-    "slug": "event-checkin-app",
+    "name": "certify",
+    "slug": "certify",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,25 +13,37 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.sahrutar.certify",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Precisamos de acesso à câmera para...",
+        "NSPhotoLibraryUsageDescription": "Precisamos de acesso à sua galeria de fotos para...",
+        "NSPhotoLibraryAddUsageDescription": "Precisamos de permissão para salvar fotos...",
+        "NSMicrophoneUsageDescription": "Precisamos de acesso ao microfone para...",
+        "NSFileSystemUsageDescription": "Precisamos de permissão para ler/gravar arquivos no dispositivo."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sahrutar.eventcheckinapp"
+      "package": "com.sahrutar.certify",
+      "permissions": [
+        "CAMERA",
+        "READ_INTERNAL_STORAGE",
+        "WRITE_INTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_MEDIA_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-secure-store",
-      "expo-asset"
-    ],
+    "plugins": ["expo-router", "expo-secure-store", "expo-asset"],
     "experiments": {
       "typedRoutes": true
     },

@@ -12,16 +12,9 @@ import {
   Container,
   H2,
   H3,
-  H4,
   MutedText,
 } from "@/components/common/CustomElements";
 import AccessDenied from "@/assets/images/undraw_access-denied.svg";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faCheck,
-  faCircleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
 
 const borderThickness = 7;
 
@@ -35,8 +28,15 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
   const lineAnim = useRef(new Animated.Value(screenWidth / 10)).current;
 
   const requestPermission = async () => {
-    const { status } = await Camera.getCameraPermissionsAsync();
-    setHasPermission(status === "granted");
+    const { granted } = await Camera.getCameraPermissionsAsync();
+
+    setHasPermission(granted);
+
+    if (!granted) {
+      const permissions = await Camera.requestCameraPermissionsAsync();
+
+      setHasPermission(permissions.granted);
+    }
   };
 
   useEffect(() => {
@@ -91,7 +91,7 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
   };
 
   if (hasPermission === null) {
-    return <View />;
+    return null;
   }
   if (hasPermission === false) {
     return (
@@ -112,85 +112,59 @@ function EventScanner({ navigation, updateCheckin, updateUncheckin, guests }) {
 
   return (
     <View style={styles.cameraContainer}>
-      {hasPermission ? (
-        <>
-          <CameraView
-            onBarcodeScanned={handleBarCodeScanned}
-            style={styles.camera}
-            barCodeScannerSettings={{
-              barCodeTypes: ["qr"],
+      <>
+        <CameraView
+          onBarcodeScanned={handleBarCodeScanned}
+          style={styles.camera}
+          barCodeScannerSettings={{
+            barCodeTypes: ["qr"],
+          }}
+        />
+        <View style={styles.scannerContainer}>
+          <View
+            style={styles.scanner}
+            onLayout={(event) => {
+              const { layout } = event.nativeEvent;
+              setScannerBounds({
+                x: layout.x,
+                y: layout.y,
+                width: layout.width,
+                height: layout.height,
+              });
             }}
-          />
-          <View style={styles.scannerContainer}>
-            <View
-              style={styles.scanner}
-              onLayout={(event) => {
-                const { layout } = event.nativeEvent;
-                setScannerBounds({
-                  x: layout.x,
-                  y: layout.y,
-                  width: layout.width,
-                  height: layout.height,
-                });
-              }}
-            >
-              {/* Linha superior esquerda */}
-              <Animated.View
-                style={[styles.line, styles.topLeftRight, { width: lineAnim }]}
-              />
-              <Animated.View
-                style={[
-                  styles.line,
-                  styles.topLeftBottom,
-                  { height: lineAnim },
-                ]}
-              />
-              {/* Linha superior direita */}
-              <Animated.View
-                style={[styles.line, styles.topRightLeft, { width: lineAnim }]}
-              />
-              <Animated.View
-                style={[
-                  styles.line,
-                  styles.topRightBottom,
-                  { height: lineAnim },
-                ]}
-              />
+          >
+            {/* Linha superior esquerda */}
+            <Animated.View
+              style={[styles.line, styles.topLeftRight, { width: lineAnim }]}
+            />
+            <Animated.View
+              style={[styles.line, styles.topLeftBottom, { height: lineAnim }]}
+            />
+            {/* Linha superior direita */}
+            <Animated.View
+              style={[styles.line, styles.topRightLeft, { width: lineAnim }]}
+            />
+            <Animated.View
+              style={[styles.line, styles.topRightBottom, { height: lineAnim }]}
+            />
 
-              {/* Linha inferior Esquerda */}
-              <Animated.View
-                style={[
-                  styles.line,
-                  styles.bottomLeftRight,
-                  { width: lineAnim },
-                ]}
-              />
-              <Animated.View
-                style={[
-                  styles.line,
-                  styles.bottomLeftTop,
-                  { height: lineAnim },
-                ]}
-              />
-              {/* Linha inferior Direita */}
-              <Animated.View
-                style={[
-                  styles.line,
-                  styles.bottomRightLeft,
-                  { width: lineAnim },
-                ]}
-              />
-              <Animated.View
-                style={[
-                  styles.line,
-                  styles.bottomRightTop,
-                  { height: lineAnim },
-                ]}
-              />
-            </View>
+            {/* Linha inferior Esquerda */}
+            <Animated.View
+              style={[styles.line, styles.bottomLeftRight, { width: lineAnim }]}
+            />
+            <Animated.View
+              style={[styles.line, styles.bottomLeftTop, { height: lineAnim }]}
+            />
+            {/* Linha inferior Direita */}
+            <Animated.View
+              style={[styles.line, styles.bottomRightLeft, { width: lineAnim }]}
+            />
+            <Animated.View
+              style={[styles.line, styles.bottomRightTop, { height: lineAnim }]}
+            />
           </View>
-        </>
-      ) : null}
+        </View>
+      </>
       <CustomSnackBar
         visible={visible}
         duration={5000}

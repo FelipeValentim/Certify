@@ -43,7 +43,11 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-secure-store", "expo-asset"],
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-asset"
+    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -52,7 +56,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "32c09ade-85ab-4d50-9354-9c8ed68db7b7"
+        "projectId": "b23bcdec-f5d6-4f44-8fc4-0f58163a7da1"
       }
     }
   }

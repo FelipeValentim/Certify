@@ -13,6 +13,7 @@ namespace Domain.Interfaces.Services
         ResponseModel SendCertificates(Guid eventId);
 
         Event Get(Guid id);
+        ResponseModel<Event> GetByDecodedId(string id);
 
         Event GetRelated(Guid id);
 

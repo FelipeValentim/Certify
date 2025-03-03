@@ -17,7 +17,7 @@ import {
   Text,
 } from "react-native";
 import { AccountAPI } from "@/services/AccountAPI";
-import { setToken } from "@/storage/AsyncStorage";
+import { setToken } from "@/storage/SecurityStorage";
 
 import { useDispatch } from "react-redux";
 import ButtonLoading from "@/components/common/ButtonLoading";

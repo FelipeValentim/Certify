@@ -8,7 +8,7 @@ import NewGuestScreen from "./newGuest";
 import NewEventScreen from "./newEvent";
 
 import * as Font from "expo-font";
-import { getToken } from "@/storage/AsyncStorage";
+import { getToken } from "@/storage/SecurityStorage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
@@ -57,7 +57,6 @@ const Main = () => {
         if (token) {
           dispatch(signIn(token));
         }
-        console.log(token, isSignedIn);
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } finally {

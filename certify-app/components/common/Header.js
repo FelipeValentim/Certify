@@ -1,6 +1,6 @@
 import { primaryColor, routes } from "@/constants/Default";
 import { signOut } from "@/redux/token";
-import { removeToken } from "@/storage/AsyncStorage";
+import { removeToken } from "@/storage/SecurityStorage";
 import { faChevronLeft, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";

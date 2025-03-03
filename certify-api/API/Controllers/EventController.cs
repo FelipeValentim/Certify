@@ -7,6 +7,8 @@ using Domain.Entities;
 using Services;
 using Domain.DTO;
 using Services.Helper;
+using Services.Attributes;
+using Domain.Constants;
 
 namespace API.Controllers
 {
@@ -138,6 +140,16 @@ namespace API.Controllers
             var response = _eventService.GenerateCheckinQRCode(eventId);
 
             return File(response.Data, response.MimeType);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("QRCode/decode/{eventId}")]
+        [DecodeHash(Salt.EventId)]
+        public ActionResult DecodeQRCodeEvent(string eventId)
+        {
+            var response = _eventService.GetByDecodedId(eventId);
+
+            return StatusCode(response.Code, response.Data);
         }
     }
 }

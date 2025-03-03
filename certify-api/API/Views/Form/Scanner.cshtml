@@ -1,0 +1,549 @@
+﻿@using Domain.DTO;
+@using Domain.Constants;
+
+<html>
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    @* <script type="text/javascript" src="~/js/html5-qrcode"></script> *@
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .formbold-main-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+        }
+
+        .title {
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .formbold-form-wrapper {
+            margin: 0 auto;
+            max-width: 95%;
+            width: 100%;
+            background: white;
+        }
+
+        .formbold-img {
+            display: block;
+            border-radius: 50%;
+            margin: auto;
+            height: 200px;
+            width: 200px;
+            object-fit: cover;
+        }
+
+        .event-img {
+            height: 120px;
+            width: 120px;
+        }
+
+
+        .formbold-img-container {
+            padding: 1rem;
+        }
+
+        .formbold-form-input {
+            width: 100%;
+            padding: 13px 22px;
+            border-radius: 5px;
+            border: 1px solid #dde3ec;
+            background: #ffffff;
+            font-weight: 500;
+            font-size: 16px;
+            color: #536387;
+            outline: none;
+            resize: none;
+        }
+
+            .formbold-form-input:focus {
+                border-color: #7B55E0;
+                box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            .formbold-form-input.feedback-error {
+                border-color: #dd2150;
+            }
+
+        .formbold-form-label {
+            color: #07074d;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 24px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+            .formbold-form-label span {
+                color: #536387;
+                font-size: 12px;
+                line-height: 18px;
+                display: inline-block;
+            }
+
+        .formbold-mb-3 {
+            margin-bottom: 15px;
+        }
+
+        .formbold-mb-6 {
+            margin-bottom: 30px;
+        }
+
+        .formbold-radio-flex {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .formbold-radio-label {
+            font-size: 14px;
+            line-height: 24px;
+            color: #07074d;
+            position: relative;
+            padding-left: 25px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .formbold-input-radio {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .formbold-radio-checkmark {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            height: 18px;
+            width: 18px;
+            background-color: #ffffff;
+            border: 1px solid #dde3ec;
+            border-radius: 50%;
+        }
+
+        .formbold-radio-label
+        .formbold-input-radio:checked ~ .formbold-radio-checkmark {
+            background-color: #7B55E0;
+        }
+
+        .formbold-radio-checkmark:after {
+            content: '';
+            position: absolute;
+            display: none;
+        }
+
+        .formbold-radio-label
+        .formbold-input-radio:checked ~ .formbold-radio-checkmark:after {
+            display: block;
+        }
+
+        .formbold-radio-label .formbold-radio-checkmark:after {
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ffffff;
+            transform: translate(-50%, -50%);
+        }
+
+        .formbold-btn {
+            position: relative;
+            text-align: center;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 5px;
+            /*padding: 14px 25px;*/
+            height: 3rem;
+            border: none;
+            font-weight: 500;
+            background-color: #7B55E0;
+            color: white;
+            cursor: pointer;
+            margin: 25px 0;
+        }
+
+            .formbold-btn:hover {
+                box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+            }
+
+        .photo-container {
+            position: relative;
+        }
+
+        .edit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #7B55E060;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background 0.3s ease-in-out;
+        }
+
+            .edit:hover {
+                background: #7B55E0;
+            }
+
+        .display-none {
+            display: none !important;
+        }
+
+        .spinner-container {
+            position: absolute;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #FFFFFF;
+            animation: spin 1s ease infinite;
+        }
+
+        @@keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #6a64f1;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .center-absolute-position {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .text-align-center {
+            text-align: center;
+        }
+
+        .mt-5 {
+            margin-top: 3rem;
+        }
+
+        .line-text {
+            display: flex;
+            flex-direction: row;
+            color: #AAA;
+        }
+
+            .line-text:before, .line-text:after {
+                content: "";
+                flex: 1 1;
+                border-bottom: 1px dashed;
+                margin: auto;
+            }
+
+            .line-text:before {
+                margin-right: 10px
+            }
+
+            .line-text:after {
+                margin-left: 10px
+            }
+
+        #reader {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Learn More: https://formbold.com -->
+    <div id="reader" style="width: 300px;"></div>
+
+    <div class="formbold-form-wrapper">
+
+        @* <p id="result">Aguardando leitura...</p> *@
+
+        <form id="guestForm" class="display-none">
+            <div class="formbold-img-container">
+                <img src="" class="formbold-img event-img">
+            </div>
+
+            <label for="qusOne" class="formbold-form-label title">
+                Bem vindo ao evento <strong class="event-name"></strong>.
+            </label>
+            <label for="qusOne" class="formbold-form-label title">
+                Para garantir sua presença, por favor, forneça o código de acesso do convite abaixo.
+            </label>
+
+            <div class="formbold-mb-3">
+                <label for="accesscode" class="formbold-form-label">Codigo de acesso*</label>
+
+                <input type="text"
+                       name="accesscode"
+                       id="accesscode"
+                       onblur="validateField('accesscode')"
+                       class="formbold-form-input" />
+            </div>
+
+            <button type="submit" class="formbold-btn">
+                <span class="submit-text">Buscar</span>
+                <div class="spinner-container center-absolute-position">
+                    <div id="searchLoadingSpinner" class="spinner display-none"></div>
+                </div>
+            </button>
+
+        </form>
+        <form id="checkinForm" class="display-none">
+            <div class="line-text">Convidado</div>
+            <div class="formbold-mb-6">
+                <label class="formbold-form-label">Nome:</label>
+                <strong id="name"></strong>
+            </div>
+            <div class="formbold-mb-6">
+                <label class="formbold-form-label">Email:</label>
+
+                <strong id="email"></strong>
+            </div>
+            <div class="formbold-mb-6">
+                <img id="photo" class="formbold-img" alt="Foto do Convidado" />
+            </div>
+            <button type="submit" class="formbold-btn">
+                <span class="submit-text">Confirmar presença</span>
+                <div class="spinner-container center-absolute-position">
+                    <div id="checkinLoadingSpinner" class="spinner display-none"></div>
+                </div>
+            </button>
+        </form>
+
+    </div>
+
+    <script>
+        let scanner = new Html5Qrcode("reader");
+        let scanning = false;
+
+        scanner.start(
+             { facingMode: "environment" }, // Usa a câmera traseira do celular, se disponível
+             { fps: 10, qrbox: 250, formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] },
+             onScanSuccess,
+        );
+
+        async function onScanSuccess(decodedText, decodedResult) {
+            if(scanning){
+                return;
+            }
+
+            try {
+                scanning = true;
+                const response = await fetch(`/Event/QRCode/Decode/${decodedText}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                // Verifique se a resposta foi bem-sucedida
+                if (response.ok) {
+                    const data = await response.json();
+                    scanner.stop();
+                } else {
+                    toastError("Algum problema aconteceu");
+                }
+                scanning = false;
+            } catch (error) {
+                console.error('Erro ao fazer a requisição');
+            } 
+        }
+
+         function onScanError(error) {
+             toastError(`Erro ao escanear: ${error}`);
+         }
+
+        const toast = (text) => {
+            Toastify({
+                text: text,
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top",
+                position: "center",
+                style: {
+                    background: "linear-gradient(to right, #6a64f1, #9c64f1)",
+                },
+            }).showToast();
+        }
+
+        const toastError = (text) => {
+            Toastify({
+                text: text,
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top",
+                position: "center",
+                style: {
+                    background: "linear-gradient(to right, #dd2150, #b5172f)",
+                },
+            }).showToast();
+        }
+
+        const resetForm = () => {
+            searchForm.reset();
+        }
+
+        function validateField(fieldId, errorMessage) {
+            const field = document.getElementById(fieldId);
+
+            if (!field.value.trim()) {
+                field.classList.add('feedback-error');
+            } else {
+                field.classList.remove('feedback-error');
+            }
+        }
+
+        const checkinLoadingSpinner = document.getElementById('checkinLoadingSpinner');
+        const searchLoadingSpinner = document.getElementById('searchLoadingSpinner');
+
+        // Validação em tempo real ao digitar
+        const accesscodeField = document.getElementById('accesscode');
+
+        accesscodeField.addEventListener('input', () => validateField('accesscode', 'Por favor, diga o código de acesso.'));
+
+        const searchForm = document.getElementById('guestForm');
+        const checkinForm = document.getElementById('checkinForm');
+
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+
+            // Campos que precisam de validação
+            const requiredFields = [
+                'accesscode',
+            ];
+
+            // Valida todos os campos obrigatórios
+            let isValid = true;
+            requiredFields.forEach((id) => {
+                const field = document.getElementById(id);
+                if (!field.value.trim()) {
+                    validateField(id);
+                    isValid = false;
+                }
+            });
+
+            // Se algum campo estiver inválido, exibe uma mensagem geral e não prossegue
+            if (!isValid) {
+                toastError("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            searchLoadingSpinner.classList.remove('display-none');
+            var submitText = searchForm.querySelector(".submit-text");
+            submitText.classList.add('display-none');
+
+
+            const formData = new FormData(searchForm);
+
+            const accesscode = formData.get('accesscode');
+
+            try {
+                const response = await fetch(`/Form/Guest/Search/${accesscode}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                if (response.ok) {
+                    //toast("Convidado cadastrado com sucesso");
+                    const json = await response.json();
+                    checkinForm.querySelector('#name').textContent = json.name;
+                    checkinForm.querySelector('#email').textContent = json.email;
+                    checkinForm.querySelector('#photo').src = json.photo;
+                    checkinForm.classList.remove("display-none");
+                    //resetForm();
+                } else {
+                    const errorMessage = await response.text();
+
+                    toastError(errorMessage);
+                }
+            } catch (error) {
+                toastError(error.message);
+            } finally {
+                searchLoadingSpinner.classList.add('display-none');
+                submitText.classList.remove('display-none');
+            }
+        });
+
+
+        //Checkin
+        checkinForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            checkinLoadingSpinner.classList.remove('display-none');
+            var submitText = checkinForm.querySelector(".submit-text");
+            submitText.classList.add('display-none');
+
+
+            const formData = new FormData(searchForm);
+
+            const accesscode = formData.get('accesscode');
+
+            try {
+                const response = await fetch(`/Form/Guest/Checkin/${accesscode}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                if (response.ok) {
+                    toast("Checkin realizado com sucesso");
+                    resetForm();
+                    checkinForm.classList.add("display-none");
+                } else {
+                    const errorMessage = await response.text();
+
+                    toastError(errorMessage);
+                }
+            } catch (error) {
+                toastError(error.message);
+            } finally {
+                checkinLoadingSpinner.classList.add('display-none');
+                submitText.classList.remove('display-none');
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -24,6 +24,19 @@ namespace Certify.Controllers
             _formService = formService;
         }
 
+        [HttpGet("Event/Scanner")]
+        public ActionResult EventScanner()
+        {
+            return View("Scanner");
+        }
+
+        [DecodeHash(Salt.EventId)]
+        [HttpGet("Event/Scanner/{eventId}")]
+        public ActionResult Event(string eventId)
+        {
+            return View("Scanner");
+        }
+
         [DecodeHash]
         [HttpGet("Guest/{eventId}")]
         public ActionResult FormGuest(string eventId)

@@ -8,7 +8,7 @@ import EventTemplateTab from "./templateTab";
 import EventScannerTab from "./eventScanner";
 import { Ionicons } from "@expo/vector-icons";
 import { EventAPI } from "@/services/EventAPI";
-import { View, Animated } from "react-native";
+import { View, Animated, Pressable } from "react-native";
 import { useFocusEffect } from "expo-router";
 
 const Tab = createBottomTabNavigator();
@@ -93,6 +93,9 @@ export default function EventScreen({ route, navigation }) {
     <>
       <Tab.Navigator
         screenOptions={{
+          tabBarButton: (props) => (
+            <Pressable {...props} android_ripple={{ color: "transparent" }} />
+          ),
           tabBarShowLabel: false,
           tabBarActiveTintColor: primaryColor,
           tabBarStyle: {
@@ -105,6 +108,7 @@ export default function EventScreen({ route, navigation }) {
             shadowOpacity: 0.1,
             elevation: 3,
             height: 70,
+            paddingTop: 15,
             paddingHorizontal: paddingHorizontal,
           },
         }}

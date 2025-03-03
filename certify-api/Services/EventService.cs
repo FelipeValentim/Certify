@@ -372,5 +372,23 @@ namespace Services
 
             return response;
         }
+
+        public ResponseModel<Event> GetByDecodedId(string id)
+        {
+            var guid = new Guid(id);
+
+            if (guid == Guid.Empty)
+            {
+                return ResponseModel<Event>.Error(HttpStatusCode.NotFound, "Evento não encontrado");
+            }
+
+            var e = Get(guid);
+
+            if (e == null)
+            {
+                return ResponseModel<Event>.Error(HttpStatusCode.NotFound, "Evento não encontrado");
+            }
+            return ResponseModel<Event>.Success(e);
+        }
     }
 }

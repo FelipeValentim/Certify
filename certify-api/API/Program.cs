@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.Constants;
 using Domain.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -86,6 +87,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    UrlManager.API = "https://simply-novel-shiner.ngrok-free.app";
     app.UseSwagger();
     app.UseSwaggerUI();
 }

@@ -11,5 +11,6 @@ namespace Domain.Constants
         public const string Salt1 = "oHgAc7FB";
         public const string Salt2 = "3fiZg+u6";
         public const string GuestGUID = "R4eJJEEi";
+        public const string EventId = "Ng1RDF3o:+C/";
     }
 }

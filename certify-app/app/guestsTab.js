@@ -593,16 +593,12 @@ function GuestsTab({
                   containerBackgroundColor="#F5F5F5"
                   height={38}
                 />
-
-                {filteredGuests && filteredGuests.length === 0 && (
-                  <NoFilterData />
-                )}
               </View>
             ) : (
               <NoData />
             )}
 
-            {filteredGuests && (
+            {filteredGuests && filteredGuests.length > 0 && (
               <FlatList
                 initialNumToRender={filteredGuests.length}
                 maxToRenderPerBatch={filteredGuests.length}
@@ -613,6 +609,8 @@ function GuestsTab({
                 contentContainerStyle={{ paddingBottom: 50 }}
               />
             )}
+
+            {filteredGuests && filteredGuests.length === 0 && <NoFilterData />}
           </>
         )}
 

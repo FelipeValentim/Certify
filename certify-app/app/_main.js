@@ -11,7 +11,6 @@ import * as Font from "expo-font";
 import { getToken } from "@/storage/AsyncStorage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "@/redux/token";
@@ -20,20 +19,25 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { routes } from "@/constants/Default";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import CustomSnackBar from "@/components/common/CustomSnackBar";
-import { StatusBar } from "react-native";
-
-SplashScreen.preventAutoHideAsync();
+import { Image, StatusBar, View, StyleSheet } from "react-native";
+import BackgroundSplash from "../assets/images/splash-background.svg";
+// SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 
 const Main = () => {
-  const [appIsReady, setAppIsReady] = useState(false);
-  const dispatch = useDispatch();
   const isSignedIn = useSelector((state) => state.token);
+  const [appIsReady, setAppIsReady] = useState(false);
+  const [initialRoute, setInitialRoute] = useState();
+  const dispatch = useDispatch();
   const snackBar = useSelector((state) => state.snackBar);
 
   const onDismiss = () => {
     dispatch(close());
   };
+
+  useEffect(() => {
+    setInitialRoute(isSignedIn ? routes.home : routes.login);
+  }, [isSignedIn]);
 
   useEffect(() => {
     async function prepare() {
@@ -53,6 +57,7 @@ const Main = () => {
         if (token) {
           dispatch(signIn(token));
         }
+        console.log(token, isSignedIn);
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } finally {
@@ -64,18 +69,16 @@ const Main = () => {
     prepare();
   }, []);
 
-  useEffect(() => {
-    const hideSplashScreen = async () => {
-      if (appIsReady) {
-        await SplashScreen.hideAsync();
-      }
-    };
-
-    hideSplashScreen();
-  }, [appIsReady]);
-
   if (!appIsReady) {
-    return null;
+    return (
+      <View style={styles.container}>
+        <BackgroundSplash style={styles.background} />
+        <Image
+          style={styles.image}
+          source={require("../assets/images/splash-icon.png")}
+        />
+      </View>
+    );
   }
 
   return (
@@ -84,7 +87,7 @@ const Main = () => {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <NavigationContainer>
             <Stack.Navigator
-              initialRouteName="home"
+              initialRouteName={initialRoute}
               screenOptions={{
                 headerShown: false,
               }}
@@ -156,5 +159,23 @@ const Main = () => {
     </SafeAreaProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  background: {
+    position: "absolute",
+    height: "100%",
+    width: "100%",
+  },
+  image: {
+    width: 200,
+    objectFit: "contain",
+    position: "absolute",
+  },
+});
 
 export default Main;

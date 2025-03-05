@@ -90,7 +90,7 @@ const ModalContainer = ({
     <Modal transparent visible={visible} onRequestClose={toClose}>
       <StatusBar backgroundColor="rgba(0, 0, 0, 1)" />
 
-      <View style={styles.modalContainer}>
+      <Pressable style={styles.modalContainer} onPress={toClose}>
         <Animated.View
           style={[
             styles.overlay,
@@ -99,13 +99,13 @@ const ModalContainer = ({
             },
           ]}
         >
-          {children}
+          <Pressable onPress={(e) => e.stopPropagation()}>{children}</Pressable>
 
           <Pressable style={styles.close} onPress={toClose}>
             <FontAwesomeIcon icon={faX} size={14} color="#555" />
           </Pressable>
         </Animated.View>
-      </View>
+      </Pressable>
     </Modal>
   );
 };

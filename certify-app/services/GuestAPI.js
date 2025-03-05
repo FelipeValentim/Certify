@@ -8,7 +8,7 @@ export const GuestAPI = {
       method: "POST",
       data: { ...guest },
       signal: cancel
-        ? cancelApiObject[this.post.name].handleRequestCancellation().signal
+        ? cancelApiObject[this.newGuest.name].handleRequestCancellation().signal
         : undefined,
     });
   },
@@ -72,13 +72,26 @@ export const GuestAPI = {
         : undefined,
     });
   },
-  deleteGuest: async function (id, cancel = false) {
+  sendInvitations: async function (eventId, ids, cancel = false) {
     return api.request({
-      url: `/Guest/Delete/${id}`,
-      method: "DELETE",
+      url: `/Guest/Invitations/${eventId}`,
+      method: "POST",
+      data: ids,
       signal: cancel
-        ? cancelApiObject[this.deleteGuest.name].handleRequestCancellation()
+        ? cancelApiObject[this.sendInvitations.name].handleRequestCancellation()
             .signal
+        : undefined,
+    });
+  },
+  sendCertificates: async function (eventId, ids, cancel = false) {
+    return api.request({
+      url: `/Guest/Certificates/${eventId}`,
+      method: "POST",
+      data: ids,
+      signal: cancel
+        ? cancelApiObject[
+            this.sendCertificates.name
+          ].handleRequestCancellation().signal
         : undefined,
     });
   },

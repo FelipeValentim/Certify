@@ -11,7 +11,7 @@ import { Snackbar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const CustomSnackBar = ({
-  time = 5000,
+  duration = 5000,
   visible,
   type,
   style = {},
@@ -42,7 +42,7 @@ const CustomSnackBar = ({
         backgroundColor: backgroundColor,
       }}
       visible={visible}
-      duration={time}
+      duration={duration}
       onDismiss={onDismiss}
     >
       <View

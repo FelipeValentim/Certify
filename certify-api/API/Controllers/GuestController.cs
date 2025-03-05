@@ -77,6 +77,22 @@ namespace API.Controllers
             return StatusCode(response.Code, response.Data);
         }
 
+        [HttpPost("Invitations/{eventId}")]
+        public IActionResult Invitations(Guid[] ids, Guid eventId)
+        {
+            var response = _guestService.SendInvitations(eventId, ids);
+
+            return StatusCode(response.Code, response.Data);
+        }
+
+        [HttpPost("Certificates/{eventId}")]
+        public IActionResult Certificates(Guid[] ids, Guid eventId)
+        {
+            var response = _guestService.SendCertificates(eventId, ids);
+
+            return StatusCode(response.Code, response.Data);
+        }
+
         [AllowAnonymous]
         [HttpGet("QRCode/{guestId}")]
         [DecodeHash(Salt.GuestGUID)]

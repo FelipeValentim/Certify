@@ -189,6 +189,7 @@ export default function EventScreen({ route, navigation }) {
               updateCheckin={checkin}
               updateDeleted={updateDeleted}
               addGuest={addGuest}
+              eventId={eventId}
             />
           )}
         </Tab.Screen>

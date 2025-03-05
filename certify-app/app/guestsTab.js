@@ -22,10 +22,13 @@ import { SegmentedControl } from "@/components/common/SegmentedControl";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import {
   faAdd,
+  faCertificate,
   faCheck,
   faCheckToSlot,
   faChevronRight,
   faClockRotateLeft,
+  faEllipsisV,
+  faReceipt,
   faRefresh,
   faTrashCan,
   faX,
@@ -38,6 +41,11 @@ import { format } from "date-fns";
 import CustomSnackBar from "@/components/common/CustomSnackBar";
 import NoData from "@/components/common/NoData";
 import NoFilterData from "@/components/common/NoFilterData";
+import {
+  PopupMenu,
+  PopupMenuOption,
+  PopupMenuOptions,
+} from "@/components/common/PopupMenu";
 
 const SelectionHeader = ({
   selectedItems,
@@ -46,6 +54,10 @@ const SelectionHeader = ({
   uncheckins,
   deleteGuests,
   setConfirmAlert,
+  setPopupMenuOpen,
+  popupMenuOpen,
+  sendCertificates,
+  sendInvitations,
 }) => {
   const styles = StyleSheet.create({
     container: {
@@ -168,6 +180,91 @@ const SelectionHeader = ({
               <FontAwesomeIcon icon={faCheckToSlot} color={"#FFF"} size={18} />
             </TouchableOpacity>
           )}
+
+          <TouchableOpacity
+            onPress={() =>
+              setPopupMenuOpen((popupMenuOpenPrev) => !popupMenuOpenPrev)
+            }
+            style={styles.option}
+          >
+            <FontAwesomeIcon icon={faEllipsisV} color={"#FFF"} size={18} />
+          </TouchableOpacity>
+          <PopupMenu
+            open={popupMenuOpen}
+            toggle={() => setPopupMenuOpen(!popupMenuOpen)}
+          >
+            <PopupMenuOptions>
+              <PopupMenuOption
+                onSelect={() =>
+                  setConfirmAlert({
+                    open: true,
+                    title: "Tem certeza disto?",
+                    message: `Confirmar deleção de ${selectedItems.length} convidados?`,
+                    onConfirm: () => deleteGuests(),
+                  })
+                }
+                text={"Deletar"}
+                icon={<FontAwesomeIcon icon={faTrashCan} />}
+              />
+
+              {selectedItems.filter((x) => x.checkinDate).length > 0 && (
+                <>
+                  <PopupMenuOption
+                    onSelect={() =>
+                      setConfirmAlert({
+                        open: true,
+                        title: "Tem certeza disto?",
+                        message: `Confirmar uncheckin de ${selectedItems.length} convidados?`,
+                        onConfirm: () => uncheckins(),
+                      })
+                    }
+                    text={"Uncheckin"}
+                    icon={<FontAwesomeIcon icon={faClockRotateLeft} />}
+                  />
+                  <PopupMenuOption
+                    onSelect={() =>
+                      setConfirmAlert({
+                        open: true,
+                        title: "Tem certeza disto?",
+                        message: `Confirmar envio de de certificado para ${selectedItems.length} convidado(s)?`,
+                        onConfirm: () => sendCertificates(),
+                      })
+                    }
+                    text={"Enviar certificado"}
+                    icon={<FontAwesomeIcon icon={faCertificate} />}
+                  />
+                </>
+              )}
+              {selectedItems.filter((x) => !x.checkinDate).length > 0 && (
+                <>
+                  <PopupMenuOption
+                    onSelect={() =>
+                      setConfirmAlert({
+                        open: true,
+                        title: "Tem certeza disto?",
+                        message: `Confirmar checkin de ${selectedItems.length} convidados?`,
+                        onConfirm: () => checkins(),
+                      })
+                    }
+                    text={"Checkin"}
+                    icon={<FontAwesomeIcon icon={faCheckToSlot} />}
+                  />
+                  <PopupMenuOption
+                    onSelect={() =>
+                      setConfirmAlert({
+                        open: true,
+                        title: "Tem certeza disto?",
+                        message: `Confirmar envio de de convite para ${selectedItems.length} convidado(s)?`,
+                        onConfirm: () => sendInvitations(),
+                      })
+                    }
+                    text={"Enviar convite"}
+                    icon={<FontAwesomeIcon icon={faReceipt} />}
+                  />
+                </>
+              )}
+            </PopupMenuOptions>
+          </PopupMenu>
         </View>
       </View>
     </View>
@@ -184,12 +281,14 @@ function GuestsTab({
   route,
   dataLoading,
   getData,
+  eventId,
 }) {
   const [filteredGuests, setFilteredGuests] = useState(null);
   const [snackBar, setSnackBar] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [confirmAlert, setConfirmAlert] = useState({});
+  const [popupMenuOpen, setPopupMenuOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState({
     label: "Todos",
     value: 0,
@@ -212,7 +311,12 @@ function GuestsTab({
   let rowRefs = new Map();
   const onDismissSnackBar = () => setSnackBar({ ...snackBar, visible: false });
   const onOpenSnackBar = (message) =>
-    setSnackBar({ ...snackBar, message: message, visible: true });
+    setSnackBar({
+      ...snackBar,
+      message: message,
+      visible: true,
+      duration: 3000,
+    });
 
   useEffect(() => {
     const defaultValues = {
@@ -278,6 +382,7 @@ function GuestsTab({
       }
     } finally {
       setLoading(false);
+      setPopupMenuOpen(false);
     }
   };
 
@@ -299,6 +404,7 @@ function GuestsTab({
         }
       } finally {
         setLoading(false);
+        setPopupMenuOpen(false);
       }
     }
   };
@@ -326,6 +432,48 @@ function GuestsTab({
       }
     } finally {
       setLoading(false);
+      setPopupMenuOpen(false);
+    }
+  };
+
+  const sendCertificates = async () => {
+    const ids = selectedItems.map((x) => x.id);
+
+    try {
+      if (!loading) {
+        setLoading(true);
+        await GuestAPI.sendCertificates(eventId, ids);
+        setSelectedItems([]);
+
+        onOpenSnackBar(
+          `Certificado dos ${selectedItems.length} convidados enviado com sucesso.`
+        );
+      }
+    } finally {
+      setLoading(false);
+      setPopupMenuOpen(false);
+    }
+  };
+
+  const sendInvitations = async () => {
+    const ids = selectedItems.map((x) => x.id);
+
+    try {
+      if (!loading) {
+        setLoading(true);
+
+        await GuestAPI.sendInvitations(eventId, ids);
+        setSelectedItems([]);
+
+        onOpenSnackBar(
+          `Convite dos ${selectedItems.length} convidados enviado com sucesso.`
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+      setPopupMenuOpen(false);
     }
   };
 
@@ -350,6 +498,7 @@ function GuestsTab({
         }
       } finally {
         setLoading(false);
+        setPopupMenuOpen(false);
       }
     }
   };
@@ -563,6 +712,10 @@ function GuestsTab({
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
               setConfirmAlert={setConfirmAlert}
+              setPopupMenuOpen={setPopupMenuOpen}
+              popupMenuOpen={popupMenuOpen}
+              sendCertificates={sendCertificates}
+              sendInvitations={sendInvitations}
             />
           )
         }
@@ -637,7 +790,7 @@ function GuestsTab({
       />
       <CustomSnackBar
         visible={snackBar.visible}
-        duration={5000}
+        duration={snackBar.duration}
         onDismiss={onDismissSnackBar}
         type="success"
         message={snackBar.message}

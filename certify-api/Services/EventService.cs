@@ -44,6 +44,7 @@ namespace Services
             _qrCodeService = qrCodeService;
         }
 
+
         public ResponseModel<FileDTO> DownloadCertificates(Guid eventId)
         {
             var eventItem = _eventRepository.Get(x => x.Id == eventId, includeProperties: "EventTemplate, EventType");
@@ -269,7 +270,7 @@ namespace Services
 
         public Event GetRelated(Guid id)
         {
-            var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "EventTemplate");
+            var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "EventTemplate, EventType");
 
             var guests = _guestRepository.GetGuests(eventItem.Id);
 

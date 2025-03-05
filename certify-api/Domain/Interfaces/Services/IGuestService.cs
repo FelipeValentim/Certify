@@ -9,9 +9,11 @@ namespace Domain.Interfaces.Services
 
 		void SetStudentGuestType(ref GuestDTO guest);
 
-        void SendQRCode(Guid eventId, Guid id);
+        void SendInvitation(Guid eventId, Guid id);
 
-        void SendQRCode(Guid eventId, Guid[] ids);
+        ResponseModel SendInvitations(Guid eventId, Guid[] ids);
+        ResponseModel SendCertificates(Guid eventId, Guid[] ids);
+
         ResponseModel<GuestDTO> Get(Guid id);
         ResponseModel<GuestDTO> Get(string id);
         ResponseModel Checkin(Guid id, bool form = false);

@@ -9,6 +9,8 @@ using Services.Helper;
 using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
+using Xceed.Document.NET;
+using Xceed.Words.NET;
 
 namespace Services
 {
@@ -16,6 +18,7 @@ namespace Services
     {
         private readonly IGuestRepository _guestRepository;
         private readonly IEventService _eventService;
+        private readonly IEventTemplateService _eventTemplateService;
         private readonly IStorageService _storageService;
         private readonly IGuestTypeService _guestTypeService;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -23,12 +26,14 @@ namespace Services
         private readonly IMailService _mailService;
         private readonly IMappingService _mappingService;
         private readonly IImageManager _imageManager;
+        private readonly IDocumentService _documentService;
 
-        public GuestService(IGuestRepository guestRepository, IEventService eventService, IStorageService storageService, IGuestTypeService guestTypeService,
-            IWebHostEnvironment webHostEnvironment, IMailService mailService, IQRCodeService qrCodeService, IMappingService mappingService, IImageManager imageManager)
+        public GuestService(IGuestRepository guestRepository, IEventService eventService, IEventTemplateService eventTemplateService, IStorageService storageService, IGuestTypeService guestTypeService,
+            IWebHostEnvironment webHostEnvironment, IMailService mailService, IQRCodeService qrCodeService, IMappingService mappingService, IImageManager imageManager, IDocumentService documentService)
         {
             _guestRepository = guestRepository;
             _eventService = eventService;
+            _eventTemplateService = eventTemplateService;
             _storageService = storageService;
             _guestTypeService = guestTypeService;
             _webHostEnvironment = webHostEnvironment;
@@ -36,6 +41,7 @@ namespace Services
             _qrCodeService = qrCodeService;
             _mappingService = mappingService;
             _imageManager = imageManager;
+            _documentService = documentService;
         }
 
         public ResponseModel<object> Add(GuestDTO model, bool form = false)
@@ -116,7 +122,7 @@ namespace Services
                 // Inserir o convidado no repositório
                 _guestRepository.Insert(guest);
 
-                SendQRCode(guest.EventId, guest.Id);
+                SendInvitation(guest.EventId, guest.Id);
 
                 // Retornar resposta de sucesso
                 return ResponseModel<object>.Success(new { id = guest.Id, photoFullUrl = $"{UrlManager.Storage}{guest.Photo}" }, HttpStatusCode.OK);
@@ -128,13 +134,13 @@ namespace Services
             }
         }
 
-        public void SendQRCode(Guid eventId, Guid id)
+        public void SendInvitation(Guid eventId, Guid id)
         {
-            SendQRCode(eventId, new Guid[] { id });
+            SendInvitations(eventId, new Guid[] { id });
         }
 
 
-        public void SendQRCode(Guid eventId, Guid[] ids)
+        public ResponseModel SendInvitations(Guid eventId, Guid[] ids)
         {
             var eventItem = _eventService.Get(eventId);
 
@@ -149,7 +155,7 @@ namespace Services
 
 
 
-            var guests = _guestRepository.GetAll(u => ids.Contains(u.Id));
+            var guests = _guestRepository.GetAll(u => ids.Contains(u.Id) && !u.CheckinDate.HasValue);
 
             foreach (var guest in guests)
             {
@@ -173,6 +179,8 @@ namespace Services
 
                 _mailService.SendMailCheckfyAsync(mailMessage);
             }
+
+            return ResponseModel.Success("Convite enviado com sucesso.");
         }
 
 
@@ -373,6 +381,112 @@ namespace Services
             var response = _qrCodeService.GenerateQRCode(guestId);
 
             return response;
+        }
+
+        public ResponseModel SendCertificates(Guid eventId, Guid[] ids)
+        {
+            try
+            {
+
+                var eventItem = _eventService.GetRelated(eventId);
+
+                if (eventItem == null)
+                {
+                    return ResponseModel.Error(HttpStatusCode.NotFound, "Evento não existe.");
+                }
+
+                if (eventItem.EventTemplate == null)
+                {
+                    return ResponseModel.Error(HttpStatusCode.NotFound, "Evento não possui template.");
+                }
+
+                var guestItems = _guestRepository.GetAll(x => ids.Contains(x.Id) && x.EventId == eventId && x.CheckinDate.HasValue, includeProperties: "GuestType");
+
+                var eventTemplateItem = _eventTemplateService.Get(eventItem.EventTemplateId.Value);
+
+                var templatePath = $"{UrlManager.Storage}{eventTemplateItem.Path}";
+
+                // Criação do MemoryStream para armazenar o ZIP
+
+                string htmlPath = Path.Combine(_webHostEnvironment.WebRootPath, "html", "grateful.html");
+
+                string htmlTemplate = File.ReadAllText(htmlPath);
+
+                htmlTemplate = htmlTemplate.Replace("{evento}", eventItem.Name);
+
+                List<MailMessageDTO> mailMessages = new List<MailMessageDTO>();
+
+                foreach (var guest in guestItems)
+                {
+                    // Passo 1: Carregar o template DOCX
+                    using (DocX document = DocX.Load(templatePath))
+                    {
+                        var options = new StringReplaceTextOptions
+                        {
+                            TrackChanges = false,
+                            RegExOptions = RegexOptions.None,
+                            NewFormatting = null,
+                            FormattingToMatch = null,
+                            FormattingToMatchOptions = MatchFormattingOptions.SubsetMatch,
+                            EscapeRegEx = true,
+                            UseRegExSubstitutions = false,
+                            RemoveEmptyParagraph = true
+                        };
+
+                        // Passo 2: Substituir o placeholder {{nome}} pelo nome do convidado
+                        options.SearchValue = "{nome}";
+                        options.NewValue = guest.Name;
+                        document.ReplaceText(options);
+
+                        options.SearchValue = "{data}";
+                        options.NewValue = eventItem.Date.ToBrazilDateInWords();
+                        document.ReplaceText(options);
+
+                        options.SearchValue = "{tipoconvidado}";
+                        options.NewValue = guest.GuestType.Name;
+                        document.ReplaceText(options);
+
+                        options.SearchValue = "{evento}";
+                        options.NewValue = eventItem.Name;
+                        document.ReplaceText(options);
+
+                        options.SearchValue = "{horarioinicial}";
+                        options.NewValue = eventItem.StartTime.ToString(@"hh\:mm");
+                        document.ReplaceText(options);
+
+                        options.SearchValue = "{horariofinal}";
+                        options.NewValue = eventItem.EndTime.ToString(@"hh\:mm");
+                        document.ReplaceText(options);
+
+                        MemoryStream documentStream = new MemoryStream();
+
+                        document.SaveAs(documentStream);
+
+                        // Passo 3: Converter o documento DOCX para PDF
+                        var pdfStream = _documentService.ConvertDocumentToPdf(documentStream);
+
+                        var mailMessage = new MailMessageDTO();
+
+                        mailMessage.AddTo(guest.Email, guest.Name);
+                        mailMessage.Subject = $"Certificado - {eventItem.Name}";
+
+                        mailMessage.AddAttachment(pdfStream, "application/pdf", $"{eventItem.Name.ReplaceWhiteSpace("_")}.pdf");
+
+                        mailMessage.Html = htmlTemplate;
+
+                        mailMessages.Add(mailMessage);
+                    }
+                }
+
+                _mailService.SendMailCheckfyAsync(mailMessages);
+
+                return ResponseModel.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
         }
     }
 }

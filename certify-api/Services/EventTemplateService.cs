@@ -24,7 +24,13 @@ namespace Services
 			_eventTemplateRepository = eventTemplateRepository;
 		}
 
-		public ResponseModel UploadTemplate(FileDTO file, Guid eventId)
+		public EventTemplate Get(Guid id)
+		{
+			return _eventTemplateRepository.GetByID(id);
+		}
+
+
+        public ResponseModel UploadTemplate(FileDTO file, Guid eventId)
 		{
 			try
 			{

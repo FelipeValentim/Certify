@@ -12,6 +12,8 @@ namespace Domain.DTO
 
         public FileDTO PhotoFile { get; set; }
 
+        public bool? CheckinEnabled { get; set; }
+
         public DateTime Date { get; set; }
 
 		public TimeSpan StartTime { get; set; }

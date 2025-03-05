@@ -23,9 +23,10 @@ export const backgroundColor = "#F5F0FF";
 export const redColor = "#dd2150";
 
 const remote = {
-  active: true,
+  active: false,
   url: "https://certify-1wqq.onrender.com",
 };
+
 export const baseURL = remote.active
   ? remote.url
   : "https://simply-novel-shiner.ngrok-free.app";

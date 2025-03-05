@@ -21,7 +21,6 @@ namespace Domain.Interfaces.Services
         ResponseModel Uncheckin(Guid[] ids);
         ResponseModel Delete(Guid id);
         ResponseModel Delete(Guid[] ids);
-
-
+        FileDTO GenerateCheckinQRCode(string guestId);
     }
 }

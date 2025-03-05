@@ -1,26 +1,33 @@
-import React, { useRef, useEffect, useState, useImperativeHandle } from "react";
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import ButtonLoading from "@/components/common/ButtonLoading";
 import {
   CustomScrollView,
   H3,
+  H4,
   ImageLoading,
   MutedText,
 } from "@/components/common/CustomElements";
-import { screenHeight } from "@/constants/Default";
+import { screenHeight, screenWidth } from "@/constants/Default";
 import { generateUniqueFileName } from "@/helper/Generator";
 import ModalContainer from "@/components/common/ModalContainer";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
+import { SegmentedControl } from "./common/SegmentedControl";
+import { EventAPI } from "@/services/EventAPI";
 
-const EventQRCode = ({ visible, toggle, qrCode }) => {
+const EventQRCode = ({ visible, toggle, qrCode, id, checkinEnabled }) => {
   const [performFunction, setPerformFunction] = useState({});
+  const [eventId] = useState(id);
+  const [checkinEnabledMode, setCheckinEnabledMode] = useState({
+    value: checkinEnabled,
+  });
+
+  const [eventCheckinStates] = useState([
+    { label: "Desativado", value: false },
+    { label: "Automático", value: null },
+    { label: "Ativado", value: true },
+  ]); // Estado inicial é 'Desativado'
 
   const styles = StyleSheet.create({
     innerContainer: {
@@ -57,6 +64,10 @@ const EventQRCode = ({ visible, toggle, qrCode }) => {
       resizeMode: "contain",
       aspectRatio: 1,
     },
+    checkinState: {
+      gap: 10,
+      alignItems: "center",
+    },
   });
   const downloadQRCode = async () => {
     const imageUrl = qrCode;
@@ -82,6 +93,15 @@ const EventQRCode = ({ visible, toggle, qrCode }) => {
     await MediaLibrary.createAlbumAsync("Download", asset, false); // Salvar na pasta "Download"
   };
 
+  const setCheckinEnabled = async (state) => {
+    setCheckinEnabledMode(state);
+
+    await EventAPI.checkinEnabledMode(
+      { id: eventId, checkinEnabled: state.value },
+      true
+    );
+  };
+
   if (!visible) return null;
 
   return (
@@ -104,6 +124,18 @@ const EventQRCode = ({ visible, toggle, qrCode }) => {
               Para que os convidados possam realizar o checkin por conta
               própria, compartilhe o QRCode do evento.
             </MutedText>
+            <View style={styles.checkinState}>
+              <H4>Controle de Acesso de Checkin</H4>
+              <SegmentedControl
+                width={screenWidth - 60}
+                borderRadius={10}
+                onPress={setCheckinEnabled}
+                options={eventCheckinStates}
+                selectedOption={checkinEnabledMode}
+                containerBackgroundColor="#F5F5F5"
+              />
+            </View>
+
             <TouchableOpacity onPress={downloadQRCode}>
               <ImageLoading
                 style={styles.example}

@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Interfaces.Services;
-using Domain.Interfaces.Repositories;
 using API.Models;
-using Domain.Entities;
-using Services;
 using Domain.DTO;
-using Services.Helper;
 using Services.Attributes;
 using Domain.Constants;
 
@@ -88,6 +84,7 @@ namespace API.Controllers
                     Photo = eventItem.Photo,
                     EventTemplateId = eventItem.EventTemplateId,
                     Pax = eventItem.Pax,
+                    CheckinEnabled = eventItem.CheckinEnabled,
                     EventTemplate = eventItem.EventTemplateId.HasValue
                     ? new EventTemplateViewModel
                     {
@@ -115,6 +112,14 @@ namespace API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
+        }
+
+        [HttpPut("CheckinEnabledMode")]
+        public IActionResult CheckinEnabledMode(EventDTO model)
+        {
+            var response = _eventService.CheckinEnabledMode(model);
+
+            return StatusCode(response.Code, response.Data);
         }
 
         [HttpGet("Certificado/Download/{eventId}")]

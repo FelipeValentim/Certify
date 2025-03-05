@@ -5,7 +5,6 @@ import Zone from "@/assets/images/undraw_zone.svg";
 import { CustomScrollView, H3, MutedText } from "./CustomElements";
 import { redColor, screenHeight, screenWidth } from "@/constants/Default";
 import ModalContainer from "./ModalContainer";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ConfirmAlert = ({
   onConfirm,

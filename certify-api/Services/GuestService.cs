@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using Services.Helper;
 using System.Globalization;
 using System.Net;
@@ -152,7 +153,7 @@ namespace Services
 
             foreach (var guest in guests)
             {
-                var qrCode = _qrCodeService.GenerateQRCode(guest.Id);
+                //var qrCode = _qrCodeService.GenerateQRCode(guest.Id);
 
                 var mailMessage = new MailMessageDTO();
 
@@ -160,12 +161,15 @@ namespace Services
 
                 mailMessage.Subject = $"Convite - {eventItem.Name}";
 
+                var encodedId = HasherId.Encode(guest.Id, Salt.GuestGUID);
+
                 var html = htmlTemplate.Replace("{convidado}", guest.Name)
-                                       .Replace("{accesscode}", HasherId.Encode(guest.Id, Salt.GuestGUID));
+                                       .Replace("{accesscode}", encodedId)
+                                       .Replace("{qrcode}", $"{UrlManager.API}/Guest/QRCode/{encodedId}");
 
                 mailMessage.Html = html;
 
-                mailMessage.AddEmbedded(qrCode.Data, qrCode.MimeType, "Convite - QRCode", "{qrcode}");
+                //mailMessage.AddEmbedded(qrCode.Data, qrCode.MimeType, "Convite - QRCode", "{qrcode}");
 
                 _mailService.SendMailCheckfyAsync(mailMessage);
             }
@@ -207,14 +211,22 @@ namespace Services
                 {
                     var eventItem = _eventService.Get(guest.EventId);
 
-                    if (DateTime.UtcNow.ConvertToBrazilTime() < eventItem.Date.Add(eventItem.StartTime))
+                    if (eventItem.CheckinEnabled == false)
                     {
-                        return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
+                        return ResponseModel.Error(HttpStatusCode.BadGateway, "Checkin está desativado.");
                     }
 
-                    if (DateTime.UtcNow.ConvertToBrazilTime() > eventItem.Date.Add(eventItem.EndTime))
+                    if (eventItem.CheckinEnabled == null)
                     {
-                        return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
+                        if (DateTime.UtcNow.ConvertToBrazilTime() < eventItem.Date.Add(eventItem.StartTime))
+                        {
+                            return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
+                        }
+
+                        if (DateTime.UtcNow.ConvertToBrazilTime() > eventItem.Date.Add(eventItem.EndTime))
+                        {
+                            return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
+                        }
                     }
                 }
 
@@ -354,6 +366,13 @@ namespace Services
             var guid = new Guid(id);
 
             return Get(guid);
+        }
+
+        public FileDTO GenerateCheckinQRCode(string guestId)
+        {
+            var response = _qrCodeService.GenerateQRCode(guestId);
+
+            return response;
         }
     }
 }

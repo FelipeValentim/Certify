@@ -5,8 +5,9 @@ namespace Domain.Interfaces.Services
 {
     public interface IEventService
     {
-
         ResponseModel<object> Add(EventDTO model);
+        
+        ResponseModel CheckinEnabledMode(EventDTO model);
 
         ResponseModel<FileDTO> DownloadCertificates(Guid eventId);
 

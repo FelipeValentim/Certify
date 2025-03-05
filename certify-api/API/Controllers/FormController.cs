@@ -64,7 +64,7 @@ namespace Certify.Controllers
         }
 
         [DecodeHash(Salt.GuestGUID)]
-        [HttpGet("Guest/Search/{accesscode}")]
+        [HttpGet("Guest/Search/{accesscode}")]  
         public ActionResult SearchGuest(string accesscode)
         {
             ResponseModel<GuestDTO> response = _guestService.Get(accesscode);

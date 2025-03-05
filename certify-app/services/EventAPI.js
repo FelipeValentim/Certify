@@ -39,7 +39,18 @@ export const EventAPI = {
         : undefined,
     });
   },
-
+  checkinEnabledMode: async function (event, cancel = false) {
+    return api.request({
+      url: `/Event/CheckinEnabledMode`,
+      method: "PUT",
+      data: event,
+      signal: cancel
+        ? cancelApiObject[
+            this.checkinEnabledMode.name
+          ].handleRequestCancellation().signal
+        : undefined,
+    });
+  },
   downloadCertificates: async function (eventId, cancel = false) {
     return api.request({
       url: `/Event/Certificado/Download/${eventId}`,

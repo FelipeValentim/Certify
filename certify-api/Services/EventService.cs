@@ -6,6 +6,7 @@ using Domain.Interfaces.Services;
 using HeyRed.Mime;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Services.Helper;
 using System.Globalization;
 using System.IO.Compression;
@@ -389,6 +390,22 @@ namespace Services
                 return ResponseModel<Event>.Error(HttpStatusCode.NotFound, "Evento não encontrado");
             }
             return ResponseModel<Event>.Success(e);
+        }
+
+        public ResponseModel CheckinEnabledMode(EventDTO model)
+        {
+            var eventItem = _eventRepository.Get(x => x.Id == model.Id);
+
+            if (eventItem == null)
+            {
+                return ResponseModel.Error(HttpStatusCode.NotFound, "Evento não existe.");
+            }
+
+            eventItem.CheckinEnabled = model.CheckinEnabled;
+
+            _eventRepository.Update(eventItem);
+
+            return ResponseModel.Success();
         }
     }
 }

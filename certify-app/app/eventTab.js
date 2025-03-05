@@ -63,6 +63,8 @@ const EventTab = ({ navigation, route, info, title }) => {
             toggle={toggleInfo}
             visible={visibleQRCode}
             qrCode={info.QRCode}
+            id={info.id}
+            checkinEnabled={info.checkinEnabled}
           />
           <CustomScrollView>
             <Container>

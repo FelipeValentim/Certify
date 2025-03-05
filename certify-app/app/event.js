@@ -108,7 +108,6 @@ export default function EventScreen({ route, navigation }) {
             shadowOpacity: 0.1,
             elevation: 3,
             height: 70,
-            paddingTop: 15,
             paddingHorizontal: paddingHorizontal,
           },
         }}

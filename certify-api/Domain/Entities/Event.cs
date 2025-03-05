@@ -19,7 +19,9 @@ namespace Domain.Entities
 		public TimeSpan StartTime { get; set; }
 		public TimeSpan EndTime { get; set; }
 
-		public Guid UserId { get; set; }
+        public bool? CheckinEnabled { get; set; }
+
+        public Guid UserId { get; set; }
 
         public UserProfile User { get; set; }
 

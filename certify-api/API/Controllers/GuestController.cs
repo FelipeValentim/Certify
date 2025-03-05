@@ -1,7 +1,10 @@
-﻿using Domain.DTO;
+﻿using Domain.Constants;
+using Domain.DTO;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Services;
+using Services.Attributes;
 
 namespace API.Controllers
 {
@@ -72,6 +75,16 @@ namespace API.Controllers
             var response = _guestService.Add(model);
 
             return StatusCode(response.Code, response.Data);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("QRCode/{guestId}")]
+        [DecodeHash(Salt.GuestGUID)]
+        public ActionResult GenerateCheckinQRCode(string guestId)
+        {
+            FileDTO response = _guestService.GenerateCheckinQRCode(guestId);
+
+            return File(response.Data, response.MimeType);
         }
 
     }

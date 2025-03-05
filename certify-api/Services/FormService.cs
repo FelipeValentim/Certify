@@ -1,12 +1,8 @@
 ﻿using Domain.DTO;
-using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
-using Microsoft.AspNetCore.Hosting;
 using Services.Helper;
-using Spire.Doc;
 using System.Net;
-using Xceed.Words.NET;
 
 namespace Services
 {
@@ -103,14 +99,22 @@ namespace Services
                     return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento não existe");
                 }
 
-                if (DateTime.UtcNow.ConvertToBrazilTime() < eventItem.Date.Add(eventItem.StartTime))
+                if (eventItem.CheckinEnabled == false)
                 {
-                    return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
+                    return ResponseModel<EventDTO>.Error(HttpStatusCode.BadGateway, "Evento não está disponível para checkin");
                 }
 
-                if (DateTime.UtcNow.ConvertToBrazilTime() > eventItem.Date.Add(eventItem.EndTime))
+                if (eventItem.CheckinEnabled == null)
                 {
-                    return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
+                    if (DateTime.UtcNow.ConvertToBrazilTime() < eventItem.Date.Add(eventItem.StartTime))
+                    {
+                        return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento ainda não começou.");
+                    }
+
+                    if (DateTime.UtcNow.ConvertToBrazilTime() > eventItem.Date.Add(eventItem.EndTime))
+                    {
+                        return ResponseModel<EventDTO>.Error(HttpStatusCode.BadRequest, "Evento já finalizado.");
+                    }
                 }
 
                 var dto = _mappingService.Map<EventDTO>(eventItem);

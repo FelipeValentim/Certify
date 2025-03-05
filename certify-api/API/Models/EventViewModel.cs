@@ -35,7 +35,10 @@ namespace API.Models
 		[JsonPropertyName("eventType")]
 		public EventTypeViewModel EventType { get; set; }
 
-		[JsonPropertyName("eventTemplateId")]
+        [JsonPropertyName("checkinEnabled")]
+        public bool? CheckinEnabled { get; set; }
+
+        [JsonPropertyName("eventTemplateId")]
 		public Guid? EventTemplateId { get; set; }
 
 		[JsonPropertyName("formURL")]

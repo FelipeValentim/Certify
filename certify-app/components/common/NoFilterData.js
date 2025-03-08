@@ -6,7 +6,7 @@ import { MutedText } from "./CustomElements";
 
 const NoFilterData = ({
   filter = "este filtro",
-  text = `Parece que não há dados disponível para ${filter}, tente fazer outro.`,
+  text = `Não encontramos dados disponíveis para ${filter}. Tente aplicar outro filtro.`,
 }) => {
   return (
     <View style={styles.imageContainer}>

@@ -1,4 +1,4 @@
-# Event Check-in App
+# Certify
 
 ## 📌 Sobre o Projeto
 

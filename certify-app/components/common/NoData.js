@@ -5,7 +5,7 @@ import { screenHeight } from "@/constants/Default";
 import { MutedText } from "./CustomElements";
 
 const NoData = ({
-  text = "Parece que não há dados disponível, tente recarregar ou adicione um novo item",
+  text = "Não encontramos dados disponíveis no momento. Tente recarregar a página ou adicionar um novo item.",
 }) => {
   return (
     <View style={styles.imageContainer}>

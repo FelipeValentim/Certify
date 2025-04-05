@@ -7,8 +7,8 @@ namespace Domain.Interfaces.Services
 	{
         EventTemplate Get(Guid id);
 
-        ResponseModel UploadTemplate(FileDTO file, Guid eventId);
+        void UploadTemplate(FileDTO file, Guid eventId);
 
-		ResponseModel RemoveTemplate(Guid eventId);
+        void RemoveTemplate(Guid eventId);
 	}
 }

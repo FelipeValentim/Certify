@@ -49,9 +49,9 @@ namespace Certify.Controllers
         [HttpPost("NewGuest")]
         public ActionResult NewGuest(GuestDTO model)
         {
-            ResponseModel<object> response = _formService.AddGuest(model);
+            object response = _formService.AddGuest(model);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [DecodeHash(Salt.Salt2)]
@@ -67,18 +67,18 @@ namespace Certify.Controllers
         [HttpGet("Guest/Search/{accesscode}")]  
         public ActionResult SearchGuest(string accesscode)
         {
-            ResponseModel<GuestDTO> response = _guestService.Get(accesscode);
+            GuestDTO response = _guestService.Get(accesscode);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [DecodeHash(Salt.GuestGUID)]
         [HttpPut("Guest/Checkin/{accesscode}")]
         public ActionResult CheckinGuest(string accesscode)
         {
-            ResponseModel response = _formService.CheckinGuest(accesscode);
+            string response = _formService.CheckinGuest(accesscode);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
     }

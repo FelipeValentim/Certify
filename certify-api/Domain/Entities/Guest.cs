@@ -21,7 +21,9 @@ namespace Domain.Entities
 		public Guid GuestTypeId { get; set; }
 		public GuestType GuestType { get; set; }
 
-		public Guest() : base()
+        public virtual IEnumerable<EventFieldValue> FieldsValues { get; set; }
+
+        public Guest() : base()
         {
             Photo = $"/default/avatar.png";
         }

@@ -4,6 +4,6 @@ namespace Domain.Interfaces.Services
 {
     public interface IUserService
     {
-        ResponseModel Login(string email, string password);
+        string Login(string email, string password);
     }
 }

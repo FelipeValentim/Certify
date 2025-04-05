@@ -1,6 +1,7 @@
 ﻿using Domain.Constants;
 using Domain.DTO;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using HeyRed.Mime;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Services.Helper;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO.Compression;
 using System.IO.Pipes;
@@ -45,25 +47,25 @@ namespace Services
         }
 
 
-        public ResponseModel<FileDTO> DownloadCertificates(Guid eventId)
+        public FileDTO DownloadCertificates(Guid eventId)
         {
             var eventItem = _eventRepository.Get(x => x.Id == eventId, includeProperties: "EventTemplate, EventType");
 
             if (eventItem == null)
             {
-                return ResponseModel<FileDTO>.Error(HttpStatusCode.NotFound, "Evento não existe.");
+                throw new NotFoundException("Evento não existe.");
             }
 
             if (eventItem.EventTemplate == null)
             {
-                return ResponseModel<FileDTO>.Error(HttpStatusCode.NotFound, "Evento não possui template.");
+                throw new NotFoundException("Evento não possui template.");
             }
 
             var guestItems = _guestRepository.GetAll(x => x.EventId == eventId && x.CheckinDate.HasValue, includeProperties: "GuestType");
 
             if (guestItems.Count() == 0)
             {
-                return ResponseModel<FileDTO>.Error(HttpStatusCode.BadRequest, "Evento não possui convidados com checkin.");
+                throw new NotFoundException("Evento não possui convidados com checkin.");
             }
 
             var eventTemplateItem = _eventTemplateRepository.GetByID(eventItem.EventTemplateId.Value);
@@ -157,28 +159,28 @@ namespace Services
             };
 
             // Passo 6: Retornar o arquivo ZIP como resposta
-            return ResponseModel<FileDTO>.Success(file);
+            return file;
         }
 
-        public ResponseModel SendCertificates(Guid eventId)
+        public void SendCertificates(Guid eventId)
         {
             var eventItem = _eventRepository.Get(x => x.Id == eventId, includeProperties: "EventTemplate, EventType");
 
             if (eventItem == null)
             {
-                return ResponseModel.Error(HttpStatusCode.NotFound, "Evento não existe.");
+                throw new NotFoundException("Evento não existe.");
             }
 
             if (eventItem.EventTemplate == null)
             {
-                return ResponseModel.Error(HttpStatusCode.NotFound, "Evento não possui template.");
+                throw new NotFoundException("Evento não possui template.");
             }
 
             var guestItems = _guestRepository.GetAll(x => x.EventId == eventId && x.CheckinDate.HasValue, includeProperties: "GuestType");
 
             if (guestItems.Count() == 0)
             {
-                return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento não possui convidados com checkin.");
+                throw new NotFoundException("Evento não possui convidados com checkin.");
             }
 
             var eventTemplateItem = _eventTemplateRepository.GetByID(eventItem.EventTemplateId.Value);
@@ -258,9 +260,6 @@ namespace Services
             }
 
             _mailService.SendMailCheckfyAsync(mailMessages).GetAwaiter().GetResult();
-
-            return ResponseModel.Success();
-
         }
 
         public Event Get(Guid id)
@@ -284,65 +283,57 @@ namespace Services
             return _guestRepository.Count(x => x.EventId == eventId);
         }
 
-        public ResponseModel<object> Add(EventDTO model)
+        public object Add(EventDTO model)
         {
-            try
+
+            var userId = _userContextService.UserGuid;
+
+            if (string.IsNullOrEmpty(model.Name))
             {
-                var userId = _userContextService.UserGuid;
-
-                if (string.IsNullOrEmpty(model.Name))
-                {
-                    return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Nome é obrigatório.");
-                }
-
-                if (DateTime.UtcNow.ConvertToBrazilTime() > model.Date.Date.Add(model.StartTime))
-                {
-                    return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "A data e horário inicial já passaram.");
-                }
-
-                if (model.StartTime >= model.EndTime)
-                {
-                    return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Horário inicial não pode ser maior que horário final.");
-                }
-
-                if (model.Pax.HasValue && model.Pax.Value <= 0)
-                {
-                    return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Convidados precisa ser maior que 0.");
-                }
-
-                if (model.EventTypeId == Guid.Empty)
-                {
-                    return ResponseModel<object>.Error(HttpStatusCode.BadRequest, "Tipo de evento é obrigatório.");
-                }
-
-
-                Event newEvent = new Event
-                {
-                    Date = model.Date.Date,
-                    StartTime = model.StartTime,
-                    EndTime = model.EndTime,
-                    Pax = model.Pax,
-                    Name = model.Name,
-                    EventTypeId = model.EventTypeId,
-                    UserId = userId,
-                };
-
-                if (model.PhotoFile != null)
-                {
-                    model.PhotoFile.Path = $"{newEvent.Id}";
-
-                    newEvent.Photo = _storageService.UploadFile(model.PhotoFile).GetAwaiter().GetResult();
-                }
-
-                _eventRepository.Insert(newEvent);
-
-                return ResponseModel<object>.Success(new { id = newEvent.Id, photoFullUrl = $"{UrlManager.Storage}{newEvent.Photo}" });
+                throw new BusinessException("Nome é obrigatório.");
             }
-            catch (Exception ex)
+
+            if (DateTime.UtcNow.ConvertToBrazilTime() > model.Date.Date.Add(model.StartTime))
             {
-                return ResponseModel<object>.Error(HttpStatusCode.InternalServerError, ex.Message);
-
+                throw new BusinessException("A data e horário inicial já passaram.");
             }
+
+            if (model.StartTime >= model.EndTime)
+            {
+                throw new BusinessException("Horário inicial não pode ser maior que horário final.");
+            }
+
+            if (model.Pax.HasValue && model.Pax.Value <= 0)
+            {
+                throw new BusinessException("Convidados precisa ser maior que 0.");
+            }
+
+            if (model.EventTypeId == Guid.Empty)
+            {
+                throw new BusinessException("Tipo de evento é obrigatório.");
+            }
+
+            Event newEvent = new Event
+            {
+                Date = model.Date.Date,
+                StartTime = model.StartTime,
+                EndTime = model.EndTime,
+                Pax = model.Pax,
+                Name = model.Name,
+                EventTypeId = model.EventTypeId,
+                UserId = userId,
+            };
+
+            if (model.PhotoFile != null)
+            {
+                model.PhotoFile.Path = $"{newEvent.Id}";
+
+                newEvent.Photo = _storageService.UploadFile(model.PhotoFile).GetAwaiter().GetResult();
+            }
+
+            _eventRepository.Insert(newEvent);
+
+            return new { id = newEvent.Id, photoFullUrl = $"{UrlManager.Storage}{newEvent.Photo}" };
         }
 
         public IEnumerable<Event> GetEvents()
@@ -352,18 +343,9 @@ namespace Services
             return _eventRepository.GetEvents(userId);
         }
 
-        public ResponseModel Delete(Guid eventId)
+        public void Delete(Guid eventId)
         {
-            try
-            {
-                _eventRepository.Delete(eventId);
-
-                return ResponseModel.Success("Operação realizada com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
-            }
+            _eventRepository.Delete(eventId);
         }
 
         public FileDTO GenerateCheckinQRCode(Guid eventId)
@@ -375,38 +357,37 @@ namespace Services
             return response;
         }
 
-        public ResponseModel<Event> GetByDecodedId(string id)
+        public Event GetByDecodedId(string id)
         {
             var guid = new Guid(id);
 
             if (guid == Guid.Empty)
             {
-                return ResponseModel<Event>.Error(HttpStatusCode.NotFound, "Evento não encontrado");
+                throw new NotFoundException("Evento não encontrado");
             }
 
             var e = Get(guid);
 
             if (e == null)
             {
-                return ResponseModel<Event>.Error(HttpStatusCode.NotFound, "Evento não encontrado");
+                throw new NotFoundException("Evento não encontrado");
             }
-            return ResponseModel<Event>.Success(e);
+
+            return e;
         }
 
-        public ResponseModel CheckinEnabledMode(EventDTO model)
+        public void CheckinEnabledMode(EventDTO model)
         {
             var eventItem = _eventRepository.Get(x => x.Id == model.Id);
 
             if (eventItem == null)
             {
-                return ResponseModel.Error(HttpStatusCode.NotFound, "Evento não existe.");
+                throw new NotFoundException("Evento não encontrado");
             }
 
             eventItem.CheckinEnabled = model.CheckinEnabled;
 
             _eventRepository.Update(eventItem);
-
-            return ResponseModel.Success();
         }
     }
 }

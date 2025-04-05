@@ -1,4 +1,5 @@
 using AutoMapper;
+using Certify.Middlewares;
 using Domain.Constants;
 using Domain.Identity;
 using Domain.Interfaces.Repositories;
@@ -91,6 +92,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

@@ -3,8 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace Domain.DTO
 {
-	public class GuestDTO
-	{
+	public class GuestDTO : DTOBase
+    {
 
 		[JsonPropertyName("name")]
 		public string Name { get; set; }

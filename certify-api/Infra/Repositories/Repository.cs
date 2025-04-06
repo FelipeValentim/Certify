@@ -91,5 +91,19 @@ namespace Infrastructure.Repositories
 
 			return query.Count();
 		}
-	}
+
+        public int GetMax(
+		Expression<Func<TEntity, int>> selector,
+		Expression<Func<TEntity, bool>> filter = null)
+        {
+            IQueryable<TEntity> query = dbSet;
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            var max = query.Select(selector).DefaultIfEmpty(0).Max();
+
+            return max;
+        }
+    }
 }

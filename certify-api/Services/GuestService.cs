@@ -1,6 +1,7 @@
 ﻿using Domain.Constants;
 using Domain.DTO;
 using Domain.Entities;
+using Domain.Enum;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -45,6 +46,26 @@ namespace Services
             _documentService = documentService;
         }
 
+        private bool IsValidValueForType(string value, string type)
+        {
+            var fieldType = (FieldType)Enum.Parse(typeof(FieldType), type);
+
+            switch (fieldType)
+            {
+                case FieldType.Text:
+                    return true;
+
+                case FieldType.Number:
+                    return double.TryParse(value, out _);
+
+                case FieldType.Date:
+                    return DateTime.TryParse(value, out _);
+
+                default:
+                    return false;
+            }
+        }
+
         public object Add(GuestDTO model, bool form = false)
         {
             // Validação dos campos obrigatórios
@@ -70,11 +91,44 @@ namespace Services
                 throw new BusinessException("Tipo de Convidado é obrigatório.");
             }
 
-            var eventItem = _eventService.Get(model.EventId);
+            var eventItem = _eventService.GetRelated(model.EventId);
 
             if (eventItem == null)
             {
                 throw new BusinessException("Evento é obrigatório.");
+            }
+
+            List<EventFieldValue> fieldsValues = new List<EventFieldValue>();
+
+            foreach (var fieldValue in model.FieldsValues)
+            {
+                var field = eventItem.Fields.FirstOrDefault(x => x.Id == fieldValue.EventFieldId);
+
+                if (field == null)
+                {
+                    throw new NotFoundException($"Campo com ID {fieldValue.EventFieldId} não encontrado no evento.");
+                }
+
+                if (string.IsNullOrWhiteSpace(fieldValue.Value))
+                {
+                    if (field.IsRequired)
+                    {
+                        throw new BusinessException($"{field.Name} é obrigatório.");
+                    }
+
+                    continue;
+                }
+
+                if (!IsValidValueForType(fieldValue.Value, field.Type))
+                {
+                    throw new BusinessException($"O valor de '{field.Name}' é inválido para o tipo {field.Type}.");
+                }
+
+                fieldsValues.Add(new EventFieldValue
+                {
+                    EventFieldId = fieldValue.EventFieldId,
+                    Value = fieldValue.Value,
+                });
             }
 
             if (form)
@@ -105,7 +159,8 @@ namespace Services
                 Name = model.Name.Trim(),
                 Email = model.Email,
                 EventId = model.EventId,
-                GuestTypeId = model.GuestTypeId
+                GuestTypeId = model.GuestTypeId,
+                FieldsValues = fieldsValues,
             };
 
             // Upload da foto, se necessário

@@ -10,6 +10,8 @@ namespace Domain.Interfaces.Repositories
 {
     public interface IRepository<TEntity> where TEntity : EntityBase
     {
+        void Insert(TEntity entity);
+
         IEnumerable<TEntity> GetAll(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,

@@ -267,6 +267,11 @@ namespace Services
             return _eventRepository.GetByID(id);
         }
 
+        public Event GetRelatedFields(Guid id)
+        {
+            return _eventRepository.Get(x => x.Id == id, includeProperties: "Fields");
+        }
+
         public Event GetRelated(Guid id)
         {
             var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "EventTemplate, EventType");

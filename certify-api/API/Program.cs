@@ -40,6 +40,7 @@ builder.Services.AddTransient<IEventTypeRepository, EventTypeRepository>();
 builder.Services.AddTransient<IGuestTypeRepository, GuestTypeRepository>();
 builder.Services.AddTransient<IEventTemplateRepository, EventTemplateRepository>();
 builder.Services.AddTransient<IEventFieldRepository, EventFieldRepository>();
+builder.Services.AddTransient<IEventFieldValueRepository, EventFieldValueRepository>();
 
 // Serviços
 builder.Services.AddTransient<IDocumentService, DocumentService>();
@@ -50,8 +51,9 @@ builder.Services.AddTransient<IEventTypeService, EventTypeService>();
 builder.Services.AddTransient<IUserContextService, UserContextService>();
 builder.Services.AddTransient<IGuestTypeService, GuestTypeService>();
 builder.Services.AddTransient<IStorageService, StorageService>();
-builder.Services.AddTransient<IEventFieldService, EventFieldService>();
 builder.Services.AddTransient<IEventService, EventService>();
+builder.Services.AddTransient<IEventFieldService, EventFieldService>();
+builder.Services.AddTransient<IEventFieldValueService, EventFieldValueService>();
 builder.Services.AddTransient<IEventTemplateService, EventTemplateService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IGuestService, GuestService>();

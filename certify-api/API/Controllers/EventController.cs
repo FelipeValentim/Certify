@@ -14,10 +14,11 @@ namespace API.Controllers
     public class EventController : ControllerBase
     {
         private readonly IEventService _eventService;
-        public EventController(IEventService eventService)
+        private readonly IEventFieldService _eventFieldService;
+        public EventController(IEventService eventService, IEventFieldService eventFieldService)
         {
             _eventService = eventService;
-
+            _eventFieldService = eventFieldService;
         }
 
         [HttpGet("GetEvents")]
@@ -143,6 +144,38 @@ namespace API.Controllers
             var response = _eventService.GetByDecodedId(eventId);
 
             return StatusCode(StatusCodes.Status200OK, response);
+        }
+
+        [HttpGet("{eventId}/EventField")]
+        public ActionResult GetEventFields(Guid eventId)
+        {
+            var eventFields = _eventFieldService.GetAll(eventId);
+
+            var items = eventFields.Select(s => new EventFieldViewModel
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Type = s.Type.ToString(),
+                DisplayOrder = s.DisplayOrder
+            });
+
+            return StatusCode(StatusCodes.Status200OK, items);
+        }
+
+        [HttpPost("EventField")]
+        public ActionResult PostEventField(EventFieldDTO eventFieldDTO)
+        {
+            var repsonse = _eventFieldService.Add(eventFieldDTO);
+
+            return StatusCode(StatusCodes.Status200OK, repsonse);
+        }
+
+        [HttpPut("EventField/Reorder")]
+        public ActionResult EventReorderField(EventReorderFieldDTO eventReorderField)
+        {
+            _eventFieldService.ReorderFields(eventReorderField);
+
+            return StatusCode(StatusCodes.Status200OK);
         }
     }
 }

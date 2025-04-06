@@ -24,5 +24,7 @@ namespace Domain.DTO
 		[JsonPropertyName("eventId")]
 		public Guid EventId { get; set; }
 
-	}
+        [JsonPropertyName("eventId")]
+        public IEnumerable<EventFieldValueDTO> FieldsValues { get; set; }
+    }
 }

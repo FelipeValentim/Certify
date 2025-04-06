@@ -82,12 +82,6 @@ namespace Infrastructure.Repositories
 			return query.FirstOrDefault();
 		}
 
-		public virtual void Insert(TEntity entity)
-		{
-			dbSet.Add(entity);
-			context.SaveChanges();
-		}
-
 		public virtual void Delete(Guid id, bool physicalDeletion = false)
 		{
 			var entity = GetByID(id);

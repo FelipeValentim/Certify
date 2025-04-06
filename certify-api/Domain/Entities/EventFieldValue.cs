@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class EventFieldValue : AuditableEntity
+    public class EventFieldValue : EntityBase
     {
         public Guid EventFieldId { get; set; }
         public EventField EventField { get; set; }

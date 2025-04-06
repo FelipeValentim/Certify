@@ -5,7 +5,7 @@ using Infrastructure.Repositories;
 
 namespace Repository
 {
-    public class EventFieldValueRepository :  AuditableRepository<EventFieldValue>, IEventFieldValueRepository
+    public class EventFieldValueRepository :  Repository<EventFieldValue>, IEventFieldValueRepository
     {
         public EventFieldValueRepository(CertifyDbContext context) : base(context)
         {

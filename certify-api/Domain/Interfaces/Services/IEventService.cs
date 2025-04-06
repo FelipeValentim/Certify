@@ -16,6 +16,7 @@ namespace Domain.Interfaces.Services
         Event Get(Guid id);
         Event GetByDecodedId(string id);
 
+        Event GetRelatedFields(Guid id);
         Event GetRelated(Guid id);
 
         IEnumerable<Event> GetEvents();

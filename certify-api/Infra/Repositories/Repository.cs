@@ -29,7 +29,13 @@ namespace Infrastructure.Repositories
 			dbSet = context.Set<TEntity>();
 		}
 
-		public virtual IEnumerable<TEntity> GetAll(
+        public virtual void Insert(TEntity entity)
+        {
+            dbSet.Add(entity);
+            context.SaveChanges();
+        }
+
+        public virtual IEnumerable<TEntity> GetAll(
 			Expression<Func<TEntity, bool>> filter = null,
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
 			string includeProperties = "")

@@ -6,7 +6,6 @@ namespace Domain.DTO
     {
         public Guid EventId { get; set; }
         public string Name { get; set; }
-        public string Placeholder { get; set; }
         public FieldType Type { get; set; }
         public bool IsRequired { get; set; }
         public int DisplayOrder { get; set; }

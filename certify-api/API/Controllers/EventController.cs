@@ -177,5 +177,13 @@ namespace API.Controllers
 
             return StatusCode(StatusCodes.Status200OK);
         }
+
+        [HttpPut("{eventId}/EventField/Reorder")]
+        public ActionResult EventReorderField(IEnumerable<Guid> reorderFields, Guid eventId)
+        {
+            _eventFieldService.ReorderFields(reorderFields, eventId);
+
+            return StatusCode(StatusCodes.Status200OK);
+        }
     }
 }

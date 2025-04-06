@@ -26,14 +26,16 @@ namespace Services
                 throw new BusinessException("Nome do campo é obrigatório.");
             }
 
-            if (string.IsNullOrEmpty(eventField.Placeholder))
-            {
-                throw new BusinessException("Placeholder é obrigatório.");
-            }
-
             if (!Enum.IsDefined(typeof(FieldType), eventField.Type))
             {
                 throw new BusinessException("Tipo do dado é obrigatório.");
+            }
+
+            if (_eventFieldRepository.Count(x =>
+                x.EventId == eventField.EventId &&
+                x.Name.ToLower() == eventField.Name.ToLower()) > 0)
+            {
+                throw new BusinessException("Já existe um campo com esse nome.");
             }
 
             var order = _eventFieldRepository.GetMax(x => x.DisplayOrder, f => f.EventId == eventField.EventId);
@@ -42,7 +44,6 @@ namespace Services
             {
                 EventId = eventField.EventId,
                 Type = eventField.Type.ToString(),
-                Placeholder = eventField.Placeholder,
                 Name = eventField.Name,
                 DisplayOrder = order + 1,
             };
@@ -64,7 +65,7 @@ namespace Services
         public void ReorderFields(EventReorderFieldDTO reorderField)
         {
             var fieldId = reorderField.FieldId;
-            var newIndex = reorderField.NewIndex;
+            var newIndex = reorderField.DisplayOrder;
 
             var field = _eventFieldRepository.GetByID(fieldId);
 
@@ -92,6 +93,50 @@ namespace Services
                 fields[i].DisplayOrder = i + 1;
                 _eventFieldRepository.Update(fields[i]);
             }
+        }
+
+        public void ReorderFields(IEnumerable<Guid> reorderFields, Guid eventId)
+        {
+            if (eventId == Guid.Empty)
+            {
+                throw new NotFoundException("Evento não informado.");
+            }
+
+            if (reorderFields == null || !reorderFields.Any())
+            {
+                throw new BusinessException("Reordenação vazia.");
+            }
+
+            var reorderList = reorderFields.ToList();
+            var fields = _eventFieldRepository
+                           .GetAll(x => reorderList.Contains(x.Id) || x.EventId == eventId)
+                           .ToList();
+
+            var selectedFields = fields.Where(f => reorderList.Contains(f.Id)).ToList();
+            if (selectedFields.Count != reorderList.Count)
+            {
+                throw new BusinessException("Alguns campos informados não foram encontrados para o evento.");
+            }
+
+            for (int i = 0; i < reorderList.Count; i++)
+            {
+                var field = selectedFields.First(f => f.Id == reorderList[i]);
+                field.DisplayOrder = i + 1;
+            }
+
+            // Para os demais, reordena em sequência após os últimos
+            var remainingFields = fields
+                .Where(f => !reorderList.Contains(f.Id))
+                .OrderBy(f => f.DisplayOrder) // mantém ordem antiga
+                .ToList();
+
+            int displayOrder = reorderList.Count + 1;
+            foreach (var field in remainingFields)
+            {
+                field.DisplayOrder = displayOrder++;
+            }
+
+            _eventFieldRepository.UpdateRange(fields);
         }
     }
 }

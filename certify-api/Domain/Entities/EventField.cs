@@ -11,10 +11,10 @@ namespace Domain.Entities
         public Guid EventId { get; set; }
         public Event Event { get; set; }
         public string Name { get; set; }
-        public string Placeholder { get; set; }
         public string Type { get; set; }
         public bool IsRequired { get; set; }
         public int DisplayOrder { get; set; }
+
         //public string OptionsJson { get; set; }
     }
 }

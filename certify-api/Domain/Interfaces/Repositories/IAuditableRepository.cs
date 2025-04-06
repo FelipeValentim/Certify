@@ -9,5 +9,7 @@ namespace Domain.Interfaces.Repositories
 		void Delete(Guid[] ids);
 
 		void Update(TEntity entity);
-	}
+
+        void UpdateRange(IEnumerable<TEntity> entities);
+    }
 }

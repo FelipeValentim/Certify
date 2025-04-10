@@ -288,7 +288,7 @@ namespace Services
 
         public Event GetRelated(Guid id)
         {
-            var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "EventTemplate, EventType");
+            var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "EventTemplate, EventType, Fields");
 
             var guests = _guestRepository.GetGuests(eventItem.Id);
 

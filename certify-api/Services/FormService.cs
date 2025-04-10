@@ -43,7 +43,7 @@ namespace Services
                     return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento inválido.");
                 }
 
-                var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User");
+                var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User, Fields");
 
                 if (eventItem == null)
                 {

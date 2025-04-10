@@ -98,25 +98,22 @@ namespace Services
                 throw new BusinessException("Evento é obrigatório.");
             }
 
+            var guid = Guid.NewGuid();
+
             List<EventFieldValue> fieldsValues = new List<EventFieldValue>();
 
-            foreach (var fieldValue in model.FieldsValues)
+            foreach (var field in eventItem.Fields)
             {
-                var field = eventItem.Fields.FirstOrDefault(x => x.Id == fieldValue.EventFieldId);
+                var fieldValue = model.FieldsValues.FirstOrDefault(x => x.EventFieldId == field.Id);
 
-                if (field == null)
-                {
-                    throw new NotFoundException($"Campo com ID {fieldValue.EventFieldId} não encontrado no evento.");
-                }
+                var isEmpty = fieldValue == null || string.IsNullOrWhiteSpace(fieldValue.Value);
 
-                if (string.IsNullOrWhiteSpace(fieldValue.Value))
+                if (isEmpty)
                 {
                     if (field.IsRequired)
-                    {
                         throw new BusinessException($"{field.Name} é obrigatório.");
-                    }
 
-                    continue;
+                    continue; // não obrigatório e está vazio → pula
                 }
 
                 if (!IsValidValueForType(fieldValue.Value, field.Type))
@@ -128,6 +125,7 @@ namespace Services
                 {
                     EventFieldId = fieldValue.EventFieldId,
                     Value = fieldValue.Value,
+                    GuestId = guid,
                 });
             }
 
@@ -156,6 +154,7 @@ namespace Services
             // Criar entidade Guest
             var guest = new Guest
             {
+                Id = guid,
                 Name = model.Name.Trim(),
                 Email = model.Email,
                 EventId = model.EventId,

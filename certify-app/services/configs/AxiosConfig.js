@@ -29,20 +29,17 @@ setHeader();
 
 const errorHandler = async (error) => {
   const statusCode = error.response?.status;
-  // logging only errors that are not 401
-  if (statusCode && statusCode !== httpStatus.unauthorized) {
-    if (typeof error.response?.data === "string") {
-      const message = error.response?.data;
-      store.dispatch(
-        toast({
-          text: message ? message : "Algum problema ocorreu",
-          type: "error",
-        })
-      );
-    }
-  } else if (statusCode && statusCode === httpStatus.unauthorized) {
+  const message =
+    typeof error.response?.data === "string"
+      ? error.response.data
+      : "Algum problema ocorreu";
+
+  if (statusCode === httpStatus.unauthorized) {
     await removeToken();
     store.dispatch(signOut());
+    store.dispatch(toast({ text: message, type: "error" }));
+  } else if (statusCode && statusCode !== httpStatus.unauthorized) {
+    store.dispatch(toast({ text: message, type: "error" }));
   }
 
   return Promise.reject(error);

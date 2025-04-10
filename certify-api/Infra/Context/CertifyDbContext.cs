@@ -43,6 +43,8 @@ namespace Infrastructure.Context
         public DbSet<Guest> Guest { get; set; }
 		public DbSet<EventType> EventType { get; set; }
 		public DbSet<EventTemplate> EventTemplate { get; set; }
+        public DbSet<EventField> EventField { get; set; }
+        public DbSet<EventFieldValue> EventFieldValue { get; set; }
 
-	}
+    }
 }

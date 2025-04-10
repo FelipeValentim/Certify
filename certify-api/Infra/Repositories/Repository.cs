@@ -99,7 +99,7 @@ namespace Infrastructure.Repositories
 		}
 
         public int GetMax(
-		Expression<Func<TEntity, int>> selector,
+		Expression<Func<TEntity, int?>> selector,
 		Expression<Func<TEntity, bool>> filter = null)
         {
             IQueryable<TEntity> query = dbSet;
@@ -107,9 +107,9 @@ namespace Infrastructure.Repositories
             if (filter != null)
                 query = query.Where(filter);
 
-            var max = query.Select(selector).DefaultIfEmpty(0).Max();
+            var max = query.Select(selector).Max();
 
-            return max;
+            return max ?? 0;
         }
     }
 }

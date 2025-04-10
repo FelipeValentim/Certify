@@ -1,14 +1,17 @@
 ﻿@using Domain.DTO;
 @using Domain.Constants;
 @using System.Globalization
+@using Domain.Enum
 @using Services.Helper;
 @model EventDTO;
 
 <html>
 <head>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="text/javascript" src="~/js/jquery-serialize-object.min.js"></script>
 
     <style>
         @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -212,7 +215,7 @@
             display: none !important;
         }
 
-        .spinner-container{
+        .spinner-container {
             position: absolute;
         }
 
@@ -245,17 +248,17 @@
             font-weight: 500;
         }
 
-        .center-absolute-position{
+        .center-absolute-position {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
-        .text-align-center{
+        .text-align-center {
             text-align: center;
         }
 
-        .mt-5{
+        .mt-5 {
             margin-top: 3rem;
         }
     </style>
@@ -280,7 +283,7 @@
             <label for="qusOne" class="formbold-form-label title">
                 Para participar, por favor, preencha o formulário abaixo.
             </label>
-            <input type="hidden" name="eventId" value="@Model.Id" />
+            <input type="hidden" name="EventId" value="@Model.Id" />
 
 
 
@@ -288,7 +291,7 @@
 
                 <input type="file" id="photoInput" accept="image/*" class="formbold-form-input display-none" />
                 <div class="formbold-img-container">
-                <label for="name" class="formbold-form-label text-align-center">Sua foto</label>
+                    <label for="name" class="formbold-form-label text-align-center">Sua foto</label>
                     <div class="formbold-img photo-container">
                         <img id="photoPreview" class="formbold-img" src="https://meucertificado.uk/default/avatar.png" alt="Preview da Imagem" />
                         <label for="photoInput" class="edit">
@@ -308,23 +311,63 @@
                 <label for="name" class="formbold-form-label">Nome*</label>
 
                 <input type="text"
-                       name="name"
+                       name="Name"
                        id="name"
                        onblur="validateField('name')"
-                       class="formbold-form-input" />
+                       class="formbold-form-input required-field" />
             </div>
 
-            <div>
+            <div class="formbold-mb-3">
                 <label for="email" class="formbold-form-label">Email*</label>
                 <input type="email"
-                       name="email"
+                       name="Email"
                        id="email"
                        onblur="validateField('email')"
-                       class="formbold-form-input" />
+                       class="formbold-form-input required-field" />
             </div>
 
+            @for (int i = 0; i < Model.Fields.Count(); i++)
+            {
+                var field = Model.Fields.OrderBy(f => f.DisplayOrder).ElementAt(i);
+
+                <div class="formbold-mb-3">
+                    <label for="field_@field.Id" class="formbold-form-label">
+                        @field.Name @if (field.IsRequired)
+                        {
+                            <span>*</span>
+                        }
+                    </label>
+
+                    <input type="hidden" name="FieldsValues[][EventFieldId]" value="@field.Id" />
+
+                    @switch (field.Type)
+                    {
+                        case FieldType.Text:
+                            <input type="text"
+                                   name="FieldsValues[][Value]"
+                                   id="FieldsValues_@i"
+                                   class="formbold-form-input @(field.IsRequired ? "required-field" : "")" />
+                            break;
+
+                        case FieldType.Number:
+                            <input type="number"
+                                   name="FieldsValues[][Value]"
+                                   id="FieldsValues_@i"
+                                   class="formbold-form-input @(field.IsRequired ? "required-field" : "")" />
+                            break;
+
+                        case FieldType.Date:
+                            <input type="date"
+                                   name="FieldsValues[][Value]"
+                                   id="FieldsValues_@i"
+                                   class="formbold-form-input @(field.IsRequired ? "required-field" : "")" />
+                            break;
+                    }
+                </div>
+            }
+
             <button type="submit" class="formbold-btn">
-                <span id="submit-text">Salvar</span>  
+                <span id="submit-text">Salvar</span>
                 <div class="spinner-container center-absolute-position">
                     <div id="loadingSpinner" class="spinner display-none"></div>
                 </div>
@@ -363,53 +406,41 @@
             }).showToast();
         }
 
+        const form = document.getElementById('guestForm');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const submitText = document.getElementById('submit-text');
+
         const resetForm = () => {
             form.reset();
             photoPreview.src = "https://meucertificado.uk/default/avatar.png";
         }
 
-        function validateField(fieldId, errorMessage) {
-            const field = document.getElementById(fieldId);
-
+        const validateField = (field) => {
             if (!field.value.trim()) {
                 field.classList.add('feedback-error');
             } else {
                 field.classList.remove('feedback-error');
             }
-        }
+        };
 
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const submitText = document.getElementById('submit-text');
+        const requiredFields = form.querySelectorAll('.required-field');
+        requiredFields.forEach(field => {
+            field.addEventListener('input', () => validateField(field));
+        });
 
 
-        // Validação em tempo real ao digitar
-        const nameField = document.getElementById('name');
-        const emailField = document.getElementById('email');
-
-        nameField.addEventListener('input', () => validateField('name', 'Por favor, insira seu nome.'));
-        emailField.addEventListener('input', () => validateField('email', 'Por favor, insira seu email.'));
-
-        const form = document.getElementById('guestForm');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-
-            // Campos que precisam de validação
-            const requiredFields = [
-                'name',
-                'email'
-            ];
-
-            // Valida todos os campos obrigatórios
-            let isValid = true;
-            requiredFields.forEach((id) => {
-                const field = document.getElementById(id);
-                if (!field.value.trim()) {
-                    validateField(id);
-                    isValid = false;
-                }
-            });
+            // Validação dos campos obrigatórios
+             let isValid = true;
+             requiredFields.forEach(field => {
+                 if (!field.value.trim()) {
+                     validateField(field);
+                     isValid = false;
+                 }
+             });
 
             // Se algum campo estiver inválido, exibe uma mensagem geral e não prossegue
             if (!isValid) {
@@ -420,21 +451,14 @@
             loadingSpinner.classList.remove('display-none');
             submitText.classList.add('display-none');
 
-
-            const formData = new FormData(form);
-            const model = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                eventId: formData.get('eventId'),
-                photo: formData.get('photo'),
-            };
+            const data = $("#guestForm").serializeObject();
             try {
                 const response = await fetch('/Form/NewGuest', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(model)
+                    body: JSON.stringify(data)
                 });
                 if (response.ok) {
                     toast("Convidado cadastrado com sucesso");

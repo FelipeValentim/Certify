@@ -26,6 +26,6 @@ namespace Domain.Interfaces.Repositories
 
         int Count(Expression<Func<TEntity, bool>> filter = null);
 
-        int GetMax(Expression<Func<TEntity, int>> selector, Expression<Func<TEntity, bool>> filter = null);
+        int GetMax(Expression<Func<TEntity, int?>> selector, Expression<Func<TEntity, bool>> filter = null);
     }
 }

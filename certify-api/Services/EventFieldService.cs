@@ -43,6 +43,7 @@ namespace Services
             var entity = new EventField
             {
                 EventId = eventField.EventId,
+                IsRequired = eventField.IsRequired,
                 Type = eventField.Type.ToString(),
                 Name = eventField.Name,
                 DisplayOrder = order + 1,

@@ -24,5 +24,8 @@ namespace Domain.DTO
 
         public UserDTO User { get; set; }
 
-	}
+        public IEnumerable<EventFieldDTO> Fields { get; set; }
+
+
+    }
 }

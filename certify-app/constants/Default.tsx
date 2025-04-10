@@ -40,4 +40,28 @@ export const routes = {
   newEvent: "Novo Evento",
   login: "Login",
   register: "Cadastrar",
+  newField: "Novo campo",
 };
+
+export enum FieldType {
+  Text = 1,
+  Number = 2,
+  Date = 3,
+  // Select = 4,
+  // Radio = 5,
+  // Checkbox = 6
+}
+
+export function TranslateFieldType(key: string): string {
+  switch (key) {
+    case "Text":
+      return "Texto";
+    case "Number":
+      return "Número";
+    case "Date":
+      return "Data";
+    // Adicione mais traduções conforme necessário
+    default:
+      return key;
+  }
+}

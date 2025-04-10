@@ -24,5 +24,13 @@ namespace API.Controllers
 
             return StatusCode(StatusCodes.Status200OK, response);
         }
+
+        [HttpPost("LoginDemo")]
+        public IActionResult LoginDemo()
+        {
+            var response = _userService.Login("teste@teste.com", "teste");
+
+            return StatusCode(StatusCodes.Status200OK, response);
+        }
     }
 }

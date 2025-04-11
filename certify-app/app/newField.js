@@ -18,6 +18,8 @@ import { EventAPI } from "@/services/EventAPI";
 import { SegmentedControl } from "@/components/common/SegmentedControl";
 
 const NewField = ({ route, navigation }) => {
+  const { addEventField } = route.params;
+
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
   const [eventField, setEventField] = useState({
@@ -61,9 +63,17 @@ const NewField = ({ route, navigation }) => {
   }, [fieldRequired]);
 
   const save = async () => {
-    console.log(eventField);
+    try {
+      if (!loading) {
+        setLoading(true);
+        const { data } = await EventAPI.saveField(eventField);
+        addEventField(data);
 
-    await EventAPI.saveField(eventField);
+        navigation.goBack();
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

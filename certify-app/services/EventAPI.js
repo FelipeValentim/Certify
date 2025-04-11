@@ -94,6 +94,17 @@ export const EventAPI = {
         : undefined,
     });
   },
+  reorderFields: async function (reorderFields, eventId, cancel = false) {
+    return api.request({
+      url: `/Event/${eventId}/EventField/Reorder`,
+      method: "PUT",
+      data: reorderFields,
+      signal: cancel
+        ? cancelApiObject[this.saveField.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

@@ -5,6 +5,7 @@ using API.Models;
 using Domain.DTO;
 using Services.Attributes;
 using Domain.Constants;
+using Domain.Entities;
 
 namespace API.Controllers
 {
@@ -165,9 +166,19 @@ namespace API.Controllers
         [HttpPost("EventField")]
         public ActionResult PostEventField(EventFieldDTO eventFieldDTO)
         {
-            var repsonse = _eventFieldService.Add(eventFieldDTO);
+            var response = _eventFieldService.Add(eventFieldDTO);
 
-            return StatusCode(StatusCodes.Status200OK, repsonse);
+            var eventField = _eventFieldService.Get(response);
+
+            var item = new EventFieldViewModel
+            {
+                Id = eventField.Id,
+                Name = eventField.Name,
+                Type = eventField.Type.ToString(),
+                DisplayOrder = eventField.DisplayOrder
+            };
+
+            return StatusCode(StatusCodes.Status200OK, item);
         }
 
         [HttpPut("EventField/Reorder")]
@@ -179,7 +190,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{eventId}/EventField/Reorder")]
-        public ActionResult EventReorderField(IEnumerable<Guid> reorderFields, Guid eventId)
+        public ActionResult EventReorderField(Guid[] reorderFields, Guid eventId)
         {
             _eventFieldService.ReorderFields(reorderFields, eventId);
 

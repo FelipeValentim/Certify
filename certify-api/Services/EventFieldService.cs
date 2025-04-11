@@ -33,7 +33,7 @@ namespace Services
 
             if (_eventFieldRepository.Count(x =>
                 x.EventId == eventField.EventId &&
-                x.Name.ToLower() == eventField.Name.ToLower()) > 0)
+                x.Name.ToLower() == eventField.Name.Trim().ToLower()) > 0)
             {
                 throw new BusinessException("Já existe um campo com esse nome.");
             }
@@ -45,7 +45,7 @@ namespace Services
                 EventId = eventField.EventId,
                 IsRequired = eventField.IsRequired,
                 Type = eventField.Type.ToString(),
-                Name = eventField.Name,
+                Name = eventField.Name.Trim(),
                 DisplayOrder = order + 1,
             };
 
@@ -56,11 +56,20 @@ namespace Services
 
         public IEnumerable<EventFieldDTO> GetAll(Guid eventId)
         {
-            var entities = _eventFieldRepository.GetAll(x => x.EventId == eventId);
+            var entities = _eventFieldRepository.GetAll(x => x.EventId == eventId).OrderBy(x => x.DisplayOrder);
 
             var dtos = _mappingService.Map<IEnumerable<EventFieldDTO>>(entities);
 
             return dtos;
+        }
+
+        public EventFieldDTO Get(Guid eventFieldId)
+        {
+            var entity = _eventFieldRepository.GetByID(eventFieldId);
+
+            EventFieldDTO eventFieldDTO = _mappingService.Map<EventFieldDTO>(entity);
+
+            return eventFieldDTO;
         }
 
         public void ReorderFields(EventReorderFieldDTO reorderField)

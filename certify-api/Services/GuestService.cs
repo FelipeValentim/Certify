@@ -405,7 +405,7 @@ namespace Services
                 throw new NotFoundException("Evento não possui template.");
             }
 
-            var guestItems = _guestRepository.GetAll(x => ids.Contains(x.Id) && x.EventId == eventId && x.CheckinDate.HasValue, includeProperties: "GuestType");
+            var guestItems = _guestRepository.GetAllRelated(x => ids.Contains(x.Id) && x.EventId == eventId && x.CheckinDate.HasValue);
 
             var eventTemplateItem = _eventTemplateService.Get(eventItem.EventTemplateId.Value);
 
@@ -439,29 +439,36 @@ namespace Services
                     };
 
                     // Passo 2: Substituir o placeholder {{nome}} pelo nome do convidado
-                    options.SearchValue = "{nome}";
+                    options.SearchValue = "{Nome}";
                     options.NewValue = guest.Name;
                     document.ReplaceText(options);
 
-                    options.SearchValue = "{data}";
+                    options.SearchValue = "{Data}";
                     options.NewValue = eventItem.Date.ToBrazilDateInWords();
                     document.ReplaceText(options);
 
-                    options.SearchValue = "{tipoconvidado}";
+                    options.SearchValue = "{Tipo Convidado}";
                     options.NewValue = guest.GuestType.Name;
                     document.ReplaceText(options);
 
-                    options.SearchValue = "{evento}";
+                    options.SearchValue = "{Evento}";
                     options.NewValue = eventItem.Name;
                     document.ReplaceText(options);
 
-                    options.SearchValue = "{horarioinicial}";
+                    options.SearchValue = "{Horário Inicial}";
                     options.NewValue = eventItem.StartTime.ToString(@"hh\:mm");
                     document.ReplaceText(options);
 
-                    options.SearchValue = "{horariofinal}";
+                    options.SearchValue = "{Horário Final}";
                     options.NewValue = eventItem.EndTime.ToString(@"hh\:mm");
                     document.ReplaceText(options);
+
+                    foreach (var fieldValue in guest.FieldsValues)
+                    {
+                        options.SearchValue = $"{{{fieldValue.EventField.Name}}}";
+                        options.NewValue = fieldValue.Value;
+                        document.ReplaceText(options);
+                    }
 
                     MemoryStream documentStream = new MemoryStream();
 

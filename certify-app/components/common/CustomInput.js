@@ -364,7 +364,11 @@ export const SelectInput = ({
         />
         <FontAwesomeIcon style={styles.right} icon={faChevronDown} size={16} />
       </Pressable>
-      <ModalContainer visible={pickerVisible} toggle={togglePicker}>
+      <ModalContainer
+        overlayStyle={{ bottom: 10 }}
+        visible={pickerVisible}
+        toggle={togglePicker}
+      >
         <CustomScrollView style={{ borderRadius: 20 }}>
           {items?.map((item) => (
             <TouchableOpacity

@@ -125,6 +125,8 @@ function Guest({ route, navigation }) {
                   value={guest.id}
                   size={200}
                   logo={require("@/assets/images/icon.png")}
+                  backgroundColor="transparent"
+                  logoBackgroundColor="transparent"
                 />
               </View>
 

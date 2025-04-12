@@ -1,5 +1,5 @@
 import ButtonLoading from "@/components/common/ButtonLoading";
-import { baseURL, primaryColor } from "@/constants/Default";
+import { baseURL, FieldType, primaryColor } from "@/constants/Default";
 import React, { Fragment, useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Header from "@/components/common/Header";
@@ -7,6 +7,8 @@ import {
   Input,
   ImagePicker,
   SelectInput,
+  InputDate,
+  InputNumber,
 } from "@/components/common/CustomInput";
 import { GuestAPI } from "@/services/GuestAPI";
 import { GuestTypeAPI } from "@/services/GuestTypeAPI";
@@ -17,15 +19,21 @@ import {
 } from "@/components/common/CustomElements";
 import { useDispatch } from "react-redux";
 import { toast } from "@/redux/snackBar";
+import { EventAPI } from "@/services/EventAPI";
+import HideOnKeyboard from "@/components/common/HideOnKeyboard";
 
 function NewGuest({ route, navigation }) {
   const dispatch = useDispatch();
+  const { eventId } = route.params;
+
   const [loading, setLoading] = useState(false);
-  const [guestTypes, setGuestTypes] = useState();
+  const [guestTypes, setGuestTypes] = useState(null);
+  const [eventFields, setEventFields] = useState(null);
   const [guest, setGuest] = useState({
-    eventId: route.params.eventId,
+    eventId: eventId,
     photoFullUrl: `${baseURL}/default/avatar.png`,
   });
+
   const [errors, setErrors] = React.useState({
     name: undefined,
     email: undefined,
@@ -37,19 +45,55 @@ function NewGuest({ route, navigation }) {
       const { data } = await GuestTypeAPI.getAll();
       setGuestTypes(data);
     };
+    const getEventFields = async () => {
+      const { data } = await EventAPI.getFields(eventId);
+      setEventFields(data);
+      setGuest((prevGuest) => ({
+        ...prevGuest,
+        fieldsValues: data.map((field) => ({
+          eventFieldId: field.id,
+          value: null,
+        })),
+      }));
+    };
     getEventTypes();
+    getEventFields();
   }, []);
+
+  const setFieldValue = (eventFieldId, value) => {
+    setGuest((prevGuest) => ({
+      ...prevGuest,
+      fieldsValues: prevGuest.fieldsValues.map((fieldValue) =>
+        fieldValue.eventFieldId === eventFieldId
+          ? { ...fieldValue, value }
+          : fieldValue
+      ),
+    }));
+  };
 
   const save = async () => {
     if (!loading) {
-      if (!guest.name || !guest.email || !guest.guestTypeId) {
-        const newErrors = {
-          name: !guest.email ? "Nome é obrigatório" : undefined,
-          email: !guest.email ? "Email é obrigatório" : undefined,
-          guestTypeId: !guest.guestTypeId
-            ? "Tipo de Convidado é obrigatório"
-            : undefined,
-        };
+      const newErrors = {
+        name: !guest.name ? "Nome é obrigatório" : undefined,
+        email: !guest.email ? "Email é obrigatório" : undefined,
+        guestTypeId: !guest.guestTypeId
+          ? "Tipo de Convidado é obrigatório"
+          : undefined,
+      };
+
+      // Validação dos campos dinâmicos
+      eventFields?.forEach((field) => {
+        const fieldValue = guest.fieldsValues?.find(
+          (fv) => fv.eventFieldId === field.id
+        );
+        if (field.isRequired && (!fieldValue || !fieldValue.value)) {
+          newErrors[field.name] = `${field.name} é obrigatório`;
+        }
+      });
+
+      const hasErrors = Object.values(newErrors).some((error) => error);
+
+      if (hasErrors) {
         setErrors(newErrors);
         dispatch(
           toast({
@@ -57,25 +101,27 @@ function NewGuest({ route, navigation }) {
             type: "warning",
           })
         );
-      } else {
-        try {
-          setLoading(true);
+        return;
+      }
 
-          const response = await GuestAPI.newGuest(guest);
+      // prossegue com o envio
+      try {
+        setLoading(true);
 
-          const { data } = response;
-          guest.id = data.id;
-          guest.photoFullUrl = data.photoFullUrl;
-          addGuest(guest);
-          navigation.goBack();
-        } catch (error) {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            invalidCredentials: error.response?.data,
-          }));
-        } finally {
-          setLoading(false);
-        }
+        const response = await GuestAPI.newGuest(guest);
+        const { data } = response;
+
+        guest.id = data.id;
+        guest.photoFullUrl = data.photoFullUrl;
+        addGuest(guest);
+        navigation.goBack();
+      } catch (error) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          invalidCredentials: error.response?.data,
+        }));
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -97,7 +143,7 @@ function NewGuest({ route, navigation }) {
   return (
     <Fragment>
       <Header route={route} navigation={navigation} />
-      {!guestTypes ? (
+      {guestTypes == null || eventFields == null ? (
         <Loading color={primaryColor} size={24} />
       ) : (
         <CustomScrollView>
@@ -110,7 +156,6 @@ function NewGuest({ route, navigation }) {
                 onPicker={(file) => setGuest({ ...guest, photoFile: file })}
               />
 
-              {/* <Text style={styles.name}>{guest.name}</Text> */}
               {guest.checkin && (
                 <Text style={styles.checkin}>Checkin: {guest.checkin}</Text>
               )}
@@ -145,19 +190,63 @@ function NewGuest({ route, navigation }) {
                   }
                   error={errors.guestTypeId}
                 />
-              </View>
+                {eventFields.map((field) => {
+                  const fieldValue =
+                    guest.fieldsValues?.find((f) => f.eventFieldId === field.id)
+                      ?.value || null;
 
-              <ButtonLoading
-                loading={loading}
-                onPress={save}
-                style={styles.button}
-              >
-                Salvar
-              </ButtonLoading>
+                  if (field.type == FieldType[FieldType.Date]) {
+                    return (
+                      <InputDate
+                        onChange={(value) =>
+                          setFieldValue(field.id, new Date(value))
+                        }
+                        key={field.id}
+                        placeholder={field.name}
+                        value={fieldValue}
+                        error={errors[field.name]}
+                      />
+                    );
+                  }
+
+                  if (field.type == FieldType[FieldType.Number]) {
+                    return (
+                      <InputNumber
+                        onChangeText={(text) =>
+                          setFieldValue(field.id, new Date(text))
+                        }
+                        key={field.id}
+                        placeholder={field.name}
+                        value={fieldValue}
+                        error={errors[field.name]}
+                      />
+                    );
+                  }
+
+                  return (
+                    <Input
+                      key={field.id}
+                      value={fieldValue}
+                      onChangeText={(text) => setFieldValue(field.id, text)}
+                      placeholder={field.name}
+                      error={errors[field.name]}
+                    />
+                  );
+                })}
+              </View>
             </View>
           </Container>
         </CustomScrollView>
       )}
+      <HideOnKeyboard style={styles.footer}>
+        <ButtonLoading
+          loading={loading}
+          onPress={save}
+          style={{ width: "100%" }}
+        >
+          Salvar
+        </ButtonLoading>
+      </HideOnKeyboard>
     </Fragment>
   );
 }
@@ -175,9 +264,15 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 10,
   },
-  button: {
-    width: "100%",
-    marginTop: 40,
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 20,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
   },
 });
 

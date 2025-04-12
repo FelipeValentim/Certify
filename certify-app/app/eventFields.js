@@ -6,7 +6,11 @@ import {
   routes,
   TranslateFieldType,
 } from "@/constants/Default";
-import { faAdd } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAdd,
+  faCircleExclamation,
+  faExclamationCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "@/components/common/Header";
@@ -15,6 +19,8 @@ import { EventAPI } from "@/services/EventAPI";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faGripLines } from "@fortawesome/free-solid-svg-icons";
+import NoData from "@/components/common/NoData";
+import Separator from "@/components/common/Separator";
 function EventFieldsTab({ navigation, route, eventId, dataLoading, title }) {
   const [loading, setLoading] = useState(false);
   const [eventFields, setEventFields] = useState(null);
@@ -47,23 +53,33 @@ function EventFieldsTab({ navigation, route, eventId, dataLoading, title }) {
     setEventFields([...eventFields, data]);
   };
 
-  const renderItem = ({ item, drag, isActive }) => (
-    <View
-      style={[
-        styles.item,
-        { backgroundColor: isActive ? "#f5f5f5" : "#ffffff" },
-      ]}
-    >
-      <View style={styles.itemText}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <MutedText style={styles.itemType}>
-          ({TranslateFieldType(item.type)})
-        </MutedText>
-      </View>
+  const renderItem = ({ item, drag }) => (
+    <View>
+      <View style={[styles.item]}>
+        <View style={styles.itemText}>
+          <Text style={styles.itemName} numberOfLines={1} ellipsizeMode="tail">
+            {item.name}
+          </Text>
+          <MutedText style={styles.itemType}>
+            ({TranslateFieldType(item.type)})
+          </MutedText>
+          {item.isRequired && (
+            <View style={styles.requiredContainer}>
+              <FontAwesomeIcon
+                icon={faCircleExclamation}
+                size={12}
+                color="#f39c12"
+              />
+              <Text style={styles.requiredLabel}>Obrigatório</Text>
+            </View>
+          )}
+        </View>
 
-      <TouchableOpacity onPressIn={drag} style={styles.dragHandle}>
-        <FontAwesomeIcon icon={faGripLines} size={20} color="#888" />
-      </TouchableOpacity>
+        <TouchableOpacity onPressIn={drag} style={styles.dragHandle}>
+          <FontAwesomeIcon icon={faGripLines} size={20} color="#888" />
+        </TouchableOpacity>
+      </View>
+      <Separator />
     </View>
   );
 
@@ -74,15 +90,21 @@ function EventFieldsTab({ navigation, route, eventId, dataLoading, title }) {
         {dataLoading || eventFields == null ? (
           <Loading color={primaryColor} size={24} />
         ) : (
-          <View style={styles.content}>
-            <DraggableFlatList
-              data={eventFields}
-              onDragEnd={({ data }) => handleDragEnd(data)}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderItem}
-              contentContainerStyle={styles.listContent}
-            />
-          </View>
+          <>
+            {eventFields.length > 0 ? (
+              <View style={styles.content}>
+                <DraggableFlatList
+                  data={eventFields}
+                  onDragEnd={({ data }) => handleDragEnd(data)}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={renderItem}
+                  contentContainerStyle={styles.listContent}
+                />
+              </View>
+            ) : (
+              <NoData />
+            )}
+          </>
         )}
 
         <FloatingButton
@@ -114,6 +136,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 16,
+    backgroundColor: "#FFF",
+  },
+  itemName: {
+    fontSize: 13,
+    fontWeight: "400",
+    flexShrink: 1,
+    maxWidth: "70%",
   },
   itemText: {
     flexDirection: "row",
@@ -126,6 +155,17 @@ const styles = StyleSheet.create({
   },
   dragHandle: {
     padding: 8,
+  },
+  requiredContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  requiredLabel: {
+    fontSize: 14,
+    fontWeight: "500", // Peso de fonte mais suave
+    color: "#f39c12", // Cor de laranja suave
+    marginLeft: 5,
   },
 });
 

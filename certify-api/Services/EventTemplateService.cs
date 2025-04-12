@@ -50,9 +50,9 @@ namespace Services
                 throw new BusinessException("Evento inválido.");
             }
 
-            if (!_documentService.PlaceholderExists(file, "{nome}"))
+            if (!_documentService.PlaceholderExists(file, "{Nome}"))
             {
-                throw new BusinessException("Não existe placeholder de {nome} no documento");
+                throw new BusinessException("Não existe placeholder de {Nome} no documento");
             }
 
             var entity = _eventRepository.GetByID(eventId);

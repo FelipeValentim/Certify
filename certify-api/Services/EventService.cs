@@ -221,7 +221,7 @@ namespace Services
                         RemoveEmptyParagraph = true
                     };
 
-                    // Passo 2: Substituir o placeholder {{nome}} pelo nome do convidado
+                    // Passo 2: Substituir o placeholder 
                     options.SearchValue = "{Nome}";
                     options.NewValue = guest.Name;
                     document.ReplaceText(options);

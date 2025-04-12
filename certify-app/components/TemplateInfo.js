@@ -7,7 +7,7 @@ import {
   H3,
   MutedText,
 } from "@/components/common/CustomElements";
-import { redColor, screenHeight, screenWidth } from "@/constants/Default";
+import { screenHeight } from "@/constants/Default";
 import ModalContainer from "@/components/common/ModalContainer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ImageViewer from "react-native-image-zoom-viewer";
@@ -75,46 +75,50 @@ const TemplateInfo = ({ visible, toggle }) => {
       toPerformFunction={setPerformFunction}
     >
       <View style={{ ...styles.innerContainer }}>
-        <CustomScrollView
-          contentContainerStyle={{
-            ...styles.contentContainerStyle,
-          }}
-          style={styles.rounded}
-        >
-          <View style={styles.imageContainer}>
-            <Question height={screenHeight / 6} />
-          </View>
-          <H3 style={styles.title}>Informações importantes</H3>
-          <View>
-            <MutedText style={styles.message}>
-              O modelo deve possuir placeholders para personalizar o conteúdo
-              automaticamente. Basta enviar o template com os seguintes
-              marcadores, e eles serão substituídos pelas informações
-              específicas, gerando os certificados finais prontos para uso:
-              {"\n"}
-              {"\n"}
-              {"{nome}"} - Nome do convidado
-              {"\n"}
-              {"{data}"} - Data do evento
-              {"\n"}
-              {"{tipoconvidado}"} - Tipo de convidado
-              {"\n"}
-              {"{evento}"} - Nome do evento
-              {"\n"}
-              {"{horarioinicial}"} - Horário inicial
-              {"\n"}
-              {"{horariofinal}"} - Horário final
-              {"\n"} {"\n"}
-              Aqui está um exemplo de como deve ficar. Vale ressaltar que apenas{" "}
-              {"{nome}"} é obrigatório:
-            </MutedText>
+        <CustomScrollView style={styles.rounded}>
+          <View
+            style={{
+              ...styles.contentContainerStyle,
+            }}
+            onStartShouldSetResponder={() => true}
+          >
+            <View style={styles.imageContainer}>
+              <Question height={screenHeight / 6} />
+            </View>
+            <H3 style={styles.title}>Informações importantes</H3>
+            <View>
+              <MutedText style={styles.message}>
+                O modelo deve possuir placeholders para personalizar o conteúdo
+                automaticamente. Basta enviar o template com os seguintes
+                marcadores, e eles serão substituídos pelas informações
+                específicas, gerando os certificados finais prontos para uso:
+                {"\n"}
+                {"\n"}
+                {"{Nome}"} - Nome do convidado
+                {"\n"}
+                {"{Data}"} - Data do evento
+                {"\n"}
+                {"{Tipo Convidado}"} - Tipo de convidado
+                {"\n"}
+                {"{Evento}"} - Nome do evento
+                {"\n"}
+                {"{Tipo Evento}"} - Tipo do evento
+                {"\n"}
+                {"{Horário Inicial}"} - Horário inicial
+                {"\n"}
+                {"{Horário Final}"} - Horário final
+                {"\n"} {"\n"}
+                Aqui está um exemplo de como deve ficar. Vale ressaltar que
+                apenas {"{Nome}"} é obrigatório:
+              </MutedText>
 
-            <Pressable onPress={() => setImageZoom(true)}>
-              <Image
-                style={styles.example}
-                source={require("@/assets/images/certificate_example.png")}
-              />
-            </Pressable>
+              <Pressable onPress={() => setImageZoom(true)}>
+                <Image
+                  style={styles.example}
+                  source={require("@/assets/images/certificate_example.png")}
+                />
+              </Pressable>
+            </View>
           </View>
         </CustomScrollView>
 

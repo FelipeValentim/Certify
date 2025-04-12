@@ -78,6 +78,7 @@ Escaneie o QR Code gerado para abrir o app no seu dispositivo ou emulador.
 - 🔍 Implementar barra de pesquisa para eventos e convidados.
 - ✏️ Adicionar funcionalidade para edição de eventos e convidados.
 - 📩 Indicativo visual de quais convidados receberam convite e certificado.
+- 🎓 Criação de templates pelo próprio aplicativo (ou pela web no lado do servidor).
 
 ## 🏗️ Este projeto foi desenvolvido para facilitar a gestão de eventos, tornando o processo de check-in e emissão de certificados mais eficiente e automatizado.
 

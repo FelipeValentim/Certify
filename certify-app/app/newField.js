@@ -16,8 +16,11 @@ import {
 } from "@/components/common/CustomElements";
 import { EventAPI } from "@/services/EventAPI";
 import { SegmentedControl } from "@/components/common/SegmentedControl";
+import { useDispatch } from "react-redux";
+import { toast } from "@/redux/snackBar";
 
 const NewField = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { addEventField } = route.params;
 
   const [loading, setLoading] = useState(false);
@@ -64,6 +67,21 @@ const NewField = ({ route, navigation }) => {
 
   const save = async () => {
     try {
+      if (!eventField.name || !eventField.type) {
+        const newErrors = {
+          name: !eventField.name ? "Nome é obrigatório" : undefined,
+          type: !eventField.type ? "Tipo é obrigatório" : undefined,
+        };
+        setErrors(newErrors);
+        dispatch(
+          toast({
+            text: Object.values(newErrors).find((error) => error),
+            type: "warning",
+          })
+        );
+        return;
+      }
+
       if (!loading) {
         setLoading(true);
         const { data } = await EventAPI.saveField(eventField);
@@ -80,64 +98,70 @@ const NewField = ({ route, navigation }) => {
     <Fragment>
       <Header route={route} navigation={navigation} />
 
-      <CustomScrollView>
-        <Container style={styles.container}>
-          <View style={styles.content}>
-            <View style={styles.inputs}>
-              <Input
-                value={eventField.name}
-                onChangeText={(text) =>
-                  setField("name", text, "Nome é obrigatório")
-                }
-                placeholder="Nome"
-                error={errors.name}
-              />
-              <SelectInput
-                items={fieldTypes}
-                placeholder={"Tipo do campo"}
-                selected={eventField.type}
-                onSelected={(itemSelected) =>
-                  setField(
-                    "type",
-                    itemSelected.id,
-                    "Tipo do campo é obrigatório"
-                  )
-                }
-                error={errors.type}
-              />
+      <View style={styles.wrapper}>
+        <CustomScrollView contentContainerStyle={styles.scrollContent}>
+          <Container style={styles.container}>
+            <View style={styles.content}>
+              <View style={styles.inputs}>
+                <Input
+                  value={eventField.name}
+                  onChangeText={(text) =>
+                    setField("name", text, "Nome é obrigatório")
+                  }
+                  placeholder="Nome"
+                  error={errors.name}
+                />
+                <SelectInput
+                  items={fieldTypes}
+                  placeholder={"Tipo do campo"}
+                  selected={eventField.type}
+                  onSelected={(itemSelected) =>
+                    setField(
+                      "type",
+                      itemSelected.id,
+                      "Tipo do campo é obrigatório"
+                    )
+                  }
+                  error={errors.type}
+                />
+              </View>
+              <View style={styles.segmentedState}>
+                <H4>Obrigatoriedade</H4>
+                <SegmentedControl
+                  width={screenWidth - 60}
+                  borderRadius={10}
+                  onPress={(state) => setFieldRequired(state)}
+                  options={eventFieldStates}
+                  selectedOption={fieldRequired}
+                  containerBackgroundColor="#F5F5F5"
+                />
+              </View>
             </View>
-            <View style={styles.segmentedState}>
-              <H4>Obrigatoriedade</H4>
-              <SegmentedControl
-                width={screenWidth - 60}
-                borderRadius={10}
-                onPress={(state) => setFieldRequired(state)}
-                options={eventFieldStates}
-                selectedOption={fieldRequired}
-                containerBackgroundColor="#F5F5F5"
-              />
-            </View>
-            <ButtonLoading
-              loading={loading}
-              onPress={save}
-              style={styles.button}
-            >
-              Salvar
-            </ButtonLoading>
-          </View>
-        </Container>
-      </CustomScrollView>
+          </Container>
+        </CustomScrollView>
+
+        <View style={styles.footer}>
+          <ButtonLoading loading={loading} onPress={save} style={styles.button}>
+            Salvar
+          </ButtonLoading>
+        </View>
+      </View>
     </Fragment>
   );
 };
-
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
   container: {
     padding: 20,
   },
   content: {
     alignItems: "center",
-    flex: 1,
     gap: 10,
   },
   inputs: {
@@ -146,7 +170,13 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    marginTop: 40,
+  },
+  footer: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
   },
   segmentedState: {
     marginTop: 40,

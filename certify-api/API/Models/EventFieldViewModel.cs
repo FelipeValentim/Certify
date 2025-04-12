@@ -12,5 +12,9 @@ namespace API.Models
 
         [JsonPropertyName("type")]
         public string Type { get; set; }
+
+
+        [JsonPropertyName("isRequired")]
+        public bool IsRequired { get; set; }
     }
 }

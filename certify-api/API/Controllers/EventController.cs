@@ -157,6 +157,7 @@ namespace API.Controllers
                 Id = s.Id,
                 Name = s.Name,
                 Type = s.Type.ToString(),
+                IsRequired = s.IsRequired,
                 DisplayOrder = s.DisplayOrder
             });
 

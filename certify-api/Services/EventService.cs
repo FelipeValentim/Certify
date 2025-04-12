@@ -111,6 +111,10 @@ namespace Services
                         options.NewValue = eventItem.Name;
                         document.ReplaceText(options);
 
+                        options.SearchValue = "{Tipo Evento}";
+                        options.NewValue = eventItem.EventType.Name;
+                        document.ReplaceText(options);
+
                         options.SearchValue = "{Horário Inicial}";
                         options.NewValue = eventItem.StartTime.ToString(@"hh\:mm");
                         document.ReplaceText(options);
@@ -236,6 +240,10 @@ namespace Services
 
                     options.SearchValue = "{Evento}";
                     options.NewValue = eventItem.Name;
+                    document.ReplaceText(options);
+
+                    options.SearchValue = "{Tipo Evento}";
+                    options.NewValue = eventItem.EventType.Name;
                     document.ReplaceText(options);
 
                     options.SearchValue = "{Horário Inicial}";

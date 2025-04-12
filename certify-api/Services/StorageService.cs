@@ -3,6 +3,7 @@ using HeyRed.Mime;
 using Domain.DTO;
 using Amazon.S3;
 using Amazon.S3.Model;
+using System.Xml.Linq;
 
 namespace Services
 {
@@ -15,27 +16,13 @@ namespace Services
         private static string endpoint = $"https://{accountId}.r2.cloudflarestorage.com";  // Endpoint do seu R2 (substitua <account_id> pelo seu ID de conta)
 
 
-        public async Task<string> UploadFile(FileDTO file, string name = null)
+        public async Task<string> UploadFile(FileDTO file)
         {
             // 1. Verifica se a string base64 é válida
             if ((file.Data == null || file.Data.Length == 0) && string.IsNullOrWhiteSpace(file.Base64))
                 throw new ArgumentException("Base64 string or byte array is required.");
 
             byte[] data;
-            string path;
-
-            var extension = MimeTypesMap.GetExtension(file.MimeType);
-
-            if (name != null)
-            {
-                path = $"/storage/{file.Path.Trim('/')}/{name}.{extension}";
-            }
-            else
-            {
-                string guid = Guid.NewGuid().ToString("N");
-
-                path = $"/storage/{file.Path}/{guid}.{extension}";
-            }
 
             // 2. Caso o array de bytes esteja disponível, use-o
             if (file.Data != null && file.Data.Length > 0)
@@ -53,6 +40,12 @@ namespace Services
                 // Converte a base64 para bytes
                 data = Convert.FromBase64String(base64Data);
             }
+
+            // 3. Gera nome único com base em ticks (ou pode usar Guid se preferir)
+            var version = DateTime.UtcNow.Ticks;
+            var extension = MimeTypesMap.GetExtension(file.MimeType);
+            var fileName = $"{Guid.NewGuid():N}_v{version}.{extension}";
+            var path = $"/storage/{file.Path.TrimEnd('/')}/{fileName}";
 
             // Configure o cliente S3
             var config = new AmazonS3Config
@@ -76,7 +69,6 @@ namespace Services
 
                 // Faça o upload do arquivo
                 await client.PutObjectAsync(request);
-
             }
 
             // 7. Retorna o caminho relativo da imagem

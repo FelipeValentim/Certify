@@ -11,7 +11,7 @@ namespace Domain.Interfaces.Services
         /// <param name="name">Nome do arquivo (opcional). Caso não seja passado, será criado um nome com GUID aleatório.</param>
         /// <returns>Retorna o caminho relativo salvo</returns>
         /// <exception cref="ArgumentException"></exception>
-        Task<string> UploadFile(FileDTO file, string name = null);
+        Task<string> UploadFile(FileDTO file);
         Task<Stream> GetFileStream(string path);
     }
 }

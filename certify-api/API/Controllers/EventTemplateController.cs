@@ -18,11 +18,11 @@ namespace API.Controllers
         }
 
         [HttpPost("Upload/{eventId}")]
-        public IActionResult UploadTemplate(FileDTO file, Guid eventId)
+        public async Task<IActionResult> UploadTemplate(FileDTO file, Guid eventId)
         {
-            _eventTemplateService.UploadTemplate(file, eventId);
+            var response = await _eventTemplateService.UploadTemplateAsync(file, eventId);
 
-            return StatusCode(StatusCodes.Status200OK);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [HttpDelete("Remove/{eventId}")]

@@ -7,7 +7,7 @@ namespace Domain.Interfaces.Services
 	{
         EventTemplate Get(Guid id);
 
-        void UploadTemplate(FileDTO file, Guid eventId);
+        Task<string> UploadTemplateAsync(FileDTO file, Guid eventId);
 
         void RemoveTemplate(Guid eventId);
 	}

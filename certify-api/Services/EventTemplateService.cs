@@ -31,7 +31,7 @@ namespace Services
         }
 
 
-        public void UploadTemplate(FileDTO file, Guid eventId)
+        public async Task<string> UploadTemplateAsync(FileDTO file, Guid eventId)
         {
             var allowedMimeTypes = new[] { "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
 
@@ -72,9 +72,9 @@ namespace Services
             previewFile.Path = $"{eventId}";
             file.Path = $"{eventId}";
 
-            var previewPath = _storageService.UploadFile(previewFile, "preview").GetAwaiter().GetResult();
+            var previewPath = await _storageService.UploadFile(previewFile);
 
-            var path = _storageService.UploadFile(file, "template").GetAwaiter().GetResult();
+            var path = await _storageService.UploadFile(file);
 
             var eventTemplateEntity = new EventTemplate
             {
@@ -88,6 +88,7 @@ namespace Services
 
             _eventRepository.Update(entity);
 
+            return $"{UrlManager.Storage}{previewPath}";
         }
 
         public void RemoveTemplate(Guid eventId)

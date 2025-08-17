@@ -32,6 +32,8 @@ export const baseURL =
 export const screenHeight = Dimensions.get("window").height;
 export const screenWidth = Dimensions.get("window").width;
 
+export const swipeIconSize = 18;
+
 export const routes = {
   home: "Início",
   event: "Evento",

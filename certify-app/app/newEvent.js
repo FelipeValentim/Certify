@@ -26,6 +26,7 @@ import { baseURL, primaryColor } from "@/constants/Default";
 import { toast } from "@/redux/snackBar";
 import { useDispatch } from "react-redux";
 import { EventAPI } from "@/services/EventAPI";
+import HideOnKeyboard from "@/components/common/HideOnKeyboard";
 
 function NewEvent({ route, navigation }) {
   const dispatch = useDispatch();
@@ -195,7 +196,7 @@ function NewEvent({ route, navigation }) {
             </CustomScrollView>
 
             {/* BOTÃO FIXO NO FOOTER */}
-            <View style={styles.footer}>
+            <HideOnKeyboard style={styles.footer}>
               <ButtonLoading
                 loading={loading}
                 onPress={save}
@@ -203,7 +204,7 @@ function NewEvent({ route, navigation }) {
               >
                 Salvar
               </ButtonLoading>
-            </View>
+            </HideOnKeyboard>
           </View>
         </KeyboardAvoidingView>
       )}

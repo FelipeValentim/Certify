@@ -18,6 +18,7 @@ import { EventAPI } from "@/services/EventAPI";
 import { SegmentedControl } from "@/components/common/SegmentedControl";
 import { useDispatch } from "react-redux";
 import { toast } from "@/redux/snackBar";
+import HideOnKeyboard from "@/components/common/HideOnKeyboard";
 
 const NewField = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -140,11 +141,11 @@ const NewField = ({ route, navigation }) => {
           </Container>
         </CustomScrollView>
 
-        <View style={styles.footer}>
+        <HideOnKeyboard style={styles.footer}>
           <ButtonLoading loading={loading} onPress={save} style={styles.button}>
             Salvar
           </ButtonLoading>
-        </View>
+        </HideOnKeyboard>
       </View>
     </Fragment>
   );

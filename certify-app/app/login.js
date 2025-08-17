@@ -135,9 +135,9 @@ export default function LoginScreen({ navigation }) {
           <ButtonLoading loading={loading} onPress={login}>
             Login
           </ButtonLoading>
-          <ButtonLoading loading={loading} onPress={loginDemo}>
+          {/* <ButtonLoading loading={loading} onPress={loginDemo}>
             Demo
-          </ButtonLoading>
+          </ButtonLoading> */}
           {/* <H4 style={{ textAlign: "center", ...styles.shadowText }}>
             Não tem conta?{" "}
             <H4

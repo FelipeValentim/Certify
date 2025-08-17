@@ -22,7 +22,6 @@ import { useDispatch } from "react-redux";
 const EventTab = ({ navigation, route, info, title }) => {
   const dispatch = useDispatch();
   const [visibleQRCode, setVisibleQRCode] = useState(false);
-
   const toggleInfo = () => {
     setVisibleQRCode(!visibleQRCode);
   };
@@ -63,6 +62,7 @@ const EventTab = ({ navigation, route, info, title }) => {
             toggle={toggleInfo}
             visible={visibleQRCode}
             qrCode={info.QRCode}
+            formCheckinURL={info.formCheckinURL}
             id={info.id}
             checkinEnabled={info.checkinEnabled}
           />

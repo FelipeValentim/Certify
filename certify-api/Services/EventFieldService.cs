@@ -4,6 +4,7 @@ using Domain.Enum;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Services
@@ -147,6 +148,11 @@ namespace Services
             }
 
             _eventFieldRepository.UpdateRange(fields);
+        }
+
+        public void Delete(Guid id)
+        {
+            _eventFieldRepository.Delete(id);
         }
     }
 }

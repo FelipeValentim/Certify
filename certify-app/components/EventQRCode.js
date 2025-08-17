@@ -15,8 +15,22 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { SegmentedControl } from "./common/SegmentedControl";
 import { EventAPI } from "@/services/EventAPI";
+import CustomText from "./common/CustomText";
+import { Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { toast } from "@/redux/snackBar";
+import * as Clipboard from "expo-clipboard";
 
-const EventQRCode = ({ visible, toggle, qrCode, id, checkinEnabled }) => {
+const EventQRCode = ({
+  visible,
+  toggle,
+  qrCode,
+  formCheckinURL,
+  id,
+  checkinEnabled,
+}) => {
+  const dispatch = useDispatch();
+
   const [performFunction, setPerformFunction] = useState({});
   const [eventId] = useState(id);
   const [checkinEnabledMode, setCheckinEnabledMode] = useState({
@@ -135,6 +149,24 @@ const EventQRCode = ({ visible, toggle, qrCode, id, checkinEnabled }) => {
                 containerBackgroundColor="#F5F5F5"
               />
             </View>
+
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+              }}
+              onPress={async () => {
+                await Clipboard.setStringAsync(formCheckinURL);
+                dispatch(
+                  toast({
+                    text: "Link copiado com sucesso",
+                    type: "success",
+                  })
+                );
+              }}
+            >
+              <CustomText numberOfLines={1}>{formCheckinURL}</CustomText>
+              <Ionicons name="clipboard-outline" color={"#000"} size={20} />
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={downloadQRCode}>
               <ImageLoading

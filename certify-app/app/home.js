@@ -3,6 +3,7 @@ import {
   redColor,
   routes,
   screenWidth,
+  swipeIconSize,
 } from "@/constants/Default";
 import React, { Fragment, useEffect, useState } from "react";
 import {
@@ -126,7 +127,11 @@ export default function HomeScreen({ navigation, route }) {
               ...styles.swipeItem,
             }}
           >
-            <FontAwesomeIcon icon={faTrashCan} size={22} color="#FFF" />
+            <FontAwesomeIcon
+              icon={faTrashCan}
+              size={swipeIconSize}
+              color="#FFF"
+            />
           </View>
         </TouchableOpacity>
       );

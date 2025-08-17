@@ -14,5 +14,6 @@ namespace Domain.Interfaces.Services
         public EventFieldDTO Get(Guid eventField);
         public void ReorderFields(EventReorderFieldDTO eventReorderFieldDTO);
         void ReorderFields(IEnumerable<Guid> reorderFields, Guid eventId);
+        void Delete(Guid id);
     }
 }

@@ -2,6 +2,7 @@
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -21,7 +22,15 @@ namespace API.Controllers
         {
             var response = _userService.Login(model.Email, model.Password);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
+        }
+
+        [HttpPost("LoginDemo")]
+        public IActionResult LoginDemo()
+        {
+            var response = _userService.Login("teste@teste.com", "teste");
+
+            return StatusCode(StatusCodes.Status200OK, response);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Domain.Constants;
 using Domain.DTO;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
@@ -10,121 +11,112 @@ using System.Net;
 
 namespace Services
 {
-	public class EventTemplateService : IEventTemplateService
-	{
-		private readonly IEventRepository _eventRepository;
-		private readonly IEventTemplateRepository _eventTemplateRepository;
-		private readonly IStorageService _storageService;
-		private readonly IDocumentService _documentService;
-		public EventTemplateService(IEventRepository eventRepository,  IStorageService storageService, IDocumentService documentService, IEventTemplateRepository eventTemplateRepository)
-		{
-			_eventRepository = eventRepository;
-			_storageService = storageService;
-			_documentService = documentService;
-			_eventTemplateRepository = eventTemplateRepository;
-		}
+    public class EventTemplateService : IEventTemplateService
+    {
+        private readonly IEventRepository _eventRepository;
+        private readonly IEventTemplateRepository _eventTemplateRepository;
+        private readonly IStorageService _storageService;
+        private readonly IDocumentService _documentService;
+        public EventTemplateService(IEventRepository eventRepository, IStorageService storageService, IDocumentService documentService, IEventTemplateRepository eventTemplateRepository)
+        {
+            _eventRepository = eventRepository;
+            _storageService = storageService;
+            _documentService = documentService;
+            _eventTemplateRepository = eventTemplateRepository;
+        }
 
-		public EventTemplate Get(Guid id)
-		{
-			return _eventTemplateRepository.GetByID(id);
-		}
+        public EventTemplate Get(Guid id)
+        {
+            return _eventTemplateRepository.GetByID(id);
+        }
 
 
-        public ResponseModel UploadTemplate(FileDTO file, Guid eventId)
-		{
-			try
-			{
-				var allowedMimeTypes = new[] { "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
+        public async Task<string> UploadTemplateAsync(FileDTO file, Guid eventId)
+        {
+            var allowedMimeTypes = new[] { "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
 
-				if (!Array.Exists(allowedMimeTypes, mime => mime.Equals(file.MimeType, StringComparison.OrdinalIgnoreCase)))
-				{
-					return ResponseModel.Error(HttpStatusCode.BadRequest, "Tipo de arquivo inválido.");
-				}
+            if (!Array.Exists(allowedMimeTypes, mime => mime.Equals(file.MimeType, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new BusinessException("Tipo de arquivo inválido.");
+            }
 
-				if (file.Size >= 10 * 1024 * 1024) //10MB LIMIT
-				{
-					return ResponseModel.Error(HttpStatusCode.BadRequest, "Documento ultrapassa 10mb.");
-				}
+            if (file.Size >= 10 * 1024 * 1024) //10MB LIMIT
+            {
+                throw new BusinessException("Documento ultrapassa 10mb.");
+            }
 
-				if (eventId == Guid.Empty)
-				{
-					return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento inválido.");
-				}
+            if (eventId == Guid.Empty)
+            {
+                throw new BusinessException("Evento inválido.");
+            }
 
-				if (!_documentService.PlaceholderExists(file, "{nome}"))
-				{
-					return ResponseModel.Error(HttpStatusCode.BadRequest, "Não existe placeholder de {nome} no documento");
-				}
+            if (!_documentService.PlaceholderExists(file, "{Nome}"))
+            {
+                throw new BusinessException("Não existe placeholder de {Nome} no documento");
+            }
 
-				var entity = _eventRepository.GetByID(eventId);
+            var entity = _eventRepository.GetByID(eventId);
 
-				if (entity == null)
-				{
-					return ResponseModel.Error(HttpStatusCode.NotFound, "Evento não existe ou foi deletado.");
-				}
+            if (entity == null)
+            {
+                throw new NotFoundException("Evento não existe ou foi deletado.");
+            }
 
-				if (entity.EventTemplateId.HasValue)
-				{
-					return ResponseModel.Error(HttpStatusCode.NotFound, "Evento já possui template.");
-				}
+            if (entity.EventTemplateId.HasValue)
+            {
+                throw new ConflictException("Evento já possui template.");
+            }
 
-				var previewFile = _documentService.ConvertDocumentToPdf(file);
+            var previewFile = _documentService.ConvertDocumentToPdf(file);
 
-                previewFile.Path = $"{eventId}";
-                file.Path = $"{eventId}";
+            previewFile.Path = $"{eventId}";
+            file.Path = $"{eventId}";
 
-                var previewPath = _storageService.UploadFile(previewFile, "preview").GetAwaiter().GetResult();
+            var previewPath = await _storageService.UploadFile(previewFile);
 
-                var path = _storageService.UploadFile(file, "template").GetAwaiter().GetResult();
+            var path = await _storageService.UploadFile(file);
 
-				var eventTemplateEntity = new EventTemplate
-				{
-					Path = path,
-					PreviewPath = previewPath
-                };
+            var eventTemplateEntity = new EventTemplate
+            {
+                Path = path,
+                PreviewPath = previewPath
+            };
 
-				_eventTemplateRepository.Insert(eventTemplateEntity);
+            _eventTemplateRepository.Insert(eventTemplateEntity);
 
-				entity.EventTemplateId = eventTemplateEntity.Id;
+            entity.EventTemplateId = eventTemplateEntity.Id;
 
-				_eventRepository.Update(entity);
+            _eventRepository.Update(entity);
 
-				return ResponseModel.Success(payload: $"{UrlManager.Storage}{eventTemplateEntity.PreviewPath}");
-			}
-			catch (Exception ex)
-			{
-				return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
-			}
-		}
+            return $"{UrlManager.Storage}{previewPath}";
+        }
 
-		public ResponseModel RemoveTemplate(Guid eventId)
-		{
-			if (eventId == Guid.Empty)
-			{
-				return ResponseModel.Error(HttpStatusCode.BadRequest, "Evento inválido.");
-			}
+        public void RemoveTemplate(Guid eventId)
+        {
+            if (eventId == Guid.Empty)
+            {
+                throw new BusinessException("Evento inválido.");
+            }
 
-			var eventEntity = _eventRepository.GetByID(eventId);
+            var eventEntity = _eventRepository.GetByID(eventId);
 
-			if (eventEntity == null)
-			{
-				return ResponseModel.Error(HttpStatusCode.NotFound, "Evento não existe ou foi deletado.");
-			}
+            if (eventEntity == null)
+            {
+                throw new NotFoundException("Evento não existe ou foi deletado.");
+            }
 
-			if (!eventEntity.EventTemplateId.HasValue)
-			{
-				return ResponseModel.Error(HttpStatusCode.NotFound, "Template não existe para este evento.");
-			}
+            if (!eventEntity.EventTemplateId.HasValue)
+            {
+                throw new NotFoundException("Template não existe para este evento.");
+            }
 
-			var eventTemplateId = eventEntity.EventTemplateId.Value;
+            var eventTemplateId = eventEntity.EventTemplateId.Value;
 
-			eventEntity.EventTemplateId = null;
+            eventEntity.EventTemplateId = null;
 
-			_eventRepository.Update(eventEntity);
+            _eventRepository.Update(eventEntity);
 
-			_eventTemplateRepository.Delete(eventTemplateId, true);
-
-			return ResponseModel.Success();
-		}
-	}
+            _eventTemplateRepository.Delete(eventTemplateId, true);
+        }
+    }
 }

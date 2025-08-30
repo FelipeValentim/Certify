@@ -29,7 +29,13 @@ namespace Infrastructure.Repositories
 			dbSet = context.Set<TEntity>();
 		}
 
-		public virtual IEnumerable<TEntity> GetAll(
+        public virtual void Insert(TEntity entity)
+        {
+            dbSet.Add(entity);
+            context.SaveChanges();
+        }
+
+        public virtual IEnumerable<TEntity> GetAll(
 			Expression<Func<TEntity, bool>> filter = null,
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
 			string includeProperties = "")
@@ -91,5 +97,19 @@ namespace Infrastructure.Repositories
 
 			return query.Count();
 		}
-	}
+
+        public int GetMax(
+		Expression<Func<TEntity, int?>> selector,
+		Expression<Func<TEntity, bool>> filter = null)
+        {
+            IQueryable<TEntity> query = dbSet;
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            var max = query.Select(selector).Max();
+
+            return max ?? 0;
+        }
+    }
 }

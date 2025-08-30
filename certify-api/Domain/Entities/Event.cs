@@ -34,7 +34,9 @@ namespace Domain.Entities
 
 		public virtual IEnumerable<Guest> Guests { get; set; }
 
-		public Event() : base()
+        public virtual IEnumerable<EventField> Fields { get; set; }
+
+        public Event() : base()
         {
             Photo = "/default/lecture.png";
 

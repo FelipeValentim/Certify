@@ -13,29 +13,22 @@ namespace API.Controllers
         private readonly IGuestTypeService _guestTypeService;
         public GuestTypeController(IGuestTypeService guestTypeService)
         {
-			_guestTypeService = guestTypeService;
+            _guestTypeService = guestTypeService;
         }
 
         [HttpGet("GetGuestTypes")]
         public IActionResult GetGuestTypes()
         {
-            try
-            {
-                var guestTypes = _guestTypeService.GetAll();
+            var guestTypes = _guestTypeService.GetAll();
 
-				var items = guestTypes.Select(e => new GuestTypeViewModel
-                {
-                    Id = e.Id,
-                    Name = e.Name,
-                });
-
-                return StatusCode(StatusCodes.Status200OK, items);
-            }
-            catch (Exception ex)
+            var items = guestTypes.Select(e => new GuestTypeViewModel
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+                Id = e.Id,
+                Name = e.Name,
+            });
+
+            return StatusCode(StatusCodes.Status200OK, items);
         }
-       
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Domain.DTO;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
@@ -20,30 +21,23 @@ namespace Services
             _tokenService = tokenService;
         }
 
-        public ResponseModel Login(string email, string password)
+        public string Login(string email, string password)
         {
-            try
-            {
-                UserProfile user = _userProfileRepository.Get(x => x.Email.ToUpper() == email.ToUpper());
+            UserProfile user = _userProfileRepository.Get(x => x.Email.ToUpper() == email.ToUpper());
 
-                if (user != null)
+            if (user != null)
+            {
+                var isCorrect = _hashService.VerifyPassword(password, user.PasswordHash);
+
+                if (isCorrect)
                 {
-                    var isCorrect = _hashService.VerifyPassword(password, user.PasswordHash);
+                    var token = _tokenService.GenerateToken(user);
 
-                    if (isCorrect)
-                    {
-                        var token = _tokenService.GenerateToken(user);
-
-                        return ResponseModel.Success(token);
-                    }
+                    return token;
                 }
+            }
 
-                return ResponseModel.Error(HttpStatusCode.Unauthorized, "Usuário ou senha incorreto.");
-            }
-            catch (Exception ex)
-            {
-                return ResponseModel.Error(HttpStatusCode.InternalServerError, ex.Message);
-            }
+            throw new UnauthorizedException("Usuário ou senha incorreto.");
         }
     }
 }

@@ -21,20 +21,14 @@ namespace Services
             _mappingService = mappingService;
         }
 
-        public ResponseModel<object> AddGuest(GuestDTO model)
+        public object AddGuest(GuestDTO model)
         {
-            try
-            {
-                _guestService.SetStudentGuestType(ref model);
 
-                var response = _guestService.Add(model, true);
+            _guestService.SetStudentGuestType(ref model);
 
-                return response;
-            }
-            catch (Exception ex)
-            {
-                return ResponseModel<object>.Error(HttpStatusCode.InternalServerError, ex.Message);
-            }
+            var response = _guestService.Add(model, true);
+
+            return response;
         }
 
         public ResponseModel<EventDTO> GenerateRegistrationForm(string eventId)
@@ -49,7 +43,7 @@ namespace Services
                     return ResponseModel<EventDTO>.Error(HttpStatusCode.NotFound, "Evento inválido.");
                 }
 
-                var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User");
+                var eventItem = _eventRepository.Get(x => x.Id == id, includeProperties: "User, Fields");
 
                 if (eventItem == null)
                 {
@@ -130,7 +124,7 @@ namespace Services
 
         }
 
-        public ResponseModel CheckinGuest(string accesscode)
+        public string CheckinGuest(string accesscode)
         {
             var response = _guestService.Checkin(accesscode, true);
 

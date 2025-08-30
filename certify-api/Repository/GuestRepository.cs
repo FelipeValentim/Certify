@@ -2,6 +2,8 @@
 using Domain.Interfaces.Repositories;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Repository
 {
@@ -20,5 +22,14 @@ namespace Repository
 		{
 			return Count(x => x.Email.ToLower() == email.ToLower() && x.EventId == eventId) > 0;
 		}
-	}
+
+        public IEnumerable<Guest> GetAllRelated(Expression<Func<Guest, bool>> filter = null)
+        {
+            return dbSet.Where(filter)
+                        .Include(x => x.GuestType)
+                        .Include(x => x.FieldsValues)
+                        .ThenInclude(fv => fv.EventField)
+                        .ToList();
+        }
+    }
 }

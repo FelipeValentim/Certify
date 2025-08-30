@@ -24,7 +24,6 @@ import ButtonLoading from "@/components/common/ButtonLoading";
 import { signIn } from "@/redux/token";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons";
-import CustomText from "@/components/common/CustomText";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -85,6 +84,21 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
+  const loginDemo = async () => {
+    if (!loading) {
+      setLoading(true);
+
+      try {
+        const response = await AccountAPI.loginDemo();
+
+        await setToken(response.data);
+        dispatch(signIn(response.data));
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   return (
     // <DismissKeyboard>
     <View>
@@ -121,6 +135,9 @@ export default function LoginScreen({ navigation }) {
           <ButtonLoading loading={loading} onPress={login}>
             Login
           </ButtonLoading>
+          {/* <ButtonLoading loading={loading} onPress={loginDemo}>
+            Demo
+          </ButtonLoading> */}
           {/* <H4 style={{ textAlign: "center", ...styles.shadowText }}>
             Não tem conta?{" "}
             <H4

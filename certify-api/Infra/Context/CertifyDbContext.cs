@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Infrastructure.Context
 {
@@ -12,11 +13,29 @@ namespace Infrastructure.Context
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
+        private static void SetGlobalQueryFilter<T>(ModelBuilder modelBuilder) where T : AuditableEntity
+        {
+            modelBuilder.Entity<T>().HasQueryFilter(e => !e.DeletedDate.HasValue);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(AuditableEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    var method = typeof(CertifyDbContext)
+                        .GetMethod(nameof(SetGlobalQueryFilter), BindingFlags.NonPublic | BindingFlags.Static)?
+                        .MakeGenericMethod(entityType.ClrType);
+
+                    method?.Invoke(null, new object[] { modelBuilder });
+                }
+            }
+
             modelBuilder.Ignore<EntityBase>();
+            modelBuilder.Ignore<AuditableEntity>();
         }
 
         public DbSet<UserProfile> UserProfile { get; set; }
@@ -24,6 +43,8 @@ namespace Infrastructure.Context
         public DbSet<Guest> Guest { get; set; }
 		public DbSet<EventType> EventType { get; set; }
 		public DbSet<EventTemplate> EventTemplate { get; set; }
+        public DbSet<EventField> EventField { get; set; }
+        public DbSet<EventFieldValue> EventFieldValue { get; set; }
 
-	}
+    }
 }

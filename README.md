@@ -23,6 +23,16 @@ Os convidados podem se inscrever diretamente pelo link do evento ou serem cadast
 
 Após o evento, o organizador pode enviar certificados personalizados para os convidados que realizaram check-in.
 
+### 📝 Campos Dinâmicos no Formulário
+
+O organizador pode cadastrar **campos personalizados** para o formulário de inscrição do evento. Esses campos podem ser de diferentes tipos, como texto, número ou data, e podem ser configurados como obrigatórios ou opcionais.
+
+Os valores preenchidos pelos convidados **podem aparecer no certificado**, permitindo que cada certificado seja totalmente personalizado. Exemplos de campos dinâmicos:
+
+- Matrícula do participante
+- Data prevista para formatura
+- Curso do participante
+
 ## 🛠 Tecnologias Utilizadas
 
 ### Backend (API)
@@ -78,6 +88,7 @@ Escaneie o QR Code gerado para abrir o app no seu dispositivo ou emulador.
 - 🔍 Implementar barra de pesquisa para eventos e convidados.
 - ✏️ Adicionar funcionalidade para edição de eventos e convidados.
 - 📩 Indicativo visual de quais convidados receberam convite e certificado.
+- 🎓 Criação de templates pelo próprio aplicativo (ou pela web no lado do servidor).
 
 ## 🏗️ Este projeto foi desenvolvido para facilitar a gestão de eventos, tornando o processo de check-in e emissão de certificados mais eficiente e automatizado.
 

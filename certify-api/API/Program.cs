@@ -1,4 +1,5 @@
 using AutoMapper;
+using Certify.Middlewares;
 using Domain.Constants;
 using Domain.Identity;
 using Domain.Interfaces.Repositories;
@@ -38,6 +39,8 @@ builder.Services.AddTransient<IGuestRepository, GuestRepository>();
 builder.Services.AddTransient<IEventTypeRepository, EventTypeRepository>();
 builder.Services.AddTransient<IGuestTypeRepository, GuestTypeRepository>();
 builder.Services.AddTransient<IEventTemplateRepository, EventTemplateRepository>();
+builder.Services.AddTransient<IEventFieldRepository, EventFieldRepository>();
+builder.Services.AddTransient<IEventFieldValueRepository, EventFieldValueRepository>();
 
 // Serviços
 builder.Services.AddTransient<IDocumentService, DocumentService>();
@@ -49,6 +52,8 @@ builder.Services.AddTransient<IUserContextService, UserContextService>();
 builder.Services.AddTransient<IGuestTypeService, GuestTypeService>();
 builder.Services.AddTransient<IStorageService, StorageService>();
 builder.Services.AddTransient<IEventService, EventService>();
+builder.Services.AddTransient<IEventFieldService, EventFieldService>();
+builder.Services.AddTransient<IEventFieldValueService, EventFieldValueService>();
 builder.Services.AddTransient<IEventTemplateService, EventTemplateService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IGuestService, GuestService>();
@@ -91,6 +96,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

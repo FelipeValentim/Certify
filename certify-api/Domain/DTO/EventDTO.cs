@@ -2,10 +2,8 @@
 
 namespace Domain.DTO
 {
-	public class EventDTO
+	public class EventDTO : DTOBase
 	{
-		public Guid Id { get; set; }
-
 		public string Name { get; set; }
 
         public string Photo { get; set; }
@@ -26,5 +24,8 @@ namespace Domain.DTO
 
         public UserDTO User { get; set; }
 
-	}
+        public IEnumerable<EventFieldDTO> Fields { get; set; }
+
+
+    }
 }

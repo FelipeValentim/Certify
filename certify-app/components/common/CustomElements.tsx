@@ -119,10 +119,10 @@ export const ImageLoading: React.FC<ImageLoadingProps> = ({ ...props }) => {
   const [loading, setLoading] = useState(true);
 
   return (
-    <>
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
       {loading && <LoadingSpinner />}
       <Image {...props} onLoadEnd={() => setLoading(false)} />
-    </>
+    </View>
   );
 };
 

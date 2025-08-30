@@ -12,6 +12,16 @@ export const AccountAPI = {
         : undefined,
     });
   },
+  loginDemo: async function (cancel = false) {
+    return api.request({
+      url: `/Account/LoginDemo`,
+      method: "POST",
+      signal: cancel
+        ? cancelApiObject[this.loginDemo.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

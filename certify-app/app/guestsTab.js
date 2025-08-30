@@ -5,6 +5,7 @@ import {
   redColor,
   routes,
   screenWidth,
+  swipeIconSize,
 } from "@/constants/Default";
 import { GuestAPI } from "@/services/GuestAPI";
 import React, { useEffect, useState } from "react";
@@ -580,7 +581,11 @@ function GuestsTab({
             }
             style={{ ...styles.swipeItem, backgroundColor: redColor }}
           >
-            <FontAwesomeIcon icon={faTrashCan} size={22} color="#FFF" />
+            <FontAwesomeIcon
+              icon={faTrashCan}
+              size={swipeIconSize}
+              color="#FFF"
+            />
           </TouchableOpacity>
           {item.checkinDate ? (
             <TouchableOpacity
@@ -596,7 +601,7 @@ function GuestsTab({
             >
               <FontAwesomeIcon
                 icon={faClockRotateLeft}
-                size={22}
+                size={swipeIconSize}
                 color="#FFF"
               />
             </TouchableOpacity>
@@ -612,7 +617,11 @@ function GuestsTab({
               }
               style={{ ...styles.swipeItem, backgroundColor: "#36AE7C" }}
             >
-              <FontAwesomeIcon icon={faCheckToSlot} size={22} color="#FFF" />
+              <FontAwesomeIcon
+                icon={faCheckToSlot}
+                size={swipeIconSize}
+                color="#FFF"
+              />
             </TouchableOpacity>
           )}
         </View>

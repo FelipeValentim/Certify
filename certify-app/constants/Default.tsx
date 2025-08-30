@@ -22,6 +22,8 @@ export const primaryColor = "#7B55E0";
 export const backgroundColor = "#F5F0FF";
 export const redColor = "#dd2150";
 
+export const mutedColor = "#666";
+
 export const environment = process.env.NODE_ENV;
 
 export const baseURL =
@@ -32,6 +34,8 @@ export const baseURL =
 export const screenHeight = Dimensions.get("window").height;
 export const screenWidth = Dimensions.get("window").width;
 
+export const swipeIconSize = 18;
+
 export const routes = {
   home: "Início",
   event: "Evento",
@@ -40,4 +44,28 @@ export const routes = {
   newEvent: "Novo Evento",
   login: "Login",
   register: "Cadastrar",
+  newField: "Novo campo",
 };
+
+export enum FieldType {
+  Text = 1,
+  Number = 2,
+  Date = 3,
+  // Select = 4,
+  // Radio = 5,
+  // Checkbox = 6
+}
+
+export function TranslateFieldType(key: string): string {
+  switch (key) {
+    case "Text":
+      return "Texto";
+    case "Number":
+      return "Número";
+    case "Date":
+      return "Data";
+    // Adicione mais traduções conforme necessário
+    default:
+      return key;
+  }
+}

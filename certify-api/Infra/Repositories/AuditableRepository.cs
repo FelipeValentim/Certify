@@ -82,12 +82,6 @@ namespace Infrastructure.Repositories
 			return query.FirstOrDefault();
 		}
 
-		public virtual void Insert(TEntity entity)
-		{
-			dbSet.Add(entity);
-			context.SaveChanges();
-		}
-
 		public virtual void Delete(Guid id, bool physicalDeletion = false)
 		{
 			var entity = GetByID(id);
@@ -115,7 +109,18 @@ namespace Infrastructure.Repositories
 			context.SaveChanges();
 		}
 
-		public void Delete(Guid[] ids)
+        public void UpdateRange(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                dbSet.Attach(entity);
+                context.Entry(entity).State = EntityState.Modified;
+            }
+
+            context.SaveChanges();
+        }
+
+        public void Delete(Guid[] ids)
 		{
 			var entities = GetAll(x => ids.Any(id => x.Id == id));
 

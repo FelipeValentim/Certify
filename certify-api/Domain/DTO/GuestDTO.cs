@@ -3,8 +3,13 @@ using System.Text.Json.Serialization;
 
 namespace Domain.DTO
 {
-	public class GuestDTO
-	{
+	public class GuestDTO : DTOBase
+    {
+
+		public GuestDTO()
+		{
+			FieldsValues = new List<EventFieldValueDTO>();
+		}
 
 		[JsonPropertyName("name")]
 		public string Name { get; set; }
@@ -24,5 +29,7 @@ namespace Domain.DTO
 		[JsonPropertyName("eventId")]
 		public Guid EventId { get; set; }
 
-	}
+        [JsonPropertyName("fieldsValues")]
+        public IEnumerable<EventFieldValueDTO> FieldsValues { get; set; }
+    }
 }

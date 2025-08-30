@@ -22,6 +22,8 @@ export const primaryColor = "#7B55E0";
 export const backgroundColor = "#F5F0FF";
 export const redColor = "#dd2150";
 
+export const mutedColor = "#666";
+
 export const environment = process.env.NODE_ENV;
 
 export const baseURL =

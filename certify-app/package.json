@@ -30,6 +30,7 @@
     "@reduxjs/toolkit": "^2.2.5",
     "axios": "^1.7.2",
     "date-fns": "^4.1.0",
+    "dayjs": "^1.11.17",
     "expo": "~51.0.8",
     "expo-asset": "~10.0.10",
     "expo-barcode-scanner": "~13.0.1",

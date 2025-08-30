@@ -2,10 +2,8 @@
 
 namespace Domain.DTO
 {
-	public class UserDTO
-	{
-		public Guid Id { get; set; }
-
+	public class UserDTO : DTOBase
+    {
 		public string Name { get; set; }
 	}
 }

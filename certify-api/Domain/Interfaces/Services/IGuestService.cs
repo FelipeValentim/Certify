@@ -5,24 +5,24 @@ namespace Domain.Interfaces.Services
 {
     public interface IGuestService
 	{
-		ResponseModel<object> Add(GuestDTO guest, bool form = false);
+		object Add(GuestDTO guest, bool form = false);
 
 		void SetStudentGuestType(ref GuestDTO guest);
 
         void SendInvitation(Guid eventId, Guid id);
 
-        ResponseModel SendInvitations(Guid eventId, Guid[] ids);
-        ResponseModel SendCertificates(Guid eventId, Guid[] ids);
+        void SendInvitations(Guid eventId, Guid[] ids);
+        void SendCertificates(Guid eventId, Guid[] ids);
 
-        ResponseModel<GuestDTO> Get(Guid id);
-        ResponseModel<GuestDTO> Get(string id);
-        ResponseModel Checkin(Guid id, bool form = false);
-        ResponseModel Checkin(string id, bool form = false);
-        ResponseModel Uncheckin(Guid id);
-        ResponseModel Checkin(Guid[] ids);
-        ResponseModel Uncheckin(Guid[] ids);
-        ResponseModel Delete(Guid id);
-        ResponseModel Delete(Guid[] ids);
+        GuestDTO Get(Guid id);
+        GuestDTO Get(string id);
+        string Checkin(Guid id, bool form = false);
+        string Checkin(string id, bool form = false);
+        string Uncheckin(Guid id);
+        string Checkin(Guid[] ids);
+        string Uncheckin(Guid[] ids);
+        string Delete(Guid id);
+        string Delete(Guid[] ids);
         FileDTO GenerateCheckinQRCode(string guestId);
     }
 }

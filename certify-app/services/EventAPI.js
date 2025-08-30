@@ -73,6 +73,38 @@ export const EventAPI = {
         : undefined,
     });
   },
+  getFields: async function (eventId, cancel = false) {
+    return api.request({
+      url: `/Event/${eventId}/EventField`,
+      method: "GET",
+      signal: cancel
+        ? cancelApiObject[this.getFields.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
+  saveField: async function (eventField, cancel = false) {
+    return api.request({
+      url: `/Event/EventField`,
+      method: "POST",
+      data: eventField,
+      signal: cancel
+        ? cancelApiObject[this.saveField.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
+  reorderFields: async function (reorderFields, eventId, cancel = false) {
+    return api.request({
+      url: `/Event/${eventId}/EventField/Reorder`,
+      method: "PUT",
+      data: reorderFields,
+      signal: cancel
+        ? cancelApiObject[this.saveField.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

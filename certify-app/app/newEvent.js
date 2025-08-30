@@ -1,16 +1,20 @@
 import ButtonLoading from "@/components/common/ButtonLoading";
-
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import { View, ScrollView, StyleSheet, Image } from "react-native";
+import React, { Fragment, useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import Header from "@/components/common/Header";
 import {
   InputNumber,
   Input,
   InputDate,
   InputTime,
-  SelectPicker,
-  ImagePicker,
   SelectInput,
+  ImagePicker,
 } from "@/components/common/CustomInput";
 import {
   Container,
@@ -22,6 +26,7 @@ import { baseURL, primaryColor } from "@/constants/Default";
 import { toast } from "@/redux/snackBar";
 import { useDispatch } from "react-redux";
 import { EventAPI } from "@/services/EventAPI";
+import HideOnKeyboard from "@/components/common/HideOnKeyboard";
 
 function NewEvent({ route, navigation }) {
   const dispatch = useDispatch();
@@ -35,11 +40,8 @@ function NewEvent({ route, navigation }) {
   });
   const [eventTypes, setEventTypes] = useState();
   const { addEvent } = route.params;
-
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = React.useState({
-    name: undefined,
-  });
+  const [errors, setErrors] = useState({ name: undefined });
 
   useEffect(() => {
     const getEventTypes = async () => {
@@ -62,9 +64,9 @@ function NewEvent({ route, navigation }) {
           name: !event.name ? "Nome é obrigatório" : undefined,
           date: !event.date ? "Data é obrigatório" : undefined,
           startTime: !event.startTime
-            ? "Horário final é obrigatório"
+            ? "Horário inicial é obrigatório"
             : undefined,
-          endTime: !event.endTime ? "Horário inicial é obrigatório" : undefined,
+          endTime: !event.endTime ? "Horário final é obrigatório" : undefined,
           eventTypeId: !event.eventTypeId
             ? "Tipo de evento é obrigatório"
             : undefined,
@@ -76,29 +78,26 @@ function NewEvent({ route, navigation }) {
             type: "warning",
           })
         );
-      } else {
-        try {
-          setLoading(true);
+        return;
+      }
 
-          const { data } = await EventAPI.newEvent(event);
-
-          event.id = data.id;
-          event.photoFullUrl = data.photoFullUrl;
-          event.eventType = {
-            name: eventTypes.find((x) => x.id === event.eventTypeId).name,
-          };
-
-          addEvent(event);
-
-          navigation.goBack();
-        } catch (error) {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            invalidCredentials: error.response?.data,
-          }));
-        } finally {
-          setLoading(false);
-        }
+      try {
+        setLoading(true);
+        const { data } = await EventAPI.newEvent(event);
+        event.id = data.id;
+        event.photoFullUrl = data.photoFullUrl;
+        event.eventType = {
+          name: eventTypes.find((x) => x.id === event.eventTypeId).name,
+        };
+        addEvent(event);
+        navigation.goBack();
+      } catch (error) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          invalidCredentials: error.response?.data,
+        }));
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -123,80 +122,91 @@ function NewEvent({ route, navigation }) {
       {!eventTypes ? (
         <Loading color={primaryColor} size={24} />
       ) : (
-        <CustomScrollView>
-          <Container style={styles.container}>
-            <View style={styles.content}>
-              <ImagePicker
-                photo={
-                  event.photoFile ? event.photoFile.base64 : event.fullPhotoUrl
-                }
-                onPicker={(file) => setEvent({ ...event, photoFile: file })}
-              />
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <View style={{ flex: 1 }}>
+            <CustomScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+              <Container style={styles.container}>
+                <View style={styles.content}>
+                  <ImagePicker
+                    photo={
+                      event.photoFile
+                        ? event.photoFile.base64
+                        : event.fullPhotoUrl
+                    }
+                    onPicker={(file) => setEvent({ ...event, photoFile: file })}
+                  />
+                  <View style={styles.inputs}>
+                    <Input
+                      value={event.name}
+                      onChangeText={(text) =>
+                        setField("name", text, "Nome é obrigatório")
+                      }
+                      placeholder="Nome"
+                      error={errors.name}
+                    />
+                    <InputNumber
+                      onChangeText={(text) =>
+                        setField("pax", text, "Convidados é obrigatório", false)
+                      }
+                      placeholder="Convidados"
+                      value={event.pax}
+                      maxLength={10}
+                      error={errors.pax}
+                    />
+                    <InputDate
+                      onChange={(value) => {
+                        setEvent({ ...event, date: new Date(value) });
+                      }}
+                      placeholder="Data"
+                      minimumDate={new Date()}
+                      value={event.date}
+                      error={errors.date}
+                    />
+                    <InputTime
+                      onChange={(value) => {
+                        setEvent({ ...event, startTime: value });
+                      }}
+                      placeholder="Horário inicial"
+                      value={event.startTime}
+                      error={errors.startTime}
+                    />
+                    <InputTime
+                      onChange={(value) => {
+                        setEvent({ ...event, endTime: value });
+                      }}
+                      placeholder="Horário final"
+                      value={event.endTime}
+                      error={errors.endTime}
+                    />
+                    <SelectInput
+                      placeholder={"Tipo de evento"}
+                      selected={event.eventTypeId}
+                      items={eventTypes}
+                      onSelected={(selected) =>
+                        setEvent({ ...event, eventTypeId: selected.id })
+                      }
+                      error={errors.eventTypeId}
+                    />
+                  </View>
+                </View>
+              </Container>
+            </CustomScrollView>
 
-              {/* <Text style={styles.name}>{event.name}</Text> */}
-              <View style={styles.inputs}>
-                <Input
-                  value={event.name}
-                  onChangeText={(text) =>
-                    setField("name", text, "Nome é obrigatório")
-                  }
-                  placeholder="Nome"
-                  error={errors.name}
-                ></Input>
-                <InputNumber
-                  onChangeText={(text) =>
-                    setField("pax", text, "Convidados é obrigatório", false)
-                  }
-                  placeholder="Convidados"
-                  value={event.pax}
-                  maxLength={10}
-                  error={errors.pax}
-                />
-                <InputDate
-                  onChange={(value) => {
-                    setEvent({ ...event, date: new Date(value) });
-                  }}
-                  placeholder="Data"
-                  minimumDate={new Date()}
-                  value={event.date}
-                  error={errors.date}
-                />
-                <InputTime
-                  onChange={(value) => {
-                    setEvent({ ...event, startTime: value });
-                  }}
-                  placeholder="Horário inicial"
-                  value={event.startTime}
-                  error={errors.startTime}
-                />
-                <InputTime
-                  onChange={(value) => {
-                    setEvent({ ...event, endTime: value });
-                  }}
-                  placeholder="Horário final"
-                  value={event.endTime}
-                  error={errors.endTime}
-                />
-                <SelectInput
-                  placeholder={"Tipo de evento"}
-                  selected={event.eventTypeId}
-                  items={eventTypes}
-                  onSelected={(selected) =>
-                    setEvent({ ...event, eventTypeId: selected.id })
-                  }
-                  error={errors.eventTypeId}
-                />
-              </View>
+            {/* BOTÃO FIXO NO FOOTER */}
+            <HideOnKeyboard style={styles.footer}>
               <ButtonLoading
                 loading={loading}
                 onPress={save}
-                style={styles.button}
+                style={{ width: "100%" }}
               >
                 Salvar
               </ButtonLoading>
-            </View>
-          </Container>
-        </CustomScrollView>
+            </HideOnKeyboard>
+          </View>
+        </KeyboardAvoidingView>
       )}
     </Fragment>
   );
@@ -211,19 +221,19 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 10,
   },
-  name: {
-    fontSize: 28,
-    fontFamily: "PoppinsRegular",
-    fontWeight: "bold",
-  },
-
   inputs: {
     width: "100%",
     gap: 10,
   },
-  button: {
-    width: "100%",
-    marginTop: 40,
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 20,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
   },
 });
 

@@ -6,10 +6,10 @@ import EventInfoTab from "./eventTab";
 import EventGuestsTab from "./guestsTab";
 import EventTemplateTab from "./templateTab";
 import EventScannerTab from "./eventScanner";
+import EventFieldsTab from "./eventFields";
 import { Ionicons } from "@expo/vector-icons";
 import { EventAPI } from "@/services/EventAPI";
 import { View, Animated, Pressable } from "react-native";
-import { useFocusEffect } from "expo-router";
 
 const Tab = createBottomTabNavigator();
 
@@ -86,7 +86,7 @@ export default function EventScreen({ route, navigation }) {
     width = screenWidth - paddingHorizontal * 2;
 
     // Total five Tabs...
-    return width / 4;
+    return width / 5;
   };
 
   return (
@@ -165,6 +165,32 @@ export default function EventScreen({ route, navigation }) {
             headerShown: false,
             tabBarIcon: ({ color, size, focused }) => {
               return focused ? (
+                <Ionicons name="apps" size={size} color={color} />
+              ) : (
+                <Ionicons name="apps-outline" size={size} color={color} />
+              );
+            },
+          }}
+          name="Campos dinâmicos"
+          listeners={() => ({
+            focus: () => {
+              handleTabFocus(2);
+            },
+          })}
+        >
+          {(props) => (
+            <EventFieldsTab
+              dataLoading={loading}
+              eventId={eventId}
+              {...props}
+            />
+          )}
+        </Tab.Screen>
+        <Tab.Screen
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size, focused }) => {
+              return focused ? (
                 <Ionicons name="people" size={size} color={color} />
               ) : (
                 <Ionicons name="people-outline" size={size} color={color} />
@@ -175,7 +201,7 @@ export default function EventScreen({ route, navigation }) {
           initialParams={{ eventId }}
           listeners={() => ({
             focus: () => {
-              handleTabFocus(2);
+              handleTabFocus(3);
             },
           })}
         >
@@ -208,7 +234,7 @@ export default function EventScreen({ route, navigation }) {
           initialParams={{ eventId }}
           listeners={() => ({
             focus: () => {
-              handleTabFocus(3);
+              handleTabFocus(4);
             },
           })}
         >

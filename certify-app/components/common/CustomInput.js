@@ -17,17 +17,23 @@ import { Picker } from "@react-native-picker/picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faChevronDown,
+  faChevronLeft,
+  faChevronRight,
   faEye,
   faEyeSlash,
   faPen,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
-import { faImages } from "@fortawesome/free-regular-svg-icons";
+import { faImages, faCalendar } from "@fortawesome/free-regular-svg-icons";
 import * as SelectImage from "expo-image-picker";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { screenHeight } from "@/constants/Default";
+import { mutedColor, primaryColor, screenHeight } from "@/constants/Default";
 import { CustomScrollView } from "./CustomElements";
 import ModalContainer from "./ModalContainer";
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br"; // importa o locale pt-br
+
+dayjs.locale("pt-br"); // define como padrão
 
 const now = new Date();
 
@@ -173,40 +179,260 @@ export const InputDate = ({
   error,
   ...props
 }) => {
-  const [show, setShow] = useState(false);
-  const togglePicker = () => {
-    setShow(!show);
-  };
-  return (
-    <>
-      <Pressable
-        onPress={() => {
-          togglePicker();
-        }}
-      >
-        <InputBase
-          value={value?.toLocaleDateString("pt-BR") ?? ""}
-          placeholder={placeholder}
-          error={error}
-          editable={false}
-        />
-      </Pressable>
+  const selectInputStyle = StyleSheet.create({
+    selectItem: {
+      padding: 15,
+      flex: 1,
+    },
+  });
 
-      {show && (
-        <DateTimePicker
-          value={value ?? new Date()}
-          mode={"date"}
-          display="default"
-          onChange={(e, selectedDate) => {
-            togglePicker();
-            if (e.type === "set") {
-              onChange(selectedDate);
-            }
-          }}
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [viewMode, setViewMode] = useState("calendar"); // 'calendar' ou 'year'
+  const [currentMonth, setCurrentMonth] = useState(dayjs());
+  const [selectedYear, setSelectedYear] = useState(dayjs().year());
+
+  const togglePicker = () => {
+    setPickerVisible(!pickerVisible);
+    // Reset para view de calendário quando abrir
+    if (!pickerVisible) {
+      setViewMode("calendar");
+    }
+  };
+
+  const generateCalendarMatrix = (month, year) => {
+    const firstDay = dayjs().year(year).month(month).date(1);
+    const daysInMonth = firstDay.daysInMonth();
+    const startDay = firstDay.day(); // 0 (domingo) até 6 (sábado)
+
+    const matrix = [];
+    let week = [];
+
+    // Dias em branco antes do primeiro dia
+    for (let i = 0; i < startDay; i++) {
+      week.push(null);
+    }
+
+    // Dias do mês
+    for (let d = 1; d <= daysInMonth; d++) {
+      week.push(dayjs().year(year).month(month).date(d));
+      if (week.length === 7) {
+        matrix.push(week);
+        week = [];
+      }
+    }
+
+    // Preenche o resto da última semana com null
+    if (week.length > 0) {
+      while (week.length < 7) {
+        week.push(null);
+      }
+      matrix.push(week);
+    }
+
+    return matrix;
+  };
+
+  const generateYearRange = (centerYear = selectedYear) => {
+    const years = [];
+    const startYear = centerYear - 6; // 6 anos antes
+    const endYear = centerYear + 5; // 5 anos depois
+
+    for (let year = startYear; year <= endYear; year++) {
+      years.push(year);
+    }
+
+    return years;
+  };
+
+  const handleMonthChange = (newMonth) => {
+    setCurrentMonth(newMonth);
+  };
+
+  const handleYearSelect = (year) => {
+    setSelectedYear(year);
+    setCurrentMonth(currentMonth.year(year));
+    setViewMode("calendar"); // Volta para a view de calendário
+  };
+
+  const toggleViewMode = () => {
+    setViewMode(viewMode === "calendar" ? "year" : "calendar");
+  };
+
+  const calendarMatrix = generateCalendarMatrix(
+    currentMonth.month(),
+    currentMonth.year()
+  );
+
+  const yearRange = generateYearRange();
+
+  return (
+    <View style={selectInputStyle.container}>
+      <Pressable onPress={togglePicker} style={styles.formControl}>
+        <InputBase
+          editable={false}
+          placeholder={placeholder}
+          value={value ? dayjs(value).format("DD/MM/YYYY") : ""}
+          error={error}
           {...props}
         />
-      )}
-    </>
+        <FontAwesomeIcon style={styles.right} icon={faCalendar} size={16} />
+      </Pressable>
+      <ModalContainer visible={pickerVisible} toggle={togglePicker}>
+        <View style={{ padding: 10 }}>
+          {/* Header com mês/ano */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 10,
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              style={{ padding: 20 }}
+              onPress={() => {
+                if (viewMode === "calendar") {
+                  handleMonthChange(currentMonth.subtract(1, "month"));
+                } else {
+                  setSelectedYear(selectedYear - 12); // Navega 12 anos para trás
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faChevronLeft} size={16} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={toggleViewMode}>
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                {viewMode === "calendar"
+                  ? currentMonth.format("MMMM YYYY").charAt(0).toUpperCase() +
+                    currentMonth.format("MMMM YYYY").slice(1)
+                  : `${selectedYear - 6}-${selectedYear + 5}`}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{ padding: 20 }}
+              onPress={() => {
+                if (viewMode === "calendar") {
+                  handleMonthChange(currentMonth.add(1, "month"));
+                } else {
+                  setSelectedYear(selectedYear + 12); // Navega 12 anos para frente
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faChevronRight} size={16} />
+            </TouchableOpacity>
+          </View>
+
+          {viewMode === "calendar" ? (
+            <>
+              {/* Cabeçalho dias da semana */}
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-around" }}
+              >
+                {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((d) => (
+                  <Text
+                    style={{
+                      width: 40,
+                      textAlign: "center",
+                      color: mutedColor,
+                      fontSize: 12,
+                    }}
+                    key={d}
+                  >
+                    {d}
+                  </Text>
+                ))}
+              </View>
+
+              {/* Grid de dias */}
+              {calendarMatrix.map((week, i) => (
+                <View
+                  key={i}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  {week.map((day, j) => (
+                    <TouchableOpacity
+                      key={j}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: 20,
+                        backgroundColor:
+                          day && value && day.isSame(value, "day")
+                            ? primaryColor
+                            : "transparent",
+                      }}
+                      disabled={!day}
+                      onPress={() => {
+                        if (day) {
+                          onChange(day.toDate());
+                          togglePicker();
+                        }
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color:
+                            day && value && day.isSame(value, "day")
+                              ? "#FFF"
+                              : "#000",
+                        }}
+                      >
+                        {day ? day.date() : ""}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              ))}
+            </>
+          ) : (
+            /* Grid de anos */
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "center",
+              }}
+            >
+              {yearRange.map((year, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    width: "25%",
+                    padding: 15,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor:
+                      year === currentMonth.year()
+                        ? primaryColor
+                        : "transparent",
+                    borderRadius: 8,
+                    margin: 5,
+                  }}
+                  onPress={() => handleYearSelect(year)}
+                >
+                  <Text
+                    style={{
+                      color: year === currentMonth.year() ? "#FFF" : "#000",
+                      fontWeight:
+                        year === currentMonth.year() ? "bold" : "normal",
+                    }}
+                  >
+                    {year}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+      </ModalContainer>
+    </View>
   );
 };
 
@@ -364,7 +590,11 @@ export const SelectInput = ({
         />
         <FontAwesomeIcon style={styles.right} icon={faChevronDown} size={16} />
       </Pressable>
-      <ModalContainer visible={pickerVisible} toggle={togglePicker}>
+      <ModalContainer
+        overlayStyle={{ bottom: 10 }}
+        visible={pickerVisible}
+        toggle={togglePicker}
+      >
         <CustomScrollView style={{ borderRadius: 20 }}>
           {items?.map((item) => (
             <TouchableOpacity

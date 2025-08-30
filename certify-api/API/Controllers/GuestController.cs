@@ -1,4 +1,5 @@
-﻿using Domain.Constants;
+﻿using Azure;
+using Domain.Constants;
 using Domain.DTO;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +26,7 @@ namespace API.Controllers
         {
             var response = _guestService.Checkin(id);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [HttpPut("Uncheckin/{id}")]
@@ -33,7 +34,7 @@ namespace API.Controllers
         {
             var response = _guestService.Uncheckin(id);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [HttpPut("Checkin")]
@@ -41,7 +42,7 @@ namespace API.Controllers
         {
             var response = _guestService.Checkin(ids);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
 
@@ -50,7 +51,7 @@ namespace API.Controllers
         {
             var response = _guestService.Uncheckin(ids);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [HttpDelete("Delete/{id}")]
@@ -58,7 +59,7 @@ namespace API.Controllers
         {
             var response = _guestService.Delete(id);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [HttpDelete("Delete")]
@@ -66,7 +67,7 @@ namespace API.Controllers
         {
             var response = _guestService.Delete(ids);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [HttpPost("NewGuest")]
@@ -74,23 +75,23 @@ namespace API.Controllers
         {
             var response = _guestService.Add(model);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
 
         [HttpPost("Invitations/{eventId}")]
         public IActionResult Invitations(Guid[] ids, Guid eventId)
         {
-            var response = _guestService.SendInvitations(eventId, ids);
+            _guestService.SendInvitations(eventId, ids);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK);
         }
 
         [HttpPost("Certificates/{eventId}")]
         public IActionResult Certificates(Guid[] ids, Guid eventId)
         {
-            var response = _guestService.SendCertificates(eventId, ids);
+            _guestService.SendCertificates(eventId, ids);
 
-            return StatusCode(response.Code, response.Data);
+            return StatusCode(StatusCodes.Status200OK);
         }
 
         [AllowAnonymous]

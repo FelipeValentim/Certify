@@ -20,6 +20,6 @@
     "app/auth/register.js",
     "app/auth/index.js",
     "components/common/ModalContainer.js",
-    "components/common/CustomInput.js"
+    "components/common/CustomInput.tsx"
   ]
 }

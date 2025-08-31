@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   StyleSheet,
@@ -10,6 +10,11 @@ import {
   Text,
   TouchableOpacity,
   PanResponder,
+  StyleProp,
+  TextInputProps,
+  ViewStyle,
+  GestureResponderEvent,
+  PanResponderGestureState,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { format, parse } from "date-fns";
@@ -28,19 +33,19 @@ import * as SelectImage from "expo-image-picker";
 import { mutedColor, primaryColor } from "@/constants/Default";
 import { CustomScrollView, MutedText } from "./CustomElements";
 import ModalContainer from "./ModalContainer";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pt-br"; // importa o locale pt-br
 import Svg, { Circle, Text as SvgText } from "react-native-svg";
 
 dayjs.locale("pt-br"); // define como padrão
-
-const useAnimatedStyles = (value) => {
+// Hook com tipagem
+const useAnimatedStyles = (value?: string) => {
   const { width } = Dimensions.get("window");
-  const placeholderAnim = React.useRef(new Animated.Value(15)).current;
-  const lineAnim = React.useRef(new Animated.Value(width)).current;
-  const [focus, setFocus] = React.useState(false);
+  const placeholderAnim = useRef(new Animated.Value(15)).current;
+  const lineAnim = useRef(new Animated.Value(width)).current;
+  const [focus, setFocus] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (focus || value) {
       Animated.timing(lineAnim, {
         toValue: 0,
@@ -59,6 +64,7 @@ const useAnimatedStyles = (value) => {
         duration: 300,
         useNativeDriver: false,
       }).start();
+
       Animated.timing(placeholderAnim, {
         toValue: 15,
         duration: 300,
@@ -70,7 +76,20 @@ const useAnimatedStyles = (value) => {
   return { focus, setFocus, placeholderAnim, lineAnim };
 };
 
-const InputBase = ({
+// Tipagem das props do InputBase
+interface InputBaseProps extends TextInputProps {
+  value?: string;
+  onChangeText?: (text: string) => void;
+  placeholder?: string;
+  keyboardType?: TextInputProps["keyboardType"];
+  error?: string;
+  secureTextEntry?: boolean;
+  toggleSecureTextEntry?: () => void;
+  inputRef?: React.Ref<TextInput>;
+  inputGroupStyle?: StyleProp<ViewStyle>;
+}
+
+export const InputBase: React.FC<InputBaseProps> = ({
   value,
   onChangeText,
   placeholder,
@@ -83,8 +102,9 @@ const InputBase = ({
   ...inputProps
 }) => {
   const { setFocus, placeholderAnim, lineAnim } = useAnimatedStyles(value);
+
   return (
-    <View style={{ ...styles.inputGroup, ...inputGroupStyle }}>
+    <View style={[styles.inputGroup, inputGroupStyle]}>
       <View style={styles.formControl}>
         <View style={styles.field}>
           <View
@@ -102,6 +122,7 @@ const InputBase = ({
             />
           </Animated.View>
           <TextInput
+            ref={inputRef}
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
             style={styles.textInput}
@@ -133,11 +154,24 @@ const InputBase = ({
   );
 };
 
-export const InputNumber = ({ value, onChangeText, placeholder, error }) => {
+// Reaproveita a tipagem de InputBaseProps
+interface InputProps {
+  value?: string;
+  onChangeText?: (text: string) => void;
+  placeholder?: string;
+  error?: string;
+}
+
+export const InputNumber: React.FC<InputProps> = ({
+  value,
+  onChangeText,
+  placeholder,
+  error,
+}) => {
   return (
     <InputBase
       value={value}
-      onChangeText={(text) => onChangeText(text?.replace(/[^0-9]/g, ""))}
+      onChangeText={(text) => onChangeText?.(text?.replace(/[^0-9]/g, ""))}
       placeholder={placeholder}
       keyboardType="numeric"
       error={error}
@@ -145,7 +179,12 @@ export const InputNumber = ({ value, onChangeText, placeholder, error }) => {
   );
 };
 
-export const Input = ({ value, onChangeText, placeholder, error }) => (
+export const Input: React.FC<InputProps> = ({
+  value,
+  onChangeText,
+  placeholder,
+  error,
+}) => (
   <InputBase
     value={value}
     onChangeText={onChangeText}
@@ -154,8 +193,13 @@ export const Input = ({ value, onChangeText, placeholder, error }) => (
   />
 );
 
-export const InputPassword = ({ value, onChangeText, placeholder, error }) => {
-  const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+export const InputPassword: React.FC<InputProps> = ({
+  value,
+  onChangeText,
+  placeholder,
+  error,
+}) => {
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
 
   return (
     <InputBase
@@ -169,11 +213,21 @@ export const InputPassword = ({ value, onChangeText, placeholder, error }) => {
   );
 };
 
-export const InputDate = ({
+interface InputDateProps {
+  value?: Date;
+  onChange: (date: Date) => void;
+  placeholder?: string;
+  error?: string;
+  min?: Date; // 🔹 Nova prop: data mínima
+  [key: string]: any; // permite props extras
+}
+
+export const InputDate: React.FC<InputDateProps> = ({
   value,
   onChange,
   placeholder,
   error,
+  min,
   ...props
 }) => {
   const selectInputStyle = StyleSheet.create({
@@ -181,35 +235,35 @@ export const InputDate = ({
       padding: 15,
       flex: 1,
     },
+    container: {
+      flex: 1,
+    },
   });
 
   const [pickerVisible, setPickerVisible] = useState(false);
-  const [viewMode, setViewMode] = useState("calendar"); // 'calendar' ou 'year'
-  const [currentMonth, setCurrentMonth] = useState(dayjs());
-  const [selectedYear, setSelectedYear] = useState(dayjs().year());
+  const [viewMode, setViewMode] = useState<"calendar" | "year">("calendar");
+  const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
+  const [selectedYear, setSelectedYear] = useState<number>(dayjs().year());
 
   const togglePicker = () => {
     setPickerVisible(!pickerVisible);
-    // Reset para view de calendário quando abrir
     if (!pickerVisible) {
       setViewMode("calendar");
     }
   };
 
-  const generateCalendarMatrix = (month, year) => {
+  const generateCalendarMatrix = (month: number, year: number) => {
     const firstDay = dayjs().year(year).month(month).date(1);
     const daysInMonth = firstDay.daysInMonth();
-    const startDay = firstDay.day(); // 0 (domingo) até 6 (sábado)
+    const startDay = firstDay.day();
 
-    const matrix = [];
-    let week = [];
+    const matrix: (Dayjs | null)[][] = [];
+    let week: (Dayjs | null)[] = [];
 
-    // Dias em branco antes do primeiro dia
     for (let i = 0; i < startDay; i++) {
       week.push(null);
     }
 
-    // Dias do mês
     for (let d = 1; d <= daysInMonth; d++) {
       week.push(dayjs().year(year).month(month).date(d).startOf("day"));
       if (week.length === 7) {
@@ -218,7 +272,6 @@ export const InputDate = ({
       }
     }
 
-    // Preenche o resto da última semana com null
     if (week.length > 0) {
       while (week.length < 7) {
         week.push(null);
@@ -230,9 +283,9 @@ export const InputDate = ({
   };
 
   const generateYearRange = (centerYear = selectedYear) => {
-    const years = [];
-    const startYear = centerYear - 6; // 6 anos antes
-    const endYear = centerYear + 5; // 5 anos depois
+    const years: number[] = [];
+    const startYear = centerYear - 6;
+    const endYear = centerYear + 5;
 
     for (let year = startYear; year <= endYear; year++) {
       years.push(year);
@@ -241,14 +294,14 @@ export const InputDate = ({
     return years;
   };
 
-  const handleMonthChange = (newMonth) => {
+  const handleMonthChange = (newMonth: Dayjs) => {
     setCurrentMonth(newMonth);
   };
 
-  const handleYearSelect = (year) => {
+  const handleYearSelect = (year: number) => {
     setSelectedYear(year);
     setCurrentMonth(currentMonth.year(year));
-    setViewMode("calendar"); // Volta para a view de calendário
+    setViewMode("calendar");
   };
 
   const toggleViewMode = () => {
@@ -291,7 +344,7 @@ export const InputDate = ({
                 if (viewMode === "calendar") {
                   handleMonthChange(currentMonth.subtract(1, "month"));
                 } else {
-                  setSelectedYear(selectedYear - 12); // Navega 12 anos para trás
+                  setSelectedYear(selectedYear - 12);
                 }
               }}
             >
@@ -313,7 +366,7 @@ export const InputDate = ({
                 if (viewMode === "calendar") {
                   handleMonthChange(currentMonth.add(1, "month"));
                 } else {
-                  setSelectedYear(selectedYear + 12); // Navega 12 anos para frente
+                  setSelectedYear(selectedYear + 12);
                 }
               }}
             >
@@ -332,7 +385,7 @@ export const InputDate = ({
                     style={{
                       width: 40,
                       textAlign: "center",
-                      color: mutedColor,
+                      color: "#888",
                       fontSize: 12,
                     }}
                     key={d}
@@ -352,8 +405,11 @@ export const InputDate = ({
                   }}
                 >
                   {week.map((day, j) => {
-                    const isSelected = day && value && day.isSame(value, "day");
+                    const isSelected =
+                      day && value && dayjs(value).isSame(day, "day");
                     const isToday = day && day.isSame(dayjs(), "day");
+                    const isBeforeMin =
+                      day && min ? day.isBefore(dayjs(min), "day") : false;
 
                     return (
                       <TouchableOpacity
@@ -370,9 +426,9 @@ export const InputDate = ({
                             ? "#E4E4E4"
                             : "transparent",
                         }}
-                        disabled={!day}
+                        disabled={!day || isBeforeMin}
                         onPress={() => {
-                          if (day) {
+                          if (day && !isBeforeMin) {
                             onChange(day.toDate());
                             togglePicker();
                           }
@@ -380,7 +436,11 @@ export const InputDate = ({
                       >
                         <Text
                           style={{
-                            color: isSelected ? "#FFF" : "#000",
+                            color: isBeforeMin
+                              ? "#AAA"
+                              : isSelected
+                              ? "#FFF"
+                              : "#000",
                           }}
                         >
                           {day ? day.date() : ""}
@@ -436,7 +496,17 @@ export const InputDate = ({
   );
 };
 
-const RadialPicker = ({
+// ------------------- RadialPicker -------------------
+interface RadialPickerProps {
+  size?: number;
+  steps?: number;
+  interval?: number;
+  onChange?: (value: number) => void;
+  value: number;
+  showValue?: boolean;
+}
+
+const RadialPicker: FC<RadialPickerProps> = ({
   size = 300,
   steps = 60,
   interval = 5,
@@ -444,7 +514,7 @@ const RadialPicker = ({
   value,
   showValue = false,
 }) => {
-  const [currentValue, setCurrentValue] = useState(0);
+  const [currentValue, setCurrentValue] = useState<number>(0);
   const center = size / 2;
   const radius = center - 20;
 
@@ -453,21 +523,25 @@ const RadialPicker = ({
       PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: () => true,
-        onPanResponderMove: (evt) => {
+        onPanResponderMove: (
+          evt: GestureResponderEvent,
+          _gesture: PanResponderGestureState
+        ) => {
           const x = evt.nativeEvent.locationX - center;
           const y = evt.nativeEvent.locationY - center;
           let angle = Math.atan2(y, x) + Math.PI / 2;
           if (angle < 0) angle += 2 * Math.PI;
           const newValue = Math.round((angle / (2 * Math.PI)) * (steps - 1));
           setCurrentValue(newValue);
-          if (onChange) onChange(newValue);
+          onChange?.(newValue);
         },
       }),
     [steps, center, radius, onChange]
   );
+
   useEffect(() => {
     setCurrentValue(value);
-  }, [steps]);
+  }, [value, steps]);
 
   const angle = (currentValue / steps) * 2 * Math.PI - Math.PI / 2;
   const ballX = center + Math.cos(angle) * radius;
@@ -492,9 +566,9 @@ const RadialPicker = ({
       <Svg
         width={size}
         height={size}
-        viewBox={`-15 -15 ${size + 30} ${size + 30}`} // cria margem de 30px em cada lado
+        viewBox={`-15 -15 ${size + 30} ${size + 30}`} // margem extra
       >
-        {/* Caminho da circunferência */}
+        {/* Circunferência */}
         <Circle
           cx={center}
           cy={center}
@@ -504,11 +578,10 @@ const RadialPicker = ({
           fill="none"
         />
 
-        {/* Números ao redor */}
+        {/* Labels ao redor */}
         {Array.from({ length: steps / interval + 1 }, (_, i) => {
           const val = i * interval;
-          // ignora o 60 para não sobrepor o 0
-          if (val === steps) return null;
+          if (val === steps) return null; // evita sobreposição do 60 com o 0
 
           const angleLabel = (val / steps) * 2 * Math.PI - Math.PI / 2;
           const labelRadius = radius + 25;
@@ -531,20 +604,20 @@ const RadialPicker = ({
           );
         })}
 
-        {/* Bolinha do valor */}
+        {/* Bolinha de seleção */}
         <Circle
           cx={ballX}
           cy={ballY}
           r={12}
           fill={primaryColor}
           stroke="#fff"
-          // strokeWidth={1}
         />
 
-        {showValue ? (
+        {/* Valor central opcional */}
+        {showValue && (
           <SvgText
             x={center}
-            y={center + 10} // centraliza verticalmente
+            y={center + 10}
             fontSize="32"
             fontWeight="bold"
             fill={primaryColor}
@@ -552,15 +625,21 @@ const RadialPicker = ({
           >
             {currentValue}
           </SvgText>
-        ) : (
-          <></>
         )}
       </Svg>
     </View>
   );
 };
 
-export const InputTime = ({
+// ------------------- InputTime -------------------
+interface InputTimeProps {
+  value?: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  error?: string;
+}
+
+export const InputTime: FC<InputTimeProps> = ({
   value,
   onChange,
   placeholder,
@@ -571,24 +650,20 @@ export const InputTime = ({
   const CLOCK_SIZE = width * 0.8;
 
   const [visible, setVisible] = useState(false);
-  const [mode, setMode] = useState("hour"); // 'hour' ou 'minute'
+  const [mode, setMode] = useState<"hour" | "minute">("hour");
   const [hour, setHour] = useState(new Date().getHours());
   const [minute, setMinute] = useState(new Date().getMinutes());
-  const [second, setSecond] = useState("00");
+  const [second] = useState("00");
 
   const opacity = useRef(new Animated.Value(1)).current;
 
-  const switchMode = (newMode) => {
-    // Fade out
+  const switchMode = (newMode: "hour" | "minute") => {
     Animated.timing(opacity, {
       toValue: 0,
       duration: 100,
       useNativeDriver: true,
     }).start(() => {
-      // Depois que sumir, muda o mode
       setMode(newMode);
-
-      // E faz o fade in
       Animated.timing(opacity, {
         toValue: 1,
         duration: 100,
@@ -616,10 +691,6 @@ export const InputTime = ({
   };
 
   const inputTimeStyles = StyleSheet.create({
-    selectItem: {
-      padding: 15,
-      flex: 1,
-    },
     modalOverlay: {
       flex: 1,
       justifyContent: "center",
@@ -676,6 +747,7 @@ export const InputTime = ({
           <View style={inputTimeStyles.container}>
             <MutedText style={{ margin: 15 }}>Selecione o horário</MutedText>
 
+            {/* Hora e Minuto */}
             <View style={{ flexDirection: "row", gap: 2 }}>
               <Pressable
                 onPress={() => switchMode("hour")}
@@ -716,8 +788,9 @@ export const InputTime = ({
               </Pressable>
             </View>
 
+            {/* RadialPicker animado */}
             <Animated.View style={{ opacity }}>
-              {mode == "hour" ? (
+              {mode === "hour" ? (
                 <RadialPicker
                   value={hour}
                   size={CLOCK_SIZE * 0.9}
@@ -736,6 +809,7 @@ export const InputTime = ({
               )}
             </Animated.View>
 
+            {/* Ações */}
             <View style={inputTimeStyles.actions}>
               <TouchableOpacity onPress={togglePicker}>
                 <Text style={inputTimeStyles.action}>Cancelar</Text>
@@ -751,7 +825,21 @@ export const InputTime = ({
   );
 };
 
-export const SelectPicker = ({
+// Tipos auxiliares
+type SelectPickerItem = {
+  label: string;
+  value: string | number;
+};
+
+type SelectPickerProps = {
+  selectedValue?: string | number;
+  onChange: (value: string | number) => void;
+  placeholder?: string;
+  error?: string;
+  items: SelectPickerItem[];
+};
+
+export const SelectPicker: React.FC<SelectPickerProps> = ({
   selectedValue,
   onChange,
   placeholder,
@@ -759,30 +847,27 @@ export const SelectPicker = ({
   items,
   ...props
 }) => {
-  const pickerRef = useRef();
-  const [selected, setSelected] = useState();
+  const pickerRef = useRef<Picker<string | number>>(null);
+  const [selected, setSelected] = useState<SelectPickerItem | undefined>();
+
   const open = () => {
-    pickerRef.current.focus();
+    pickerRef.current?.focus();
   };
 
   useEffect(() => {
     const pickerItem = items.find((x) => x.value === selectedValue);
     setSelected(pickerItem);
-  }, [selectedValue]);
+  }, [selectedValue, items]);
 
   return (
     <>
-      <Pressable
-        style={styles.formControl}
-        onPress={() => {
-          open();
-        }}
-      >
+      <Pressable style={styles.formControl} onPress={open}>
         <InputBase
           value={selected?.label}
           placeholder={placeholder}
           error={error}
           editable={false}
+          {...props}
         />
         <FontAwesomeIcon style={styles.right} icon={faChevronDown} size={16} />
       </Pressable>
@@ -790,6 +875,7 @@ export const SelectPicker = ({
       <Picker
         style={{ display: "none" }}
         ref={pickerRef}
+        selectedValue={selectedValue}
         onValueChange={onChange}
       >
         {items.map((item) => (
@@ -800,7 +886,21 @@ export const SelectPicker = ({
   );
 };
 
-export const SelectInput = ({
+// ---------- SelectInput ----------
+type SelectInputItem = {
+  id: string | number;
+  name: string;
+};
+
+type SelectInputProps = {
+  selected?: string | number;
+  onSelected: (item: SelectInputItem) => void;
+  placeholder?: string;
+  error?: string;
+  items: SelectInputItem[];
+};
+
+export const SelectInput: React.FC<SelectInputProps> = ({
   selected,
   onSelected,
   placeholder,
@@ -813,16 +913,21 @@ export const SelectInput = ({
       padding: 15,
       flex: 1,
     },
+    container: {
+      flex: 1,
+    },
   });
 
   const [pickerVisible, setPickerVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState();
+  const [selectedItem, setSelectedItem] = useState<
+    SelectInputItem | undefined
+  >();
 
   const togglePicker = () => {
-    setPickerVisible(!pickerVisible);
+    setPickerVisible((prev) => !prev);
   };
 
-  const onSelect = (item) => {
+  const onSelect = (item: SelectInputItem) => {
     onSelected(item);
     togglePicker();
   };
@@ -832,7 +937,7 @@ export const SelectInput = ({
     if (item) {
       setSelectedItem(item);
     }
-  }, [selected]);
+  }, [selected, items]);
 
   return (
     <View style={selectInputStyle.container}>
@@ -867,16 +972,30 @@ export const SelectInput = ({
   );
 };
 
-export const ImagePicker = ({ onPicker, photo }) => {
+type ImageFile = {
+  size?: number;
+  name?: string | null | undefined;
+  mimeType?: string;
+  base64: string;
+};
+
+type ImagePickerProps = {
+  onPicker: (file: ImageFile) => void;
+  photo?: string;
+};
+
+export const ImagePicker: React.FC<ImagePickerProps> = ({
+  onPicker,
+  photo,
+}) => {
   const pickImage = async () => {
     const permissionResult = await SelectImage.requestCameraPermissionsAsync();
 
-    if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
+    if (!permissionResult.granted) {
+      alert("Você recusou o acesso à câmera!");
       return;
     }
 
-    // No permissions request is necessary for launching the image library
     const result = await SelectImage.launchImageLibraryAsync({
       mediaTypes: SelectImage.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -884,13 +1003,14 @@ export const ImagePicker = ({ onPicker, photo }) => {
       quality: 1,
       base64: true,
     });
+
     if (!result.canceled) {
       const asset = result.assets[0];
-      const file = {
+      const file: ImageFile = {
         size: asset.fileSize,
         name: asset.fileName,
         mimeType: asset.mimeType,
-        base64: `data:${asset.mimeType};base64,${asset.base64}`, // Inclui o prefixo "data:"
+        base64: `data:${asset.mimeType};base64,${asset.base64}`,
       };
       onPicker(file);
     }
@@ -900,12 +1020,7 @@ export const ImagePicker = ({ onPicker, photo }) => {
     <Pressable style={styles.preview} onPress={pickImage}>
       {photo ? (
         <>
-          <Image
-            style={styles.preview}
-            source={{
-              uri: photo,
-            }}
-          />
+          <Image style={styles.preview} source={{ uri: photo }} />
           <View
             style={{
               position: "absolute",
@@ -955,7 +1070,6 @@ const styles = StyleSheet.create({
     width: "100%",
     color: "#000",
     fontFamily: "PoppinsRegular",
-    outlineStyle: "none",
   },
   line: {
     position: "absolute",

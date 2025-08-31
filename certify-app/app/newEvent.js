@@ -161,7 +161,7 @@ function NewEvent({ route, navigation }) {
                         setEvent({ ...event, date: new Date(value) });
                       }}
                       placeholder="Data"
-                      minimumDate={new Date()}
+                      min={new Date()}
                       value={event.date}
                       error={errors.date}
                     />

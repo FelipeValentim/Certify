@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   StyleSheet,
@@ -9,9 +9,9 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  PanResponder,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { format, parse } from "date-fns";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -22,20 +22,17 @@ import {
   faEye,
   faEyeSlash,
   faPen,
-  faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { faImages, faCalendar } from "@fortawesome/free-regular-svg-icons";
 import * as SelectImage from "expo-image-picker";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { mutedColor, primaryColor, screenHeight } from "@/constants/Default";
-import { CustomScrollView } from "./CustomElements";
+import { mutedColor, primaryColor } from "@/constants/Default";
+import { CustomScrollView, MutedText } from "./CustomElements";
 import ModalContainer from "./ModalContainer";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br"; // importa o locale pt-br
+import Svg, { Circle, Text as SvgText } from "react-native-svg";
 
 dayjs.locale("pt-br"); // define como padrão
-
-const now = new Date();
 
 const useAnimatedStyles = (value) => {
   const { width } = Dimensions.get("window");
@@ -214,7 +211,7 @@ export const InputDate = ({
 
     // Dias do mês
     for (let d = 1; d <= daysInMonth; d++) {
-      week.push(dayjs().year(year).month(month).date(d));
+      week.push(dayjs().year(year).month(month).date(d).startOf("day"));
       if (week.length === 7) {
         matrix.push(week);
         week = [];
@@ -354,40 +351,43 @@ export const InputDate = ({
                     justifyContent: "space-around",
                   }}
                 >
-                  {week.map((day, j) => (
-                    <TouchableOpacity
-                      key={j}
-                      style={{
-                        width: 40,
-                        height: 40,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 20,
-                        backgroundColor:
-                          day && value && day.isSame(value, "day")
-                            ? primaryColor
-                            : "transparent",
-                      }}
-                      disabled={!day}
-                      onPress={() => {
-                        if (day) {
-                          onChange(day.toDate());
-                          togglePicker();
-                        }
-                      }}
-                    >
-                      <Text
+                  {week.map((day, j) => {
+                    const isSelected = day && value && day.isSame(value, "day");
+                    const isToday = day && day.isSame(dayjs(), "day");
+
+                    return (
+                      <TouchableOpacity
+                        key={j}
                         style={{
-                          color:
-                            day && value && day.isSame(value, "day")
-                              ? "#FFF"
-                              : "#000",
+                          width: 40,
+                          height: 40,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: 20,
+                          backgroundColor: isSelected
+                            ? primaryColor
+                            : isToday
+                            ? "#E4E4E4"
+                            : "transparent",
+                        }}
+                        disabled={!day}
+                        onPress={() => {
+                          if (day) {
+                            onChange(day.toDate());
+                            togglePicker();
+                          }
                         }}
                       >
-                        {day ? day.date() : ""}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                        <Text
+                          style={{
+                            color: isSelected ? "#FFF" : "#000",
+                          }}
+                        >
+                          {day ? day.date() : ""}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               ))}
             </>
@@ -436,6 +436,130 @@ export const InputDate = ({
   );
 };
 
+const RadialPicker = ({
+  size = 300,
+  steps = 60,
+  interval = 5,
+  onChange,
+  value,
+  showValue = false,
+}) => {
+  const [currentValue, setCurrentValue] = useState(0);
+  const center = size / 2;
+  const radius = center - 20;
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (evt) => {
+          const x = evt.nativeEvent.locationX - center;
+          const y = evt.nativeEvent.locationY - center;
+          let angle = Math.atan2(y, x) + Math.PI / 2;
+          if (angle < 0) angle += 2 * Math.PI;
+          const newValue = Math.round((angle / (2 * Math.PI)) * (steps - 1));
+          setCurrentValue(newValue);
+          if (onChange) onChange(newValue);
+        },
+      }),
+    [steps, center, radius, onChange]
+  );
+  useEffect(() => {
+    setCurrentValue(value);
+  }, [steps]);
+
+  const angle = (currentValue / steps) * 2 * Math.PI - Math.PI / 2;
+  const ballX = center + Math.cos(angle) * radius;
+  const ballY = center + Math.sin(angle) * radius;
+
+  const radialStyles = StyleSheet.create({
+    container: {
+      justifyContent: "center",
+      alignItems: "center",
+      margin: 20,
+    },
+    valueText: {
+      marginTop: 15,
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "#333",
+    },
+  });
+
+  return (
+    <View style={radialStyles.container} {...panResponder.panHandlers}>
+      <Svg
+        width={size}
+        height={size}
+        viewBox={`-15 -15 ${size + 30} ${size + 30}`} // cria margem de 30px em cada lado
+      >
+        {/* Caminho da circunferência */}
+        <Circle
+          cx={center}
+          cy={center}
+          r={radius}
+          stroke="#e0e0e0"
+          strokeWidth={24}
+          fill="none"
+        />
+
+        {/* Números ao redor */}
+        {Array.from({ length: steps / interval + 1 }, (_, i) => {
+          const val = i * interval;
+          // ignora o 60 para não sobrepor o 0
+          if (val === steps) return null;
+
+          const angleLabel = (val / steps) * 2 * Math.PI - Math.PI / 2;
+          const labelRadius = radius + 25;
+          const x = center + Math.cos(angleLabel) * labelRadius;
+          const y = center + Math.sin(angleLabel) * labelRadius + 5;
+          const isActive = currentValue === val;
+
+          return (
+            <SvgText
+              key={i}
+              x={x}
+              y={y}
+              fontSize={isActive ? "16" : "12"}
+              fill={isActive ? primaryColor : "#333"}
+              fontWeight={isActive ? "bold" : "normal"}
+              textAnchor="middle"
+            >
+              {val}
+            </SvgText>
+          );
+        })}
+
+        {/* Bolinha do valor */}
+        <Circle
+          cx={ballX}
+          cy={ballY}
+          r={12}
+          fill={primaryColor}
+          stroke="#fff"
+          // strokeWidth={1}
+        />
+
+        {showValue ? (
+          <SvgText
+            x={center}
+            y={center + 10} // centraliza verticalmente
+            fontSize="32"
+            fontWeight="bold"
+            fill={primaryColor}
+            textAnchor="middle"
+          >
+            {currentValue}
+          </SvgText>
+        ) : (
+          <></>
+        )}
+      </Svg>
+    </View>
+  );
+};
+
 export const InputTime = ({
   value,
   onChange,
@@ -443,55 +567,187 @@ export const InputTime = ({
   error,
   ...props
 }) => {
-  const [show, setShow] = useState(false);
-  const [date, setDate] = useState();
+  const { width } = Dimensions.get("window");
+  const CLOCK_SIZE = width * 0.8;
 
-  const togglePicker = () => {
-    setShow(!show);
+  const [visible, setVisible] = useState(false);
+  const [mode, setMode] = useState("hour"); // 'hour' ou 'minute'
+  const [hour, setHour] = useState(new Date().getHours());
+  const [minute, setMinute] = useState(new Date().getMinutes());
+  const [second, setSecond] = useState("00");
+
+  const opacity = useRef(new Animated.Value(1)).current;
+
+  const switchMode = (newMode) => {
+    // Fade out
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true,
+    }).start(() => {
+      // Depois que sumir, muda o mode
+      setMode(newMode);
+
+      // E faz o fade in
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }).start();
+    });
   };
 
-  useEffect(() => {
-    if (value) {
-      setDate(format(parse(value, "HH:mm:ss", new Date()), "HH:mm"));
+  const togglePicker = () => {
+    setVisible(!visible);
+    setMode("hour");
+  };
+
+  const confirm = () => {
+    if (mode === "hour") {
+      switchMode("minute");
     } else {
-      setDate("");
+      onChange(
+        `${hour.toString().padStart(2, "0")}:${minute
+          .toString()
+          .padStart(2, "0")}:${second.toString().padStart(2, "0")}`
+      );
+      togglePicker();
     }
-  }, [value]);
+  };
+
+  const inputTimeStyles = StyleSheet.create({
+    selectItem: {
+      padding: 15,
+      flex: 1,
+    },
+    modalOverlay: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    container: {
+      width: CLOCK_SIZE,
+      backgroundColor: "white",
+      borderRadius: 12,
+      alignItems: "center",
+    },
+    timeTextContainer: {
+      backgroundColor: "#E4E4E4",
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 5,
+    },
+    selectedTimeTextContainer: {
+      backgroundColor: `${primaryColor}30`,
+    },
+    timeText: {
+      fontSize: 32,
+    },
+    selectedTimeText: {
+      color: primaryColor,
+    },
+    actions: {
+      flexDirection: "row",
+      width: "100%",
+      justifyContent: "flex-end",
+    },
+    action: {
+      color: primaryColor,
+      padding: 20,
+    },
+  });
 
   return (
-    <>
-      <Pressable
-        onPress={() => {
-          togglePicker();
-        }}
-      >
+    <View>
+      <Pressable onPress={togglePicker}>
         <InputBase
-          value={date}
-          placeholder={placeholder}
-          error={error}
           editable={false}
+          placeholder={placeholder}
+          value={
+            value ? format(parse(value, "HH:mm:ss", new Date()), "HH:mm") : ""
+          }
+          error={error}
+          {...props}
         />
       </Pressable>
 
-      {show && (
-        <DateTimePicker
-          value={
-            value
-              ? parse(value, "HH:mm:ss", new Date())
-              : new Date(now.setHours(18, 0, 0, 0))
-          }
-          mode={"time"}
-          display="default"
-          onChange={(e, selectedDate) => {
-            togglePicker();
-            if (e.type === "set") {
-              onChange(format(selectedDate, "HH:mm:ss"));
-            }
-          }}
-          {...props}
-        />
-      )}
-    </>
+      <ModalContainer visible={visible} toggle={togglePicker}>
+        <View style={inputTimeStyles.modalOverlay}>
+          <View style={inputTimeStyles.container}>
+            <MutedText style={{ margin: 15 }}>Selecione o horário</MutedText>
+
+            <View style={{ flexDirection: "row", gap: 2 }}>
+              <Pressable
+                onPress={() => switchMode("hour")}
+                style={[
+                  inputTimeStyles.timeTextContainer,
+                  mode === "hour"
+                    ? inputTimeStyles.selectedTimeTextContainer
+                    : {},
+                ]}
+              >
+                <Text
+                  style={[
+                    inputTimeStyles.timeText,
+                    mode === "hour" ? inputTimeStyles.selectedTimeText : {},
+                  ]}
+                >
+                  {hour.toString().padStart(2, "0")}
+                </Text>
+              </Pressable>
+              <Text style={inputTimeStyles.timeText}>:</Text>
+              <Pressable
+                onPress={() => switchMode("minute")}
+                style={[
+                  inputTimeStyles.timeTextContainer,
+                  mode === "minute"
+                    ? inputTimeStyles.selectedTimeTextContainer
+                    : {},
+                ]}
+              >
+                <Text
+                  style={[
+                    inputTimeStyles.timeText,
+                    mode === "minute" ? inputTimeStyles.selectedTimeText : {},
+                  ]}
+                >
+                  {minute.toString().padStart(2, "0")}
+                </Text>
+              </Pressable>
+            </View>
+
+            <Animated.View style={{ opacity }}>
+              {mode == "hour" ? (
+                <RadialPicker
+                  value={hour}
+                  size={CLOCK_SIZE * 0.9}
+                  steps={24}
+                  interval={3}
+                  onChange={setHour}
+                />
+              ) : (
+                <RadialPicker
+                  interval={5}
+                  value={minute}
+                  size={CLOCK_SIZE * 0.9}
+                  steps={60}
+                  onChange={setMinute}
+                />
+              )}
+            </Animated.View>
+
+            <View style={inputTimeStyles.actions}>
+              <TouchableOpacity onPress={togglePicker}>
+                <Text style={inputTimeStyles.action}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={confirm}>
+                <Text style={inputTimeStyles.action}>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </ModalContainer>
+    </View>
   );
 };
 

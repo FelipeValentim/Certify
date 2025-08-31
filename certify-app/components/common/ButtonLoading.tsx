@@ -97,6 +97,7 @@ const ButtonLoading: React.FC<ButtonLoadingProps> = ({
       justifyContent: "center",
       position: "relative",
       height: height,
+      borderWidth: 2,
     },
     textButton: {
       color: color,

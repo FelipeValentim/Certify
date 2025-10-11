@@ -4,6 +4,7 @@ using Domain.Constants;
 using Domain.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
+using dotenv.net;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using Repository;
 using Services;
 using System.Text;
+
+
+DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,7 +68,7 @@ builder.Services.AddTransient<IImageManager, ImageManager>();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddDbContext<CertifyDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Certify")));
+builder.Services.AddDbContext<CertifyDbContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Apenas para PostgreSQL
 
 builder.Services.AddAuthentication(x =>
@@ -87,6 +91,7 @@ builder.Services.AddAuthentication(x =>
 
 
 var app = builder.Build();
+
 
 
 // Configure the HTTP request pipeline.

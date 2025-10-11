@@ -423,3 +423,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 **/.vs/
+
+.env

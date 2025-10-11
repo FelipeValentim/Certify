@@ -9,10 +9,10 @@ namespace Services
 {
     public class StorageService : IStorageService
     {
-        private static string accountId = "PLACEHOLDER_1";  // Sua chave de acesso
-        private static string accessKeyId = "PLACEHOLDER_2";
-        private static string secretAccessKey = "PLACEHOLDER_3";  // Sua chave secreta
-        private static string bucketName = "certify"; // Nome do seu bucket R2
+        private static string accountId = Environment.GetEnvironmentVariable("STORAGE_ACCOUNT_ID");  // Sua chave de acesso
+        private static string accessKeyId = Environment.GetEnvironmentVariable("STORAGE_ACCESS_KEY_ID");
+        private static string secretAccessKey = Environment.GetEnvironmentVariable("STORAGE_SECRET_ACCESS_KEY");  // Sua chave secreta
+        private static string bucketName = Environment.GetEnvironmentVariable("STORAGE_BUCKET_NAME"); // Nome do seu bucket R2
         private static string endpoint = $"https://{accountId}.r2.cloudflarestorage.com";  // Endpoint do seu R2 (substitua <account_id> pelo seu ID de conta)
 
 

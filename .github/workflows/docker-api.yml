@@ -22,7 +22,15 @@ jobs:
       # Build da imagem Docker
       - name: Build Docker Image
         run: |
-          docker build -t docker-certify -f certify-api/API/Dockerfile certify-api
+          docker build \
+            --build-arg STORAGE_ACCOUNT_ID=${{ secrets.STORAGE_ACCOUNT_ID }} \
+            --build-arg STORAGE_ACCESS_KEY_ID=${{ secrets.STORAGE_ACCESS_KEY_ID }} \
+            --build-arg STORAGE_SECRET_ACCESS_KEY=${{ secrets.STORAGE_SECRET_ACCESS_KEY }} \
+            --build-arg STORAGE_BUCKET_NAME=${{ secrets.STORAGE_BUCKET_NAME }} \
+            --build-arg CONNECTION_STRING=${{ secrets.CONNECTION_STRING }} \
+            -t docker-certify \
+            -f certify-api/API/Dockerfile \
+            certify-api
 
       # Tag da imagem
       - name: Tag Docker Image

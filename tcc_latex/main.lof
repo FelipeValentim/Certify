@@ -1,0 +1,21 @@
+\babel@toc {brazil}{}\relax 
+\babel@toc {brazil}{}\relax 
+\contentsline {figure}{\numberline {1}{\ignorespaces Figura 1 - Diagrama de Casos de Uso do Sistema Certify}}{30}{figure.4.1}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Figura 2 - Diagrama de Classes do Domínio}}{33}{figure.4.2}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Figura 3 - Diagrama de Sequência: Realizar Login}}{38}{figure.4.3}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Figura 4 - Diagrama de Sequência: Check-in via QR Code (Painel Admin)}}{39}{figure.4.4}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Figura 5 - Diagrama de Sequência: Envio de Certificados em Lote}}{40}{figure.4.5}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Figura 6 - Arquitetura Distribuída: Cliente, Servidor e Banco de Dados}}{41}{figure.4.6}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Figura 7 - Modelo de Entidade Relacional (MER)}}{42}{figure.4.7}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Figura 8 - Tela de Login (\texttt {login.js})}}{48}{figure.5.8}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Figura 9 - Tela de Criar Conta (\texttt {register.js})}}{48}{figure.5.9}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Figura 10 - Tela Inicial — Lista de Eventos (\texttt {home.js})}}{49}{figure.5.10}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Figura 11 - Criação de Novo Evento (\texttt {newEvent.js})}}{49}{figure.5.11}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Figura 12 - Aba de Informações do Evento (\texttt {eventTab.js})}}{50}{figure.5.12}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Figura 13 - Leitor de QR Code (\texttt {eventScanner.js})}}{50}{figure.5.13}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Figura 14 - Gerenciamento de Campos Dinâmicos (\texttt {eventFields.js})}}{51}{figure.5.14}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Figura 15 - Criação de Novo Campo Dinâmico (\texttt {newField.js})}}{51}{figure.5.15}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Figura 16 - Lista de Convidados e Seleção em Massa (\texttt {guestsTab.js})}}{52}{figure.5.16}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Figura 17 - Cadastro Manual de Convidado (\texttt {newGuest.js})}}{52}{figure.5.17}%
+\contentsline {figure}{\numberline {18}{\ignorespaces Figura 18 - Detalhes do Convidado (\texttt {guest.js})}}{53}{figure.5.18}%
+\contentsline {figure}{\numberline {19}{\ignorespaces Figura 19 - Aba de Certificado e Template (\texttt {templateTab.js})}}{53}{figure.5.19}%

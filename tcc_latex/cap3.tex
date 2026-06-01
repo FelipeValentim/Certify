@@ -1,0 +1,34 @@
+\chapter{Fundamentação Teórica}
+
+O desenvolvimento do Certify embasou-se em literaturas consolidadas de engenharia de software e na aplicação pragmática de *frameworks* de ponta. Este capítulo discorre sobre os conceitos teóricos das tecnologias empregadas.
+
+\section{.NET 6 e a Arquitetura em Cebola (Onion Architecture)}
+
+O .NET 6 é uma plataforma de desenvolvimento transversal de código aberto mantida pela Microsoft. A escolha dessa tecnologia justifica-se pela sua extrema velocidade na compilação *Just-in-Time* e excelente suporte à criação de APIs RESTful utilizando a linguagem C\# \cite{dotnet}.
+
+O diferencial arquitetural da API do Certify, entretanto, está na adoção do padrão *Onion Architecture* (Arquitetura Cebola). Esta metodologia defende que o coração da aplicação é o Domínio (entidades puras e sem dependência de bibliotecas externas). Em volta do Domínio orbitam as camadas de Serviço (Regras de Negócio) e Repositório (Persistência). A parte mais externa é a camada de Apresentação (os *Controllers* da API). Ao utilizar o Princípio da Inversão de Dependência (SOLID), o núcleo da aplicação torna-se altamente testável e livre de acoplamento direto com o Banco de Dados.
+
+\section{React Native, Expo e Redux}
+
+O React Native é um \textit{framework} desenvolvido pela Meta Platforms que permite a escrita de aplicativos móveis utilizando a sintaxe JavaScript/TypeScript \cite{reactnative}. Ao invés de usar WebViews nativas, o framework invoca APIs nativas de interface do iOS e do Android de forma reativa, o que propicia uma performance análoga à do desenvolvimento nativo (Java/Kotlin ou Swift), mas com uma base de código unificada.
+
+A integração com o **Expo (SDK 51)** \cite{expo} foi crucial para acelerar a engenharia do projeto, dado que ele fornece módulos robustos para acesso ao hardware do celular (como a câmera em *expo-camera*, fundamental para a leitura do QR Code, e o *expo-secure-store* para a criptografia do token de segurança local). 
+
+Adicionalmente, o **Redux Toolkit** implementa o padrão *Flux* para gerenciar os estados da aplicação. Ele centraliza informações críticas, como as notificações flutuantes (Snackbar) e os dados do usuário autenticado, disparando atualizações que reconstroem as telas do frontend em milissegundos de forma imutável e escalável.
+
+\section{A Segurança Stateless com JWT}
+
+O JSON Web Token (JWT) é um padrão aberto (RFC 7519) que define um método compacto e autônomo para transmitir informações seguras entre partes como um objeto JSON. A premissa do JWT é a arquitetura *Stateless* (sem estado), um requisito fundamental para sistemas escaláveis em nuvem. 
+
+No Certify, ao invés do servidor armazenar as sessões na memória (o que limitaria o crescimento horizontal do sistema), o servidor valida o hash de senha (BCrypt) e assina digitalmente um JWT contendo as *Claims* do usuário utilizando a criptografia simétrica HMAC-SHA256. A segurança não se dá por esconder os dados (já que o payload em Base64 é visível), mas sim pela impossibilidade de um atacante forjar a assinatura sem a Chave Secreta mantida na infraestrutura do backend.
+
+\section{EAV: Entity-Attribute-Value Model}
+
+Bancos de dados relacionais sofrem com a rigidez de colunas. Se o sistema permitisse que o organizador gerasse novos campos customizados criando colunas dinâmicas em tabelas físicas na linguagem SQL, o risco de instabilidade (*Schema Locking*) seria enorme. 
+
+A solução matemática e de arquitetura encontrada na literatura é o modelo Entity-Attribute-Value (EAV). Neste padrão as informações são particionadas horizontalmente:
+- A Entidade (*Entity*): o identificador do evento.
+- O Atributo (*Attribute*): o nome ou tipo do campo (Ex: "Matrícula").
+- O Valor (*Value*): a resposta literal concedida pelo convidado.
+
+Esta estratégia viabilizou a premissa fundamental do Certify de oferecer flexibilidade máxima sem corromper as restrições da modelagem relacional formal.

@@ -1,0 +1,115 @@
+\documentclass[
+	12pt,
+	openright,
+	twoside,
+	a4paper,
+	english,
+	brazil
+	]{abntex2}
+
+% ---
+% Pacotes básicos 
+% ---
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lastpage}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{microtype} 
+
+\usepackage{amsmath}
+\usepackage{amssymb,amsfonts,amsthm}
+\usepackage{setspace}
+
+\usepackage{lipsum}
+
+% ---
+% Pacotes de citações
+% ---
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}
+
+\renewcommand{\bf}[1]{\mathbf{#1}}
+\renewcommand{\rm}[1]{\mathrm{#1}}
+
+% --- 
+% CONFIGURAÇÕES DE PACOTES E PDF
+% --- 
+\definecolor{blue}{RGB}{41,5,195}
+
+\makeatletter
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=black,
+    filecolor=magenta,
+    urlcolor=blue,
+    bookmarksdepth=4
+}
+\makeatother
+
+\setlength{\parindent}{1.3cm}
+\setlength{\parskip}{0.2cm}
+
+\makeindex
+
+% ----------------------------------------------------------
+% INÍCIO DO DOCUMENTO
+% ----------------------------------------------------------
+\begin{document}
+\selectlanguage{brazil}
+\frenchspacing 
+
+% ----------------------------------------------------------
+% ELEMENTOS PRÉ-TEXTUAIS
+% ----------------------------------------------------------
+\pretextual
+
+\include{capa}
+\include{folhaderosto}
+\include{folhaaprova}
+\include{agradecimentos}
+\include{resumos}
+
+% Lista de figuras, tabelas e sumário
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+
+\include{siglas}
+
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+\input{cap1}
+\input{cap2}
+\input{cap3}
+\input{cap4}
+\input{cap5}
+\input{cap6}
+
+\phantompart
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ----------------------------------------------------------
+\postextual
+
+\bibliography{TCC.bib}
+
+\phantompart
+\printindex
+
+\end{document}

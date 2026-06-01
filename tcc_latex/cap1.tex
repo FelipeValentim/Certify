@@ -1,0 +1,44 @@
+\chapter{Introdução}
+
+O avanço tecnológico impulsionado pela computação móvel e pelas aplicações distribuídas alterou fundamentalmente o paradigma da gestão de informações organizacionais. Historicamente, a coordenação de grandes fluxos de dados presenciais dependia de estruturas rígidas, lentas e suscetíveis a falhas humanas consideráveis. Com o surgimento dos \textit{smartphones} e o estabelecimento de redes de alta velocidade, processos que antes levavam horas agora podem ser concluídos em frações de segundo mediante leitura óptica ou transmissões assíncronas.
+
+Neste cenário de evolução digital, a organização de eventos --- sejam eles congressos acadêmicos, simpósios corporativos ou workshops informais --- permanece como um nicho onde a transformação digital muitas vezes é implementada de forma fragmentada. Organizadores ainda enfrentam grandes barreiras logísticas, especialmente no momento de credenciar presencialmente os convidados e no encerramento do ciclo, que envolve a emissão segura e correta de milhares de diplomas ou certificados nominais \cite{dotnet}.
+
+O \textbf{Certify} foi idealizado para ser não apenas uma solução paleativa, mas um ecossistema definitivo que resolve a jornada completa de um evento. Ele centraliza a relação entre os administradores do evento e os seus convidados, orquestrando um grande volume de dados de forma assíncrona, robusta e livre de papel (\textit{paperless}).
+
+\section{Motivação}
+
+A motivação original para o projeto surge da vivência acadêmica e profissional, onde é evidente o atraso logístico na entrada de eventos. Longas filas para assinar listas de presenças físicas ainda são corriqueiras. Além da demora no credenciamento, a extração dessas assinaturas de papel para planilhas digitais visando a criação de certificados é um processo maçante. 
+
+Muitas vezes, a necessidade de produzir certificados com dados além do nome (como matrícula, curso ou área de atuação) aumenta as chances de erros ortográficos ou troca de dados. Construir um motor computacional capaz de substituir todas essas etapas burocráticas por meio de leitura instantânea via QR Code e geração autônoma de PDFs no lado do servidor foi o grande desafio motivador para a idealização do Certify.
+
+\section{Justificativa}
+
+Atualmente, o mercado disponibiliza plataformas de gestão de eventos, porém elas esbarram em dois limitadores cruciais: altas taxas de comissionamento comercial e arquiteturas fechadas (muitas vezes dependentes de interfaces web lentas e não otimizadas para o dinamismo do dia do evento pelo celular).
+
+Justifica-se, portanto, a criação de uma plataforma independente com uma arquitetura moderna nativamente focada em dispositivos móveis (*Mobile First*). Optou-se pela construção do frontend do aplicativo utilizando a biblioteca **React Native** para obter compilação cross-platform e uma API **.NET 6** que aplica a rigorosa *Onion Architecture* \cite{dotnet}, provendo um sistema altamente testável, manutenível e preparado para lidar com operações pesadas (como conversão de streams de PDF em memória) sem prejudicar a interface do usuário no aparelho móvel.
+
+\section{Objetivos}
+
+\subsection{Objetivo Geral}
+Desenvolver e implementar uma plataforma de software distribuída (aplicativo móvel e API RESTful) nomeada "Certify", visando automatizar integralmente os processos operacionais de gestão de eventos, desde o cadastro flexível de convidados até a geração automatizada de certificados através de fluxos de substituição de dados.
+
+\subsection{Objetivos Específicos}
+Considerando as vertentes técnicas da engenharia de software necessárias para concretizar o projeto, os objetivos específicos englobam:
+
+\begin{itemize}
+    \item Projetar uma API modular utilizando o framework .NET 6, isolando as regras de negócios da camada de infraestrutura sob as premissas da \textit{Onion Architecture}.
+    \item Desenvolver um banco de dados relacional e escalável fazendo uso do padrão \textit{Soft Delete} (exclusão lógica) e chaves primárias universais (UUID).
+    \item Implementar o padrão \textit{Entity-Attribute-Value} (EAV) para permitir que os organizadores criem formulários de cadastro dinâmicos adaptáveis a qualquer evento.
+    \item Incorporar um mecanismo de credenciamento utilizando decodificação de criptografia de QR Codes diretamente pelo hardware móvel.
+    \item Criar um motor de processamento no backend que carregue \textit{templates} de Word, substitua marcadores pelos dados do banco de dados, converta-os em PDF e os despache via correio eletrônico de forma automatizada.
+\end{itemize}
+
+\section{Estrutura do Trabalho}
+
+Esta monografia está estruturada de maneira sequencial e construtiva, mapeando todo o processo de engenharia do Certify:
+No **Capítulo 2**, é analisado o panorama atual do problema, contextualizando a necessidade de inovação na gestão de eventos. 
+No **Capítulo 3**, são expostos os referenciais teóricos das tecnologias de vanguarda escolhidas. 
+O **Capítulo 4** compõe o núcleo técnico, demonstrando as regras de negócios, modelagem EAV, fluxogramas, e as estratégias de autenticação com segurança stateless.
+O **Capítulo 5** concentra-se na Engenharia de Interface, apresentando os resultados das telas, controles de gestos e navegação reativa. 
+O documento se encerra no **Capítulo 6**, com a síntese dos resultados alcançados e possíveis avanços futuros.

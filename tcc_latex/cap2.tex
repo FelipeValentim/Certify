@@ -1,0 +1,24 @@
+\chapter{Contextualização e Desafios na Gestão de Eventos}
+
+\section{O Paradigma Atual do Credenciamento}
+
+A gestão de eventos contemporânea, particularmente em âmbitos acadêmicos e corporativos de médio porte, sofre de um hiato tecnológico. Enquanto áreas como o comércio eletrônico e a logística adotaram sistemas altamente integrados, o processo de recepção presencial de convidados ainda se apoia fortemente em metodologias analógicas. 
+
+Atualmente, é comum que a inscrição dos participantes ocorra por meios digitais (como formulários do *Google Forms*), mas o credenciamento no dia do evento retroceda para planilhas impressas em papel. Recepcionistas passam horas procurando manualmente nomes em listas para atestar a presença, um processo suscetível a filas quilométricas, desorganização física e perda de dados valiosos sobre a pontualidade ou taxa de desistência dos convidados.
+
+\section{O Gargalo da Certificação Manual}
+
+A falha sistêmica se estende para o pós-evento. Como o controle de presença foi feito em papel, organizadores são obrigados a digitar ou transcrever novamente os dados para softwares de edição de texto ou depender de sistemas de "Mala Direta" (como a integração entre Excel e Microsoft Word) para gerar os certificados. Esse processo consome horas de trabalho humano.
+
+Além da lentidão, existe uma inflexibilidade enorme quando se trata de coletar e exibir informações variáveis. Por exemplo, se um evento precisa colocar o "Cargo" do participante corporativo no certificado, e o outro evento exige o número da "Matrícula" acadêmica do aluno, o fluxo estático de mala direta frequentemente se quebra. Erros de formatação, nomes cortados ou omissão de envio por e-mail geram desgaste na imagem da organização responsável pelo evento.
+
+\section{A Proposta de Engenharia do Certify}
+
+Em resposta a essas ineficiências latentes, o sistema Certify atua reconstruindo toda essa arquitetura sob a perspectiva da automação. Em vez de utilizar softwares segmentados (um para formulário, outro para lista em papel, outro para mala direta e outro provedor de e-mail), o Certify engloba o ciclo de vida inteiro de uma "Unidade de Presença" no seu banco de dados.
+
+A proposta do sistema não é apenas informatizar, mas aplicar Engenharia de Software no fluxo de trabalho:
+\begin{itemize}
+    \item **Inscrição Dinâmica:** O uso de bancos relacionais com propriedades flexíveis (Padrão EAV) permite que qualquer formulário seja gerado de forma autônoma sem requerer alteração de tabelas físicas no banco de dados.
+    \item **Credenciamento Assíncrono e Seguro:** A adoção de leitura óptica (câmeras de celulares processando algoritmos criptográficos em código QR) retira o gargalo humano da validação. A API .NET analisa os limites temporais (Data e Horário) definidos pelo administrador e processa transações na casa dos milissegundos.
+    \item **Automação Pós-Evento:** O sistema encerra o fluxo atuando como um motor de geração de documentos na memória, evitando sobrecarga de discos rígidos do servidor, e aciona o protocolo SMTP para entregar PDFs gerados diretamente na caixa de entrada do participante, exigindo zero esforço de clique do organizador após a configuração inicial do template Word.
+\end{itemize}

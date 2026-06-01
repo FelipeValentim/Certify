@@ -1,0 +1,19 @@
+\chapter{Considerações Finais}
+
+\section{Conclusão}
+
+O presente trabalho apresentou a arquitetura e implementação ponta-a-ponta do Certify, um sistema de gestão de eventos robusto concebido para sanar ineficiências na emissão de certificados, controle temporal de fluxo e customizações em formulários de inscrição.
+
+A adoção de tecnologias de performance, como o framework .NET 6 com a Onion Architecture nas lógicas severas do motor de credenciais e processamento massivo de arquivos PDF na memória (via Streams assíncronas), demonstrou que as APIs RESTful adequadamente configuradas evitam degradação física da infraestrutura de servidores.
+
+No pilar de interface e credenciamento móvel, o React Native provou-se flexível para controlar lógicas densas de câmera óptica e arrasto sensível na tela, aliadas ao fechamento rigoroso de sessão com a encriptação direta nativa (SecureStore/Keychain). Além disso, a premissa de um banco de dados fundamentado no mecanismo UUID associado ao conceito \textit{Entity-Attribute-Value} cumpriu seu propósito, dotando a ferramenta de elasticidade sem sobrecarga do SGBD. A conclusão técnica deste desenvolvimento constata que a substituição dos métodos obsoletos de entrada e edição analógica nas bilheterias pela criptografia vetorial de QR Codes eleva drasticamente o rendimento logístico da organização.
+
+\section{Implementações Futuras}
+
+Como a base da plataforma encontra-se modularizada e devidamente desacoplada pelo front e backend, atualizações de características podem ser integradas facilmente ao ecossistema. Dentre as sugestões imediatas para melhorias iterativas do sistema Certify, citam-se:
+
+\begin{enumerate}
+    \item **Integração de Módulos Financeiros (Payment Gateway):** Capacitar o ecossistema com protocolos de transferência automática via PIX. Através de *Webhooks* seguros com instâncias bancárias, a inscrição e bloqueio de ingressos se tornará autônoma para painéis de venda pagos.
+    \item **Abordagem *Offline-First* no Frontend:** Implementação de bancos de dados nativos na memória móvel (como o Realm ou SQLite nativo no Expo). Se houver perda total de acesso à internet ou Wi-Fi durante as palestras, os QR codes serão enfileirados em blocos de requisição e enviados à nuvem apenas quando o organizador restaurar o acesso 4G/Wi-fi, sem interromper as filas de entrada nos stands físicos.
+    \item **Dashboard de BI (Business Intelligence):** Adicionar um módulo web complementar construído via webassembly para elaboração visual de métricas de retenção (horários médios de saída dos eventos, cruzamentos do tipo e escolaridade de convidados a partir dos EAV e estatísticas operacionais das exclusões via Soft Delete).
+\end{enumerate}

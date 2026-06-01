@@ -1,0 +1,54 @@
+\changetocdepth {4}
+\babel@toc {brazil}{}\relax 
+\babel@toc {brazil}{}\relax 
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {1}\MakeTextUppercase []{Introdução}}{19}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Motivação}{19}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Justificativa}{20}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Objetivos}{20}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Objetivo Geral}{20}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Objetivos Específicos}{20}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Estrutura do Trabalho}{21}{section.1.4}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {2}\MakeTextUppercase []{Contextualização e Desafios na Gestão de Eventos}}{23}{chapter.2}%
+\contentsline {section}{\numberline {2.1}O Paradigma Atual do Credenciamento}{23}{section.2.1}%
+\contentsline {section}{\numberline {2.2}O Gargalo da Certificação Manual}{23}{section.2.2}%
+\contentsline {section}{\numberline {2.3}A Proposta de Engenharia do Certify}{23}{section.2.3}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {3}\MakeTextUppercase []{Fundamentação Teórica}}{25}{chapter.3}%
+\contentsline {section}{\numberline {3.1}.NET 6 e a Arquitetura em Cebola (Onion Architecture)}{25}{section.3.1}%
+\contentsline {section}{\numberline {3.2}React Native, Expo e Redux}{25}{section.3.2}%
+\contentsline {section}{\numberline {3.3}A Segurança Stateless com JWT}{26}{section.3.3}%
+\contentsline {section}{\numberline {3.4}EAV: Entity-Attribute-Value Model}{26}{section.3.4}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {4}\MakeTextUppercase []{Metodologia}}{27}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Requisitos Funcionais}{27}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Requisitos Não Funcionais}{28}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Diagrama de Casos de Uso}{29}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Descrição dos Casos de Uso}{29}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Diagrama de Classes}{29}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Diagramas de Sequências}{34}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Visão Geral do Projeto do Sistema}{34}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Visão do Banco de Dados}{34}{section.4.8}%
+\contentsline {subsection}{\numberline {4.8.1}SGBD}{34}{subsection.4.8.1}%
+\contentsline {subsection}{\numberline {4.8.2}MER - Modelo de Entidade Relacional}{34}{subsection.4.8.2}%
+\contentsline {section}{\numberline {4.9}Visão do Backend (API RESTful)}{34}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Tecnologias a serem usadas}{34}{subsection.4.9.1}%
+\contentsline {subsection}{\numberline {4.9.2}Projeto do Backend (Onion Architecture)}{34}{subsection.4.9.2}%
+\contentsline {subsection}{\numberline {4.9.3}Endpoints da API}{35}{subsection.4.9.3}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{Apresentação do Sistema}}{45}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Tecnologias a serem usadas no Frontend}{45}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Projeto das Interfaces}{46}{section.5.2}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {6}\MakeTextUppercase []{Considerações Finais}}{55}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Conclusão}{55}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Implementações Futuras}{55}{section.6.2}%
+\vspace {\cftbeforechapterskip }
+\vspace {\cftbeforechapterskip }
+\vspace {\cftbeforechapterskip }

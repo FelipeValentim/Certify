@@ -1,0 +1,629 @@
+\chapter{Metodologia}
+
+Neste capítulo são apresentadas as especificações de requisitos levantadas diretamente a partir do código-fonte, a modelagem UML do sistema e a estrutura arquitetural completa do backend e banco de dados.
+
+% ─────────────────────────────────────────────────────────────────
+\section{Requisitos Funcionais}
+% ─────────────────────────────────────────────────────────────────
+
+Os requisitos funcionais foram extraídos da análise dos \textit{Controllers}, \textit{Services} e entidades do projeto:
+
+\begin{itemize}
+    \item \textbf{[RF001] Criar Conta:} O organizador deve poder se registrar na plataforma informando nome, e-mail e senha.
+    \item \textbf{[RF002] Autenticar no Sistema:} O sistema deve validar as credenciais do organizador, comparando o hash BCrypt da senha armazenada, e retornar um token JWT.
+    \item \textbf{[RF003] Listar e Filtrar Eventos:} O sistema deve listar apenas os eventos pertencentes ao organizador autenticado, extraindo o identificador do usuário diretamente do token JWT.
+    \item \textbf{[RF004] Criar Evento:} O sistema deve permitir a criação de eventos com nome, tipo, data, horários de início e fim, capacidade máxima (\textit{Pax}) e foto de banner. A data de início não pode ser anterior ao momento da criação.
+    \item \textbf{[RF005] Excluir Evento:} O sistema deve excluir logicamente (\textit{Soft Delete}) um evento, preenchendo o campo \texttt{DeletedDate} sem apagar o registro do banco.
+    \item \textbf{[RF006] Gerenciar Campos Dinâmicos (EAV):} O organizador deve poder criar campos personalizados de formulário (Texto, Número ou Data), definir obrigatoriedade e reordenar os campos via operação de lote.
+    \item \textbf{[RF007] Cadastrar Convidados Manualmente:} O organizador deve poder cadastrar convidados diretamente pelo painel, com validação de e-mail (expressão regular), tipo de convidado e campos dinâmicos obrigatórios do evento.
+    \item \textbf{[RF008] Auto-cadastro Público de Convidados:} O sistema deve disponibilizar rotas públicas (\textit{AllowAnonymous}) para que o próprio participante preencha o formulário de inscrição, sendo bloqueado caso o horário de início do evento já tenha passado ou o limite de vagas (\textit{Pax}) tenha sido atingido.
+    \item \textbf{[RF009] Check-in via QR Code (Painel Administrativo):} O aplicativo deve capturar o QR Code do participante via câmera, extrair o UUID do convidado e acionar o endpoint de check-in autenticado.
+    \item \textbf{[RF010] Check-in Automático (Rota Pública):} O sistema deve disponibilizar uma rota pública decodificada de hash para que o convidado realize seu próprio check-in, respeitando o modo do evento (\texttt{CheckinEnabled}).
+    \item \textbf{[RF011] Gerenciar Check-in em Lote:} O organizador deve poder aprovar ou reverter check-ins de múltiplos convidados simultaneamente via seleção em massa na interface.
+    \item \textbf{[RF012] Upload de Template de Certificado:} O sistema deve aceitar arquivos Word (\texttt{.doc}/\texttt{.docx}) de até 10 MB, validar a presença do placeholder \texttt{\{Nome\}} e gerar uma pré-visualização em PDF.
+    \item \textbf{[RF013] Enviar Convites por E-mail:} O sistema deve disparar e-mails com HTML personalizado e link do QR Code de auto-checkin para os convidados selecionados que ainda não fizeram check-in.
+    \item \textbf{[RF014] Gerar e Enviar Certificados em Lote por E-mail:} O sistema deve substituir os \textit{placeholders} fixos e dinâmicos (EAV) no template Word, converter para PDF em memória via \textit{MemoryStream} e enviar os arquivos por e-mail para todos os convidados com check-in confirmado.
+    \item \textbf{[RF015] Download de Certificados em ZIP:} O sistema deve gerar um arquivo compactado (\texttt{.zip}) contendo os PDFs individuais de todos os convidados presentes e disponibilizá-lo para download.
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Requisitos Não Funcionais}
+% ─────────────────────────────────────────────────────────────────
+
+\begin{itemize}
+    \item \textbf{[RNF001] Autenticação JWT Stateless:} O servidor não armazena sessões. A validade e a identidade do usuário são verificadas a cada requisição pelo \textit{middleware} \texttt{[Authorize]}, que valida a assinatura HMAC-SHA256 do token.
+    \item \textbf{[RNF002] Chaves Primárias UUID (Guid):} Todas as entidades herdam de \texttt{EntityBase}, que define o campo \texttt{Id} como \texttt{Guid}. O identificador é gerado pela camada de aplicação (\texttt{Guid.NewGuid()}) antes de qualquer persistência.
+    \item \textbf{[RNF003] Soft Delete (Exclusão Lógica):} A classe \texttt{AuditableEntity} define os campos \texttt{CreatedDate} (preenchido automaticamente com \texttt{DateTime.UtcNow} no construtor) e \texttt{DeletedDate} (nulo por padrão). Exclusões apenas preenchem \texttt{DeletedDate}; o registro permanece intacto no banco.
+    \item \textbf{[RNF004] Onion Architecture:} O projeto é divido em projetos isolados: \texttt{Domain} (entidades e interfaces puras, sem dependências externas), \texttt{Services} (regras de negócio), \texttt{Repository} (acesso a dados via EF Core), \texttt{Infra} (implementações de serviços externos) e \texttt{API} (camada de apresentação).
+    \item \textbf{[RNF005] Armazenamento Seguro no Mobile:} O token JWT é persistido no dispositivo via \texttt{expo-secure-store}, que delega a criptografia ao \textit{Keychain} (iOS) ou \textit{KeyStore} (Android), sendo inacessível a outros aplicativos.
+    \item \textbf{[RNF006] Processamento de Documentos em Memória:} A geração de PDF é realizada integralmente via \texttt{MemoryStream}, sem criação de arquivos temporários em disco, prevenindo acúmulo de lixo no servidor.
+    \item \textbf{[RNF007] Fonte Tipográfica Consistente:} O aplicativo carrega a família tipográfica \textit{Poppins} (Regular, Bold, Black e ExtraBold) de forma assíncrona na inicialização via \texttt{expo-font}, garantindo consistência visual entre iOS e Android.
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Diagrama de Casos de Uso}
+% ─────────────────────────────────────────────────────────────────
+
+A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalidades mapeadas a partir dos \textit{controllers}. O \textbf{Organizador} acessa as rotas protegidas pelo \texttt{[Authorize]}, enquanto o \textbf{Convidado} interage exclusivamente com o \texttt{FormController} (\texttt{[AllowAnonymous]}).
+
+\begin{figure}[H]
+\centering
+\caption{Figura 1 - Diagrama de Casos de Uso do Sistema Certify}
+\begin{verbatim}
+```mermaid
+flowchart TD
+    Organizador(("Organizador"))
+    Convidado(("Convidado"))
+
+    UC0["Criar Conta"]
+    UC1["Realizar Login"]
+    UC2["Gerenciar Eventos"]
+    UC3["Configurar Campos Dinâmicos"]
+    UC4["Cadastrar Convidado Manualmente"]
+    UC5["Gerenciar Check-in em Lote"]
+    UC6["Scanner QR Code (Check-in Admin)"]
+    UC7["Upload de Template de Certificado"]
+    UC8["Enviar Convites por E-mail"]
+    UC9["Enviar Certificados em Lote"]
+    UC10["Download de Certificados ZIP"]
+    UC11["Auto-cadastro Público"]
+    UC12["Auto Check-in Online (Formulário)"]
+
+    Organizador --> UC0
+    Organizador --> UC1
+    UC1 --> UC2
+    UC1 --> UC3
+    UC1 --> UC4
+    UC1 --> UC5
+    UC1 --> UC6
+    UC1 --> UC7
+    UC1 --> UC8
+    UC1 --> UC9
+    UC1 --> UC10
+
+    Convidado --> UC11
+    Convidado --> UC12
+```
+\end{verbatim}
+\fonte{O Autor (2026)}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Descrição dos Casos de Uso}
+% ─────────────────────────────────────────────────────────────────
+
+\begin{table}[H]
+\centering
+\caption{Tabela 1 - CDU001 – Criar Conta}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Identificador} & CDU001 – Criar Conta \\ \hline
+\textbf{Objetivo} & Permitir que um novo organizador crie suas credenciais de acesso ao sistema. \\ \hline
+\textbf{Ator principal} & Organizador \\ \hline
+\textbf{Pré-condições} & Nenhuma. \\ \hline
+\textbf{Pós-condições} & Registro inserido na tabela \texttt{UserProfile} com senha armazenada em hash BCrypt. \\ \hline
+\textbf{Estrutura de Dados} & Nome, E-mail, Senha. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxo Principal}} \\ \hline
+\textbf{Ações do Usuário} & \textbf{Ações do Sistema} \\ \hline
+1. Acessa a tela de Registro e preenche os campos Nome, E-mail e Senha. & 2. O app valida os campos localmente (formato do e-mail e comprimento mínimo da senha). \\ \hline
+3. Submete o formulário. & 4. A API aplica o hash BCrypt na senha e persiste o objeto \texttt{UserProfile} no banco. Retorna HTTP 200 OK. \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Tabela 2 - CDU002 – Realizar Login}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Identificador} & CDU002 – Realizar Login \\ \hline
+\textbf{Objetivo} & Autenticar o organizador e iniciar a sessão local no dispositivo. \\ \hline
+\textbf{Ator principal} & Organizador \\ \hline
+\textbf{Pré-condições} & Conta ativa cadastrada no sistema. \\ \hline
+\textbf{Pós-condições} & Token JWT salvo no \texttt{expo-secure-store}; Redux atualizado com \texttt{signIn}; usuário redirecionado para a tela Home. \\ \hline
+\textbf{Estrutura de Dados} & E-mail e Senha. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxo Principal}} \\ \hline
+\textbf{Ações do Usuário} & \textbf{Ações do Sistema} \\ \hline
+1. Informa E-mail e Senha e toca em "Entrar". & 2. O app valida o formato do e-mail via regex e o comprimento mínimo da senha. \\ \hline
+3. Aguarda resposta. & 4. A API consulta o \texttt{UserProfile}, compara o hash da senha com BCrypt e, se válido, assina um JWT com HMAC-SHA256 e retorna o token. \\ \hline
+ & 5. O app salva o token no \texttt{expo-secure-store}, despacha \texttt{signIn} para a Redux Store e navega para a Home. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxo Alternativo}} \\ \hline
+\multicolumn{2}{|p{15cm}|}{2a. Se o e-mail ou senha forem inválidos, o app exibe um \texttt{CustomSnackBar} de erro sem realizar a chamada à API. 4a. Se as credenciais não corresponderem, a API retorna HTTP 400 e o app exibe o snackbar "E-mail ou senha incorretos".} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Tabela 3 - CDU004 – Criar Evento}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Identificador} & CDU004 – Criar Evento \\ \hline
+\textbf{Objetivo} & Registrar um novo evento vinculado ao organizador autenticado. \\ \hline
+\textbf{Ator principal} & Organizador \\ \hline
+\textbf{Pré-condições} & Usuário autenticado. Tipos de evento disponíveis (\texttt{EventType}). \\ \hline
+\textbf{Pós-condições} & Evento persistido na tabela \texttt{Event} com o \texttt{UserId} extraído do JWT. \\ \hline
+\textbf{Estrutura de Dados} & Nome, Tipo de Evento, Data, Horário Inicial, Horário Final, Capacidade (Pax), Foto. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxo Principal}} \\ \hline
+\textbf{Ações do Usuário} & \textbf{Ações do Sistema} \\ \hline
+1. Acessa o formulário de novo evento e preenche os campos. & 2. O app utiliza \texttt{DateTimePicker} nativo para data/hora e \texttt{expo-image-picker} para a foto. \\ \hline
+3. Confirma a criação. & 4. A API valida: nome não vazio, data/hora inicial não no passado, horário inicial menor que o final, Pax maior que zero. Persiste o evento e retorna o UUID gerado. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxo Alternativo}} \\ \hline
+\multicolumn{2}{|p{15cm}|}{4a. Se o \texttt{StartTime} for maior ou igual ao \texttt{EndTime}, a API lança \texttt{BusinessException}: "Horário inicial não pode ser maior que horário final.". 4b. Se a data e hora inicial já tiverem passado, lança: "A data e horário inicial já passaram."} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Tabela 4 - CDU007 – Cadastrar Convidado Manualmente}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Identificador} & CDU007 – Cadastrar Convidado Manualmente \\ \hline
+\textbf{Objetivo} & Registrar um participante em um evento pelo painel administrativo do aplicativo. \\ \hline
+\textbf{Ator principal} & Organizador \\ \hline
+\textbf{Pré-condições} & Evento ativo existente. \\ \hline
+\textbf{Pós-condições} & Convidado inserido em \texttt{Guest}; respostas EAV em \texttt{EventFieldValue}; convite enviado por e-mail automaticamente. \\ \hline
+\textbf{Estrutura de Dados} & Nome, E-mail, Tipo de Convidado, Foto (opcional), Campos Dinâmicos EAV. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxo Principal}} \\ \hline
+\textbf{Ações do Usuário} & \textbf{Ações do Sistema} \\ \hline
+1. Preenche nome, e-mail, tipo e campos extras; envia. & 2. A API valida: nome e e-mail obrigatórios, e-mail por regex, tipo de convidado definido, campos EAV obrigatórios preenchidos e com tipo correto (Number/Date), limite de Pax não atingido, e-mail não duplicado no evento. \\ \hline
+ & 3. Se tudo válido, insere \texttt{Guest} e os \texttt{EventFieldValue}; dispara convite por e-mail com link QR Code. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxos Alternativos}} \\ \hline
+\multicolumn{2}{|p{15cm}|}{2a. E-mail duplicado no evento: \textit{"Email já cadastrado para este evento."}. 2b. Limite de vagas atingido: \textit{"Limite de convidados atingido para este evento."}. 2c. Campo EAV obrigatório vazio: \textit{"\{NomeDoCampo\} é obrigatório."}.} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Tabela 5 - CDU009 – Check-in via QR Code (Painel Admin)}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Identificador} & CDU009 – Check-in via QR Code \\ \hline
+\textbf{Objetivo} & Registrar presença de um convidado por leitura óptica do QR Code. \\ \hline
+\textbf{Ator principal} & Organizador \\ \hline
+\textbf{Pré-condições} & Convidado cadastrado no evento; evento com \texttt{CheckinEnabled} compatível. \\ \hline
+\textbf{Pós-condições} & Campo \texttt{CheckinDate} do \texttt{Guest} preenchido com o horário de Brasília. \\ \hline
+\textbf{Estrutura de Dados} & UUID do convidado (embarcado no QR Code em texto puro nesta rota admin). \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxo Principal}} \\ \hline
+\textbf{Ações do Usuário} & \textbf{Ações do Sistema} \\ \hline
+1. Aponta a câmera para o QR Code do participante na aba "Scanner". & 2. O \texttt{CameraView} (expo-camera) detecta o código e valida se o dado está dentro dos limites do visor (\texttt{scannerBounds}). \\ \hline
+3. Aguarda confirmação. & 4. O app localiza o convidado pela lista local (sem round-trip ao servidor); navega automaticamente para a tela de detalhes do convidado (\texttt{guest.js}) se encontrado. \\ \hline
+ & 5. A API (\texttt{PUT /Guest/Checkin/\{id\}}) valida se o check-in já foi realizado e grava \texttt{CheckinDate = DateTime.UtcNow.ConvertToBrazilTime()}. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxos Alternativos}} \\ \hline
+\multicolumn{2}{|p{15cm}|}{2a. QR Code fora dos limites do visor: leitura ignorada. 2b. Convidado não pertence ao evento: snackbar "QRCode inválido para este evento". 5a. Check-in já realizado: API retorna \texttt{HTTP 409 Conflict}; app exibe feedback visual.} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Tabela 6 - CDU012 – Gerar e Enviar Certificados em Lote}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Identificador} & CDU012 – Gerar e Enviar Certificados em Lote \\ \hline
+\textbf{Objetivo} & Substituir os \textit{placeholders} do template Word com dados do banco, converter para PDF e enviar por e-mail. \\ \hline
+\textbf{Ator principal} & Organizador \\ \hline
+\textbf{Pré-condições} & Evento com template \texttt{.docx} configurado; ao menos um convidado com \texttt{CheckinDate} preenchido. \\ \hline
+\textbf{Pós-condições} & Certificados PDF individuais despachados para os e-mails dos convidados presentes. \\ \hline
+\textbf{Estrutura de Dados} & Placeholders fixos (\texttt{\{Nome\}, \{Data\}, \{Evento\}, \{Tipo Convidado\}, \{Tipo Evento\}, \{Horário Inicial\}, \{Horário Final\}}) e dinâmicos (campos EAV). \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxo Principal}} \\ \hline
+\textbf{Ações do Usuário} & \textbf{Ações do Sistema} \\ \hline
+1. Seleciona convidados presentes e aciona o envio via menu de contexto. & 2. A API filtra convidados com \texttt{CheckinDate != null} pertencentes ao lote selecionado. \\ \hline
+ & 3. Para cada convidado: carrega o \texttt{.docx} via \texttt{DocX.Load()}; aplica \texttt{ReplaceText()} com \texttt{StringReplaceTextOptions} para campos fixos; itera \texttt{FieldsValues} para campos EAV dinâmicos; salva em \texttt{MemoryStream}. \\ \hline
+ & 4. Converte o stream via \texttt{Spire.Doc} para PDF; monta o \texttt{MailMessageDTO} com o PDF como anexo e HTML do template \texttt{grateful.html}. \\ \hline
+ & 5. Despacha a lista de e-mails em lote via \texttt{MailService.SendMailCheckfyAsync()}. \\ \hline
+\multicolumn{2}{|c|}{\textbf{Fluxos Alternativos}} \\ \hline
+\multicolumn{2}{|p{15cm}|}{Pré-condição não atendida: API lança \texttt{NotFoundException} com mensagem "Evento não possui template." ou "Evento não possui convidados com checkin.".} \\ \hline
+\end{tabular}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Diagrama de Classes}
+% ─────────────────────────────────────────────────────────────────
+
+O diagrama abaixo representa a hierarquia real de entidades da camada \texttt{Domain}, conforme implementada nos arquivos \texttt{.cs} do projeto. Todas as entidades auditáveis herdam de \texttt{AuditableEntity}, que por sua vez herda de \texttt{EntityBase} (que define o \texttt{Guid Id}).
+
+\begin{figure}[H]
+\centering
+\caption{Figura 2 - Diagrama de Classes do Domínio}
+\begin{verbatim}
+```mermaid
+classDiagram
+    class EntityBase {
+        +Guid Id
+    }
+    class AuditableEntity {
+        +DateTime CreatedDate
+        +DateTime? DeletedDate
+    }
+    class UserProfile {
+        +String Email
+        +String PasswordHash
+        +String Name
+        +String Photo
+        +Guid ConcurrencyStamp
+        +Guid SecurityStamp
+    }
+    class Event {
+        +String Name
+        +String Description
+        +String Photo
+        +Int? Pax
+        +DateTime Date
+        +TimeSpan StartTime
+        +TimeSpan EndTime
+        +Boolean? CheckinEnabled
+        +Guid UserId
+        +Guid EventTypeId
+        +Guid? EventTemplateId
+    }
+    class EventType {
+        +String Name
+    }
+    class EventTemplate {
+        +String Path
+        +String PreviewPath
+    }
+    class Guest {
+        +String Name
+        +String Email
+        +String Photo
+        +DateTime? CheckinDate
+        +Guid EventId
+        +Guid GuestTypeId
+    }
+    class GuestType {
+        +String Name
+    }
+    class EventField {
+        +Guid EventId
+        +String Name
+        +String Type
+        +Boolean IsRequired
+        +Int DisplayOrder
+    }
+    class EventFieldValue {
+        +Guid EventFieldId
+        +Guid GuestId
+        +String Value
+    }
+
+    EntityBase <|-- AuditableEntity
+    AuditableEntity <|-- UserProfile
+    AuditableEntity <|-- Event
+    AuditableEntity <|-- EventType
+    AuditableEntity <|-- EventTemplate
+    AuditableEntity <|-- Guest
+    AuditableEntity <|-- GuestType
+    AuditableEntity <|-- EventField
+    EntityBase <|-- EventFieldValue
+
+    UserProfile "1" --> "*" Event : organiza
+    EventType "1" --> "*" Event : categoriza
+    EventTemplate "0..1" --> "0..1" Event : template de
+    Event "1" --> "*" Guest : contém
+    Event "1" --> "*" EventField : define
+    GuestType "1" --> "*" Guest : tipifica
+    Guest "1" --> "*" EventFieldValue : responde
+    EventField "1" --> "*" EventFieldValue : especifica
+```
+\end{verbatim}
+\fonte{O Autor (2026)}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Diagramas de Sequências}
+% ─────────────────────────────────────────────────────────────────
+
+\begin{figure}[H]
+\centering
+\caption{Figura 3 - Diagrama de Sequência: Realizar Login}
+\begin{verbatim}
+```mermaid
+sequenceDiagram
+    actor Org as Organizador
+    participant App as React Native (_main.js)
+    participant SS as expo-secure-store
+    participant Redux as Redux Store
+    participant API as .NET 6 API (AccountController)
+    participant DB as Banco de Dados
+
+    Org->>App: Preenche e-mail e senha e toca "Entrar"
+    App->>App: Valida regex e-mail + comprimento mínimo senha
+    App->>API: POST /Account/Login {email, senha}
+    API->>DB: SELECT UserProfile WHERE Email = ...
+    DB-->>API: Retorna UserProfile com PasswordHash
+    API->>API: BCrypt.Verify(senha, PasswordHash)
+    API-->>App: HTTP 200 + JWT Token (HMAC-SHA256)
+    App->>SS: SecureStore.setItemAsync(token)
+    App->>Redux: dispatch(signIn(token))
+    Redux-->>App: isSignedIn = true
+    App->>Org: Monta pilha privada e navega para Home
+```
+\end{verbatim}
+\fonte{O Autor (2026)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Figura 4 - Diagrama de Sequência: Check-in via QR Code (Painel Admin)}
+\begin{verbatim}
+```mermaid
+sequenceDiagram
+    actor Org as Organizador
+    participant Cam as CameraView (expo-camera)
+    participant App as EventScanner.js
+    participant API as GuestController (.NET 6)
+    participant DB as Banco de Dados
+
+    Org->>Cam: Aponta câmera para QR Code
+    Cam-->>App: onBarcodeScanned({data, boundingBox})
+    App->>App: Valida se código está dentro do scannerBounds
+    App->>App: Busca convidado na lista local (guests.find)
+    alt Convidado encontrado
+        App->>App: navigate(routes.guest, {guest})
+        App->>API: PUT /Guest/Checkin/{id}
+        API->>DB: SELECT Guest WHERE Id = {id}
+        DB-->>API: Retorna Guest
+        API->>API: Verifica CheckinDate == null
+        API->>DB: UPDATE Guest SET CheckinDate = UtcNow.ToBrazilTime()
+        API-->>App: HTTP 200 OK
+    else Convidado não encontrado
+        App->>Org: CustomSnackBar "QRCode inválido para este evento"
+    end
+```
+\end{verbatim}
+\fonte{O Autor (2026)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Figura 5 - Diagrama de Sequência: Envio de Certificados em Lote}
+\begin{verbatim}
+```mermaid
+sequenceDiagram
+    actor Org as Organizador
+    participant App as guestsTab.js
+    participant API as GuestController (.NET 6)
+    participant Store as StorageService
+    participant Xceed as Xceed.Words.NET (DocX)
+    participant Spire as Spire.Doc
+    participant Mail as MailService (SMTP)
+    participant DB as Banco de Dados
+
+    Org->>App: Seleciona presentes e aciona "Enviar certificado"
+    App->>App: Exibe ConfirmAlert para confirmação
+    App->>API: POST /Guest/Certificates/{eventId} [ids]
+    API->>DB: SELECT Guests WHERE Id IN [ids] AND CheckinDate != NULL
+    DB-->>API: Lista de Guests com FieldsValues
+    API->>Store: Baixa arquivo .docx do StorageService
+    loop Para cada Convidado
+        API->>Xceed: DocX.Load(templatePath)
+        Xceed->>Xceed: ReplaceText({Nome}, {Data}, {Tipo Convidado}...)
+        Xceed->>Xceed: ReplaceText(EAV: {fieldValue.EventField.Name})
+        Xceed->>API: MemoryStream do DOCX editado
+        API->>Spire: ConvertDocumentToPdf(documentStream)
+        Spire-->>API: pdfStream
+        API->>API: Monta MailMessageDTO + AddAttachment(pdfStream)
+    end
+    API->>Mail: SendMailCheckfyAsync(List<MailMessageDTO>)
+    Mail-->>Org: E-mails entregues com PDF anexado
+    API-->>App: HTTP 200 OK
+```
+\end{verbatim}
+\fonte{O Autor (2026)}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Visão Geral do Projeto do Sistema}
+% ─────────────────────────────────────────────────────────────────
+
+\begin{figure}[H]
+\centering
+\caption{Figura 6 - Arquitetura Distribuída: Cliente, Servidor e Banco de Dados}
+\begin{verbatim}
+```mermaid
+graph TD
+    subgraph Mobile ["App Mobile (React Native + Expo SDK 51)"]
+        UI["Telas / Componentes"] --> Redux["Redux Store (token, snackBar)"]
+        Redux --> SS["expo-secure-store (JWT)"]
+        UI --> Axios["Axios Client\n(Header: Bearer JWT)"]
+    end
+
+    subgraph API ["Backend (.NET 6 - Onion Architecture)"]
+        Controllers["API Layer (Controllers)"]
+        Services["Services Layer (Regras de Negócio)"]
+        Repos["Repository Layer (EF Core)"]
+        DocEngine["Xceed.Words.NET + Spire.Doc"]
+        MailSvc["MailService (SMTP)"]
+        QRSvc["QRCodeService"]
+
+        Controllers --> Services
+        Services --> Repos
+        Services --> DocEngine
+        Services --> MailSvc
+        Services --> QRSvc
+    end
+
+    subgraph DB ["Banco de Dados Relacional"]
+        EF["Entity Framework Core"]
+        SGBD[("SGBD - Chaves UUID")]
+        EF --> SGBD
+    end
+
+    Axios <-->|"REST HTTPS / JSON"| Controllers
+    Repos --> EF
+```
+\end{verbatim}
+\fonte{O Autor (2026)}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Visão do Banco de Dados}
+% ─────────────────────────────────────────────────────────────────
+
+\subsection{SGBD}
+
+O sistema utiliza o \textbf{Entity Framework Core} como ORM (\textit{Object-Relational Mapper}), que abstrai as consultas SQL e permite o mapeamento direto entre as entidades C\# e as tabelas relacionais. A adoção de chaves primárias \texttt{Guid} torna a aplicação agnóstica ao SGBD, sendo compatível com SQL Server, PostgreSQL e SQLite sem alteração de código no domínio.
+
+\subsection{MER - Modelo de Entidade Relacional}
+
+\begin{figure}[H]
+\centering
+\caption{Figura 7 - Modelo de Entidade Relacional (MER)}
+\begin{verbatim}
+```mermaid
+erDiagram
+    UserProfile {
+        uuid Id PK
+        varchar Email
+        varchar PasswordHash
+        varchar Name
+        text Photo
+        uuid ConcurrencyStamp
+        uuid SecurityStamp
+        timestamp CreatedDate
+        timestamp DeletedDate
+    }
+    Event {
+        uuid Id PK
+        uuid UserId FK
+        uuid EventTypeId FK
+        uuid EventTemplateId FK
+        varchar Name
+        text Description
+        text Photo
+        int Pax
+        date Date
+        time StartTime
+        time EndTime
+        boolean CheckinEnabled
+        timestamp CreatedDate
+        timestamp DeletedDate
+    }
+    EventType {
+        uuid Id PK
+        varchar Name
+        timestamp CreatedDate
+        timestamp DeletedDate
+    }
+    EventTemplate {
+        uuid Id PK
+        varchar Path
+        varchar PreviewPath
+        timestamp CreatedDate
+        timestamp DeletedDate
+    }
+    Guest {
+        uuid Id PK
+        uuid EventId FK
+        uuid GuestTypeId FK
+        varchar Name
+        varchar Email
+        text Photo
+        timestamp CheckinDate
+        timestamp CreatedDate
+        timestamp DeletedDate
+    }
+    GuestType {
+        uuid Id PK
+        varchar Name
+    }
+    EventField {
+        uuid Id PK
+        uuid EventId FK
+        varchar Name
+        varchar Type
+        boolean IsRequired
+        smallint DisplayOrder
+        timestamp CreatedDate
+        timestamp DeletedDate
+    }
+    EventFieldValue {
+        uuid Id PK
+        uuid EventFieldId FK
+        uuid GuestId FK
+        text Value
+    }
+
+    UserProfile ||--o{ Event : "organiza"
+    EventType ||--o{ Event : "categoriza"
+    EventTemplate |o--o{ Event : "template de"
+    Event ||--o{ Guest : "contém"
+    Event ||--o{ EventField : "define campos"
+    GuestType ||--o{ Guest : "tipifica"
+    Guest ||--o{ EventFieldValue : "responde"
+    EventField ||--o{ EventFieldValue : "especifica"
+```
+\end{verbatim}
+\fonte{O Autor (2026)}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Visão do Backend (API RESTful)}
+% ─────────────────────────────────────────────────────────────────
+
+\subsection{Tecnologias a serem usadas}
+
+\begin{itemize}
+    \item \textbf{ASP.NET Core 6 (C\#):} Framework principal da API REST, responsável pelo roteamento, injeção de dependências e \textit{middleware} de autenticação JWT.
+    \item \textbf{Entity Framework Core:} ORM responsável pelo mapeamento objeto-relacional e execução de queries via LINQ.
+    \item \textbf{Xceed.Words.NET (DocX):} Biblioteca para manipulação de documentos \texttt{.docx} em memória. Usada para carregar o template e realizar substituições via \texttt{StringReplaceTextOptions}.
+    \item \textbf{Spire.Doc:} Biblioteca de conversão de documentos Word para PDF, operando integralmente via \texttt{MemoryStream} sem geração de arquivos temporários.
+    \item \textbf{JWT Bearer Authentication:} Middleware \texttt{[Authorize]} que valida a assinatura HMAC-SHA256 do token em todas as rotas protegidas.
+\end{itemize}
+
+\subsection{Projeto do Backend (Onion Architecture)}
+
+A API é estruturada em cinco projetos isolados que seguem a \textit{Onion Architecture}:
+
+\begin{itemize}
+    \item \textbf{Domain:} Contém entidades (\texttt{Event}, \texttt{Guest}, etc.), interfaces de serviços e repositórios, DTOs e exceções de negócio (\texttt{BusinessException}, \texttt{NotFoundException}, \texttt{ConflictException}). Sem nenhuma dependência externa.
+    \item \textbf{Services:} Implementações das regras de negócio (validações, geração de QR Code, substituição de \textit{placeholders}, envio de e-mail). Dependem apenas de interfaces do \texttt{Domain}.
+    \item \textbf{Repository:} Implementações dos repositórios com \texttt{EF Core}. Aplicam o filtro de \textit{Soft Delete} nas consultas.
+    \item \textbf{Infra:} Implementações de serviços externos (armazenamento de arquivos, e-mail SMTP, hash de senhas).
+    \item \textbf{API:} Camada de apresentação. Contém os \textit{Controllers} e o \textit{pipeline} de configuração do ASP.NET Core.
+\end{itemize}
+
+\subsection{Endpoints da API}
+
+\begin{table}[H]
+\centering
+\caption{Tabela 7 - Mapeamento Completo de Endpoints da API Certify}
+\footnotesize
+\begin{tabular}{|l|l|p{5cm}|l|}
+\hline
+\textbf{Método} & \textbf{Rota} & \textbf{Descrição} & \textbf{Auth} \\ \hline
+POST & /Account/Login & Autentica e retorna JWT & Não \\ \hline
+GET & /Event/GetEvents & Lista eventos do usuário logado & Sim \\ \hline
+GET & /Event/GetEvent/\{id\} & Retorna evento com Guests e Fields & Sim \\ \hline
+POST & /Event/NewEvent & Cria novo evento & Sim \\ \hline
+DELETE & /Event/Delete/\{id\} & Soft delete do evento & Sim \\ \hline
+PUT & /Event/CheckinEnabledMode & Altera o modo de check-in & Sim \\ \hline
+GET & /Event/QRCode/\{eventId\} & Gera QR Code do link de auto check-in & Não \\ \hline
+GET & /Event/QRCode/decode/\{eventId\} & Decodifica hash do evento & Não \\ \hline
+GET & /Event/Certificado/Download/\{id\} & Gera ZIP com todos os PDFs & Sim \\ \hline
+POST & /Event/Certificado/Send/\{id\} & Envia certificados por e-mail & Sim \\ \hline
+GET & /Event/\{id\}/EventField & Lista campos EAV do evento & Sim \\ \hline
+POST & /Event/EventField & Cria novo campo dinâmico & Sim \\ \hline
+PUT & /Event/EventField/Reorder & Reordena campos (DTO) & Sim \\ \hline
+PUT & /Event/\{id\}/EventField/Reorder & Reordena campos (array Guid) & Sim \\ \hline
+DELETE & /EventField/\{id\} & Remove campo dinâmico & Sim \\ \hline
+POST & /EventTemplate/Upload/\{id\} & Upload do template .docx & Sim \\ \hline
+DELETE & /EventTemplate/Remove/\{id\} & Remove template do evento & Sim \\ \hline
+GET & /EventType/GetEventTypes & Lista tipos de eventos & Sim \\ \hline
+GET & /GuestType/GetGuestTypes & Lista tipos de convidados & Sim \\ \hline
+POST & /Guest/NewGuest & Cadastra convidado (admin) & Sim \\ \hline
+PUT & /Guest/Checkin/\{id\} & Check-in individual & Sim \\ \hline
+PUT & /Guest/Uncheckin/\{id\} & Reverte check-in individual & Sim \\ \hline
+PUT & /Guest/Checkin & Check-in em lote [array Guid] & Sim \\ \hline
+PUT & /Guest/Uncheckin & Reverte check-in em lote & Sim \\ \hline
+DELETE & /Guest/Delete/\{id\} & Soft delete de convidado & Sim \\ \hline
+DELETE & /Guest/Delete & Soft delete em lote & Sim \\ \hline
+POST & /Guest/Invitations/\{eventId\} & Envia convites por e-mail em lote & Sim \\ \hline
+POST & /Guest/Certificates/\{eventId\} & Gera e envia certificados selecionados & Sim \\ \hline
+GET & /Guest/QRCode/\{guestId\} & Gera QR Code do convidado (hash) & Não \\ \hline
+GET & /Form/Guest/\{eventId\} & Formulário público de inscrição & Não \\ \hline
+POST & /Form/NewGuest & Submete inscrição pública & Não \\ \hline
+GET & /Form/Checkin/\{eventId\} & Formulário público de check-in & Não \\ \hline
+GET & /Form/Guest/Search/\{code\} & Busca convidado por código de acesso & Não \\ \hline
+PUT & /Form/Guest/Checkin/\{code\} & Auto check-in via código de acesso & Não \\ \hline
+\end{tabular}
+\end{table}

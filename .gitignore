@@ -425,3 +425,5 @@ FodyWeavers.xsd
 **/.vs/
 
 .env
+# Antigravity configurations
+.agents/

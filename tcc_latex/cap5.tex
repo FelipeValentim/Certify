@@ -28,159 +28,147 @@ A seguir são apresentadas as interfaces do sistema Certify, com descrições ba
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 8 - Tela de Login (\texttt{login.js})}
+    \caption{Tela de Login (\texttt{login.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da tela de Login. Exibir: tela com fundo estilizado (splash), ícone de QR Code centralizado no topo, campo de E-mail com validação de formato em tempo real, campo de Senha com botão "olho" para alternar visibilidade, botão "Entrar" com indicador de loading (ButtonLoading) e exibição de snackbar de erro em caso de credenciais inválidas.]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 A tela de Login é o ponto de entrada do ecossistema privado. O aplicativo executa validações locais de formato antes de qualquer chamada à API. Em caso de sucesso, o token JWT é persistido via \texttt{expo-secure-store} e a \textit{Redux Store} é atualizada com \texttt{dispatch(signIn(token))}, o que dispara a remontagem reativa da pilha de navegação para a pilha privada (Home).
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 9 - Tela de Criar Conta (\texttt{register.js})}
+    \caption{Tela de Criar Conta (\texttt{register.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da tela de Registro. Exibir: campos para Nome completo, E-mail e Senha com botão "Criar Conta". Design consistente com a tela de Login.]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 10 - Tela Inicial — Lista de Eventos (\texttt{home.js})}
+    \caption{Tela Inicial — Lista de Eventos (\texttt{home.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da Home. Exibir: cabeçalho com botão de logout e ícone de refresh, SegmentedControl com abas "Todos / Criado / Ativo / Fim" para filtro em memória, FlatList com cards de eventos (foto, nome, tipo e data), card sendo deslizado para a esquerda expondo botão vermelho de lixeira (Swipeable), botão flutuante (+) verde no canto inferior direito.]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 A tela Home lista exclusivamente os eventos do organizador autenticado, cujo UUID é extraído do token JWT pelo \texttt{UserContextService} no backend. Os filtros de status são aplicados em memória no frontend (\texttt{filter()} sobre o array \texttt{events}), evitando chamadas redundantes ao servidor. O gesto de \textit{swipe} para a esquerda é gerenciado pelo componente \texttt{Swipeable} da biblioteca \textit{react-native-gesture-handler}, que expõe o botão de exclusão com abertura de modal de confirmação (\texttt{ConfirmAlert}).
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 11 - Criação de Novo Evento (\texttt{newEvent.js})}
+    \caption{Criação de Novo Evento (\texttt{newEvent.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura do formulário de criação de evento. Exibir: campo de upload de foto (expo-image-picker), campo de nome, seletor de Tipo de Evento (Picker), campo de capacidade máxima (Pax), seletores nativos de data e horário de início e fim (DateTimePicker), e botão de salvar.]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 12 - Aba de Informações do Evento (\texttt{eventTab.js})}
+    \caption{Aba de Informações do Evento (\texttt{eventTab.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da aba Informações do evento. Exibir: banner do evento no topo, métricas numéricas (Total de inscritos, Presentes, Pendentes), gráfico de pizza ou rosca mostrando proporção de check-ins, botão no cabeçalho que abre modal com seletor de três estados de CheckinEnabled (Desativado / Automático / Ativado) e QR Code vetorial SVG do link de auto-checkin gerado pelo backend.]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 A aba de informações consome o endpoint \texttt{GET /Event/GetEvent/\{id\}} que retorna o evento com os dados dos convidados embutidos. O organizador pode alterar o modo de check-in via modal, que aciona o endpoint \texttt{PUT /Event/CheckinEnabledMode}, persistindo o valor \texttt{null} (Automático), \texttt{true} (Ativado) ou \texttt{false} (Desativado) no campo \texttt{CheckinEnabled} da tabela \texttt{Event}.
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 13 - Leitor de QR Code (\texttt{eventScanner.js})}
+    \caption{Leitor de QR Code (\texttt{eventScanner.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da aba do Scanner de QR Code. Exibir: tela sem cabeçalho com o componente CameraView ocupando 100\% da tela, guias de mira animadas nos quatro cantos (bordas em L com animação "pulsante" via Animated.Value) na cor primária do sistema, e um CustomSnackBar laranja na parte inferior quando o código QR é inválido para o evento.]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 A tela de scanner maximiza a área útil do visor ao remover o cabeçalho padrão. A animação das bordas de mira é implementada com \texttt{Animated.loop + Animated.sequence}, expandindo e contraindo suavemente os cantos entre 1000ms cada ciclo via \texttt{useNativeDriver: false}. A leitura é considerada válida apenas se o \texttt{boundingBox} do código QR detectado estiver dentro dos limites do quadro de mira (\texttt{scannerBounds}), evitando leituras acidentais de códigos fora do enquadramento.
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 14 - Gerenciamento de Campos Dinâmicos (\texttt{eventFields.js})}
+    \caption{Gerenciamento de Campos Dinâmicos (\texttt{eventFields.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da aba de Campos Dinâmicos. Exibir: lista de campos EAV cadastrados (ex: "Matrícula (Número) *", "Área de Atuação (Texto)"), cada item com ícone de alça de arrasto (faGripLines) na direita, item sendo arrastado verticalmente com animação de reposicionamento fluído, botão flutuante (+) para adicionar novo campo, e opção de swipe para deletar.]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 A reordenação dos campos utiliza o componente \texttt{DraggableFlatList} integrado ao \texttt{react-native-reanimated}. O evento \texttt{onDragEnd} captura o array reordenado e dispara uma requisição \texttt{PUT /Event/\{id\}/EventField/Reorder} enviando o vetor de GUIDs na nova ordem; o backend itera o array e atualiza sequencialmente o \texttt{DisplayOrder} de cada \texttt{EventField}.
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 15 - Criação de Novo Campo Dinâmico (\texttt{newField.js})}
+    \caption{Criação de Novo Campo Dinâmico (\texttt{newField.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura do formulário de criação de campo. Exibir: input de Nome do campo, seletor segmentado de Tipo ("Texto", "Número", "Data"), seletor segmentado de obrigatoriedade ("Opcional" / "Obrigatório") e botão "Salvar".]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 16 - Lista de Convidados e Seleção em Massa (\texttt{guestsTab.js})}
+    \caption{Lista de Convidados e Seleção em Massa (\texttt{guestsTab.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da aba de Convidados com modo de seleção em massa ativado. Exibir: SelectionHeader na cor primária mostrando a contagem de selecionados (ex: "3") com ícones de lixeira, check-in e menu de três pontos (faEllipsisV); dois SegmentedControls sobrepostos (Todos/Pendente/Checkin e Todos/Aluno/Professor); cards de convidados com foto, nome, tipo e status de check-in (data ou "Pendente"); checkboxes visuais nos itens selecionados substituindo a foto pelo ícone faCheck; item sendo deslizado (swipe) expondo botões coloridos de exclusão (vermelho) e check-in (verde) ou uncheckin (amarelo).]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 A aba de convidados é a mais complexa do sistema. O modo de seleção em massa é ativado com \texttt{onLongPress} (400ms), que adiciona o item ao array \texttt{selectedItems} e substitui o cabeçalho padrão pelo \texttt{SelectionHeader}. Os dois filtros \texttt{SegmentedControl} (status e tipo) operam em memória sobre o array \texttt{guests} sem requisições adicionais. O menu de contexto (\texttt{PopupMenu}) acionado pelo botão de três pontos oferece as ações em lote: \textit{Enviar certificado} (para selecionados com check-in) e \textit{Enviar convite} (para selecionados sem check-in), além de exclusão e inversão de check-in.
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 17 - Cadastro Manual de Convidado (\texttt{newGuest.js})}
+    \caption{Cadastro Manual de Convidado (\texttt{newGuest.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura do formulário de novo convidado. Exibir: campo de foto (expo-image-picker), campos de Nome e E-mail, seletor de Tipo de Convidado (GuestType) e campos dinâmicos EAV gerados automaticamente conforme configuração do evento (ex: campo de texto "Matrícula *", campo de data "Data de Nascimento").]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 Os campos EAV são buscados via \texttt{GET /Event/\{id\}/EventField} e renderizados dinamicamente: \texttt{Type == "Text"} gera um \texttt{TextInput} padrão; \texttt{Type == "Number"} gera \texttt{keyboardType="numeric"}; \texttt{Type == "Date"} renderiza um \texttt{DateTimePicker} nativo. Campos com \texttt{IsRequired = true} bloqueiam o envio do formulário se estiverem vazios.
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 18 - Detalhes do Convidado (\texttt{guest.js})}
+    \caption{Detalhes do Convidado (\texttt{guest.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da tela de detalhes do convidado. Exibir: foto do convidado, nome, tipo (Aluno/Professor), status de check-in com data/hora formatada ou "Pendente", lista das respostas dos campos EAV (ex: "Matrícula: 2021001234") e botão de ação rápida para check-in ou uncheckin individual.]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 % ───────────────────
 \begin{figure}[H]
     \centering
-    \caption{Figura 19 - Aba de Certificado e Template (\texttt{templateTab.js})}
+    \caption{Aba de Certificado e Template (\texttt{templateTab.js})}
     \vspace{0.4cm}
     \fbox{\begin{minipage}{10cm}\centering\vspace{2cm}
     [IMAGEM: Captura da aba de Certificados. Exibir: botão de upload para seleção do arquivo .docx (expo-document-picker), visualizador WebView renderizando a pré-visualização PDF do template (previewPath), modal informativo com listagem dos placeholders suportados ({Nome}, {Data}, {Evento}, {Tipo Convidado}, {Tipo Evento}, {Horário Inicial}, {Horário Final} e campos dinâmicos), botão "Enviar Certificados" e botão "Baixar em ZIP".]
     \vspace{2cm}\end{minipage}}
     \vspace{0.4cm}
-    \source{O Autor (2026)}
-\end{figure}
+    \end{figure}
 
 O upload do template lê o arquivo selecionado como Base64 via \texttt{FileSystem.readAsStringAsync(uri, \{ encoding: EncodingType.Base64 \})} e envia para \texttt{POST /EventTemplate/Upload/\{eventId\}}. O backend valida o tipo MIME, o tamanho máximo (10 MB) e a presença obrigatória do \textit{placeholder} \texttt{\{Nome\}} utilizando a biblioteca \texttt{Xceed.Words.NET} antes de aceitar o arquivo. Após aprovação, ambos o \texttt{.docx} original e a pré-visualização \texttt{.pdf} são gravados no \texttt{StorageService} e seus caminhos persistidos na tabela \texttt{EventTemplate}.

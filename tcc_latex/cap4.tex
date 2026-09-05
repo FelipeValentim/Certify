@@ -48,44 +48,8 @@ A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalid
 
 \begin{figure}[H]
 \centering
-\caption{Figura 1 - Diagrama de Casos de Uso do Sistema Certify}
-\begin{verbatim}
-```mermaid
-flowchart TD
-    Organizador(("Organizador"))
-    Convidado(("Convidado"))
-
-    UC0["Criar Conta"]
-    UC1["Realizar Login"]
-    UC2["Gerenciar Eventos"]
-    UC3["Configurar Campos Dinâmicos"]
-    UC4["Cadastrar Convidado Manualmente"]
-    UC5["Gerenciar Check-in em Lote"]
-    UC6["Scanner QR Code (Check-in Admin)"]
-    UC7["Upload de Template de Certificado"]
-    UC8["Enviar Convites por E-mail"]
-    UC9["Enviar Certificados em Lote"]
-    UC10["Download de Certificados ZIP"]
-    UC11["Auto-cadastro Público"]
-    UC12["Auto Check-in Online (Formulário)"]
-
-    Organizador --> UC0
-    Organizador --> UC1
-    UC1 --> UC2
-    UC1 --> UC3
-    UC1 --> UC4
-    UC1 --> UC5
-    UC1 --> UC6
-    UC1 --> UC7
-    UC1 --> UC8
-    UC1 --> UC9
-    UC1 --> UC10
-
-    Convidado --> UC11
-    Convidado --> UC12
-```
-\end{verbatim}
-\fonte{O Autor (2026)}
+\caption{Diagrama de Casos de Uso do Sistema Certify}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_1.png}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────
@@ -94,7 +58,7 @@ flowchart TD
 
 \begin{table}[H]
 \centering
-\caption{Tabela 1 - CDU001 – Criar Conta}
+\caption{CDU001 – Criar Conta}
 \begin{tabular}{|p{4cm}|p{11cm}|}
 \hline
 \textbf{Identificador} & CDU001 – Criar Conta \\ \hline
@@ -112,7 +76,7 @@ flowchart TD
 
 \begin{table}[H]
 \centering
-\caption{Tabela 2 - CDU002 – Realizar Login}
+\caption{CDU002 – Realizar Login}
 \begin{tabular}{|p{4cm}|p{11cm}|}
 \hline
 \textbf{Identificador} & CDU002 – Realizar Login \\ \hline
@@ -133,7 +97,7 @@ flowchart TD
 
 \begin{table}[H]
 \centering
-\caption{Tabela 3 - CDU004 – Criar Evento}
+\caption{CDU004 – Criar Evento}
 \begin{tabular}{|p{4cm}|p{11cm}|}
 \hline
 \textbf{Identificador} & CDU004 – Criar Evento \\ \hline
@@ -153,7 +117,7 @@ flowchart TD
 
 \begin{table}[H]
 \centering
-\caption{Tabela 4 - CDU007 – Cadastrar Convidado Manualmente}
+\caption{CDU007 – Cadastrar Convidado Manualmente}
 \begin{tabular}{|p{4cm}|p{11cm}|}
 \hline
 \textbf{Identificador} & CDU007 – Cadastrar Convidado Manualmente \\ \hline
@@ -173,7 +137,7 @@ flowchart TD
 
 \begin{table}[H]
 \centering
-\caption{Tabela 5 - CDU009 – Check-in via QR Code (Painel Admin)}
+\caption{CDU009 – Check-in via QR Code (Painel Admin)}
 \begin{tabular}{|p{4cm}|p{11cm}|}
 \hline
 \textbf{Identificador} & CDU009 – Check-in via QR Code \\ \hline
@@ -194,7 +158,7 @@ flowchart TD
 
 \begin{table}[H]
 \centering
-\caption{Tabela 6 - CDU012 – Gerar e Enviar Certificados em Lote}
+\caption{CDU012 – Gerar e Enviar Certificados em Lote}
 \begin{tabular}{|p{4cm}|p{11cm}|}
 \hline
 \textbf{Identificador} & CDU012 – Gerar e Enviar Certificados em Lote \\ \hline
@@ -222,90 +186,8 @@ O diagrama abaixo representa a hierarquia real de entidades da camada \texttt{Do
 
 \begin{figure}[H]
 \centering
-\caption{Figura 2 - Diagrama de Classes do Domínio}
-\begin{verbatim}
-```mermaid
-classDiagram
-    class EntityBase {
-        +Guid Id
-    }
-    class AuditableEntity {
-        +DateTime CreatedDate
-        +DateTime? DeletedDate
-    }
-    class UserProfile {
-        +String Email
-        +String PasswordHash
-        +String Name
-        +String Photo
-        +Guid ConcurrencyStamp
-        +Guid SecurityStamp
-    }
-    class Event {
-        +String Name
-        +String Description
-        +String Photo
-        +Int? Pax
-        +DateTime Date
-        +TimeSpan StartTime
-        +TimeSpan EndTime
-        +Boolean? CheckinEnabled
-        +Guid UserId
-        +Guid EventTypeId
-        +Guid? EventTemplateId
-    }
-    class EventType {
-        +String Name
-    }
-    class EventTemplate {
-        +String Path
-        +String PreviewPath
-    }
-    class Guest {
-        +String Name
-        +String Email
-        +String Photo
-        +DateTime? CheckinDate
-        +Guid EventId
-        +Guid GuestTypeId
-    }
-    class GuestType {
-        +String Name
-    }
-    class EventField {
-        +Guid EventId
-        +String Name
-        +String Type
-        +Boolean IsRequired
-        +Int DisplayOrder
-    }
-    class EventFieldValue {
-        +Guid EventFieldId
-        +Guid GuestId
-        +String Value
-    }
-
-    EntityBase <|-- AuditableEntity
-    AuditableEntity <|-- UserProfile
-    AuditableEntity <|-- Event
-    AuditableEntity <|-- EventType
-    AuditableEntity <|-- EventTemplate
-    AuditableEntity <|-- Guest
-    AuditableEntity <|-- GuestType
-    AuditableEntity <|-- EventField
-    EntityBase <|-- EventFieldValue
-
-    UserProfile "1" --> "*" Event : organiza
-    EventType "1" --> "*" Event : categoriza
-    EventTemplate "0..1" --> "0..1" Event : template de
-    Event "1" --> "*" Guest : contém
-    Event "1" --> "*" EventField : define
-    GuestType "1" --> "*" Guest : tipifica
-    Guest "1" --> "*" EventFieldValue : responde
-    EventField "1" --> "*" EventFieldValue : especifica
-```
-\end{verbatim}
-\fonte{O Autor (2026)}
+\caption{Diagrama de Classes do Domínio}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_2.png}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────
@@ -314,145 +196,65 @@ classDiagram
 
 \begin{figure}[H]
 \centering
-\caption{Figura 3 - Diagrama de Sequência: Realizar Login}
-\begin{verbatim}
-```mermaid
-sequenceDiagram
-    actor Org as Organizador
-    participant App as React Native (_main.js)
-    participant SS as expo-secure-store
-    participant Redux as Redux Store
-    participant API as .NET 6 API (AccountController)
-    participant DB as Banco de Dados
-
-    Org->>App: Preenche e-mail e senha e toca "Entrar"
-    App->>App: Valida regex e-mail + comprimento mínimo senha
-    App->>API: POST /Account/Login {email, senha}
-    API->>DB: SELECT UserProfile WHERE Email = ...
-    DB-->>API: Retorna UserProfile com PasswordHash
-    API->>API: BCrypt.Verify(senha, PasswordHash)
-    API-->>App: HTTP 200 + JWT Token (HMAC-SHA256)
-    App->>SS: SecureStore.setItemAsync(token)
-    App->>Redux: dispatch(signIn(token))
-    Redux-->>App: isSignedIn = true
-    App->>Org: Monta pilha privada e navega para Home
-```
-\end{verbatim}
-\fonte{O Autor (2026)}
+\caption{Diagrama de Sequência: Realizar Login}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_3.png}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\caption{Figura 4 - Diagrama de Sequência: Check-in via QR Code (Painel Admin)}
-\begin{verbatim}
-```mermaid
-sequenceDiagram
-    actor Org as Organizador
-    participant Cam as CameraView (expo-camera)
-    participant App as EventScanner.js
-    participant API as GuestController (.NET 6)
-    participant DB as Banco de Dados
-
-    Org->>Cam: Aponta câmera para QR Code
-    Cam-->>App: onBarcodeScanned({data, boundingBox})
-    App->>App: Valida se código está dentro do scannerBounds
-    App->>App: Busca convidado na lista local (guests.find)
-    alt Convidado encontrado
-        App->>App: navigate(routes.guest, {guest})
-        App->>API: PUT /Guest/Checkin/{id}
-        API->>DB: SELECT Guest WHERE Id = {id}
-        DB-->>API: Retorna Guest
-        API->>API: Verifica CheckinDate == null
-        API->>DB: UPDATE Guest SET CheckinDate = UtcNow.ToBrazilTime()
-        API-->>App: HTTP 200 OK
-    else Convidado não encontrado
-        App->>Org: CustomSnackBar "QRCode inválido para este evento"
-    end
-```
-\end{verbatim}
-\fonte{O Autor (2026)}
+\caption{Diagrama de Sequência: Check-in via QR Code (Painel Admin)}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_4.png}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\caption{Figura 5 - Diagrama de Sequência: Envio de Certificados em Lote}
-\begin{verbatim}
-```mermaid
-sequenceDiagram
-    actor Org as Organizador
-    participant App as guestsTab.js
-    participant API as GuestController (.NET 6)
-    participant Store as StorageService
-    participant Xceed as Xceed.Words.NET (DocX)
-    participant Spire as Spire.Doc
-    participant Mail as MailService (SMTP)
-    participant DB as Banco de Dados
-
-    Org->>App: Seleciona presentes e aciona "Enviar certificado"
-    App->>App: Exibe ConfirmAlert para confirmação
-    App->>API: POST /Guest/Certificates/{eventId} [ids]
-    API->>DB: SELECT Guests WHERE Id IN [ids] AND CheckinDate != NULL
-    DB-->>API: Lista de Guests com FieldsValues
-    API->>Store: Baixa arquivo .docx do StorageService
-    loop Para cada Convidado
-        API->>Xceed: DocX.Load(templatePath)
-        Xceed->>Xceed: ReplaceText({Nome}, {Data}, {Tipo Convidado}...)
-        Xceed->>Xceed: ReplaceText(EAV: {fieldValue.EventField.Name})
-        Xceed->>API: MemoryStream do DOCX editado
-        API->>Spire: ConvertDocumentToPdf(documentStream)
-        Spire-->>API: pdfStream
-        API->>API: Monta MailMessageDTO + AddAttachment(pdfStream)
-    end
-    API->>Mail: SendMailCheckfyAsync(List<MailMessageDTO>)
-    Mail-->>Org: E-mails entregues com PDF anexado
-    API-->>App: HTTP 200 OK
-```
-\end{verbatim}
-\fonte{O Autor (2026)}
+\caption{Diagrama de Sequência: Envio de Certificados em Lote}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_5.png}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\caption{Diagrama de Sequência: Cadastro de Evento}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_6.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Diagrama de Sequência: Gerenciamento de Campos Dinâmicos}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_7.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Diagrama de Sequência: Cadastro Manual de Convidado}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_8.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Diagrama de Sequência: Auto-cadastro Público de Convidado}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_9.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Diagrama de Sequência: Check-in em Lote}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_10.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Diagrama de Sequência: Upload de Template .docx}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_11.png}
+\end{figure}
 % ─────────────────────────────────────────────────────────────────
 \section{Visão Geral do Projeto do Sistema}
 % ─────────────────────────────────────────────────────────────────
 
 \begin{figure}[H]
 \centering
-\caption{Figura 6 - Arquitetura Distribuída: Cliente, Servidor e Banco de Dados}
-\begin{verbatim}
-```mermaid
-graph TD
-    subgraph Mobile ["App Mobile (React Native + Expo SDK 51)"]
-        UI["Telas / Componentes"] --> Redux["Redux Store (token, snackBar)"]
-        Redux --> SS["expo-secure-store (JWT)"]
-        UI --> Axios["Axios Client\n(Header: Bearer JWT)"]
-    end
-
-    subgraph API ["Backend (.NET 6 - Onion Architecture)"]
-        Controllers["API Layer (Controllers)"]
-        Services["Services Layer (Regras de Negócio)"]
-        Repos["Repository Layer (EF Core)"]
-        DocEngine["Xceed.Words.NET + Spire.Doc"]
-        MailSvc["MailService (SMTP)"]
-        QRSvc["QRCodeService"]
-
-        Controllers --> Services
-        Services --> Repos
-        Services --> DocEngine
-        Services --> MailSvc
-        Services --> QRSvc
-    end
-
-    subgraph DB ["Banco de Dados Relacional"]
-        EF["Entity Framework Core"]
-        SGBD[("SGBD - Chaves UUID")]
-        EF --> SGBD
-    end
-
-    Axios <-->|"REST HTTPS / JSON"| Controllers
-    Repos --> EF
-```
-\end{verbatim}
-\fonte{O Autor (2026)}
+\caption{Arquitetura Distribuída: Cliente, Servidor e Banco de Dados}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_12.png}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────
@@ -467,93 +269,8 @@ O sistema utiliza o \textbf{Entity Framework Core} como ORM (\textit{Object-Rela
 
 \begin{figure}[H]
 \centering
-\caption{Figura 7 - Modelo de Entidade Relacional (MER)}
-\begin{verbatim}
-```mermaid
-erDiagram
-    UserProfile {
-        uuid Id PK
-        varchar Email
-        varchar PasswordHash
-        varchar Name
-        text Photo
-        uuid ConcurrencyStamp
-        uuid SecurityStamp
-        timestamp CreatedDate
-        timestamp DeletedDate
-    }
-    Event {
-        uuid Id PK
-        uuid UserId FK
-        uuid EventTypeId FK
-        uuid EventTemplateId FK
-        varchar Name
-        text Description
-        text Photo
-        int Pax
-        date Date
-        time StartTime
-        time EndTime
-        boolean CheckinEnabled
-        timestamp CreatedDate
-        timestamp DeletedDate
-    }
-    EventType {
-        uuid Id PK
-        varchar Name
-        timestamp CreatedDate
-        timestamp DeletedDate
-    }
-    EventTemplate {
-        uuid Id PK
-        varchar Path
-        varchar PreviewPath
-        timestamp CreatedDate
-        timestamp DeletedDate
-    }
-    Guest {
-        uuid Id PK
-        uuid EventId FK
-        uuid GuestTypeId FK
-        varchar Name
-        varchar Email
-        text Photo
-        timestamp CheckinDate
-        timestamp CreatedDate
-        timestamp DeletedDate
-    }
-    GuestType {
-        uuid Id PK
-        varchar Name
-    }
-    EventField {
-        uuid Id PK
-        uuid EventId FK
-        varchar Name
-        varchar Type
-        boolean IsRequired
-        smallint DisplayOrder
-        timestamp CreatedDate
-        timestamp DeletedDate
-    }
-    EventFieldValue {
-        uuid Id PK
-        uuid EventFieldId FK
-        uuid GuestId FK
-        text Value
-    }
-
-    UserProfile ||--o{ Event : "organiza"
-    EventType ||--o{ Event : "categoriza"
-    EventTemplate |o--o{ Event : "template de"
-    Event ||--o{ Guest : "contém"
-    Event ||--o{ EventField : "define campos"
-    GuestType ||--o{ Guest : "tipifica"
-    Guest ||--o{ EventFieldValue : "responde"
-    EventField ||--o{ EventFieldValue : "especifica"
-```
-\end{verbatim}
-\fonte{O Autor (2026)}
+\caption{Modelo de Entidade Relacional (MER)}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_13.png}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────
@@ -586,7 +303,7 @@ A API é estruturada em cinco projetos isolados que seguem a \textit{Onion Archi
 
 \begin{table}[H]
 \centering
-\caption{Tabela 7 - Mapeamento Completo de Endpoints da API Certify}
+\caption{Mapeamento Completo de Endpoints da API Certify}
 \footnotesize
 \begin{tabular}{|l|l|p{5cm}|l|}
 \hline
@@ -627,3 +344,31 @@ GET & /Form/Guest/Search/\{code\} & Busca convidado por código de acesso & Não
 PUT & /Form/Guest/Checkin/\{code\} & Auto check-in via código de acesso & Não \\ \hline
 \end{tabular}
 \end{table}
+
+% ─────────────────────────────────────────────────────────────────
+\subsection{Estrutura de Componentes da API}
+% ─────────────────────────────────────────────────────────────────
+
+Para demonstrar a aplicação prática da \textit{Onion Architecture} através da Injeção de Dependências, a Figura 8 ilustra como a camada de \textit{API Layer} (Controllers) interage com o \textit{Services Layer} via interfaces puras. A inversão de dependência garante que o controlador desconheça a implementação concreta do repositório, garantindo desacoplamento.
+
+\begin{figure}[H]
+\centering
+\caption{Estrutura do Componente Evento (Onion Architecture)}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_14.png}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Visão do Frontend (App Mobile)}
+% ─────────────────────────────────────────────────────────────────
+
+Assim como o backend, o lado do cliente exige um gerenciamento arquitetural para manter as responsabilidades separadas de forma sustentável, uma vez que o App Mobile é responsável por entregar a interface do organizador e o fluxo contínuo do scanner de QRCode para check-ins.
+
+O ecossistema do frontend utiliza o \textbf{React Native} juntamente com o \textbf{Expo SDK}. A comunicação é realizada por meio do cliente HTTP \textit{Axios}, que utiliza interceptadores (\textit{interceptors}) para anexar automaticamente o token \textit{Bearer} nas requisições. O \textbf{Redux} é empregado como Single Source of Truth (Fonte Única da Verdade), gerenciando não apenas a sessão do usuário de forma reativa, mas também o cache de eventos local, a fim de diminuir o \textit{round-trip} ao servidor, essencial em ambientes de rede lenta durante congressos e eventos presenciais.
+
+A segurança no cliente é implementada salvando a chave primária JWT (JSON Web Token) no \texttt{expo-secure-store}, evitando acesso à memória cache e restringindo-o apenas via keystore nativa do SO.
+
+\begin{figure}[H]
+\centering
+\caption{Fluxo da Camada de Frontend (App Mobile)}
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_15.png}
+\end{figure}

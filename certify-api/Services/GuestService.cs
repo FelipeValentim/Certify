@@ -118,7 +118,7 @@ namespace Services
 
                 if (!IsValidValueForType(fieldValue.Value, field.Type))
                 {
-                    throw new BusinessException($"O valor de '{field.Name}' é inválido para o tipo {field.Type}.");
+                    throw new BusinessException($"O valor '{fieldValue.Value}' de '{field.Name}' é inválido para o tipo {field.Type}.");
                 }
 
                 fieldsValues.Add(new EventFieldValue

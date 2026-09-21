@@ -54,7 +54,15 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEventTypeService, EventTypeService>();
 builder.Services.AddTransient<IUserContextService, UserContextService>();
 builder.Services.AddTransient<IGuestTypeService, GuestTypeService>();
-builder.Services.AddTransient<IStorageService, StorageService>();
+var storageProvider = Environment.GetEnvironmentVariable("STORAGE_PROVIDER");
+if (storageProvider != "Cloud")
+{
+    builder.Services.AddTransient<IStorageService, LocalStorageService>();
+}
+else
+{
+    builder.Services.AddTransient<IStorageService, CloudStorageService>();
+}
 builder.Services.AddTransient<IEventService, EventService>();
 builder.Services.AddTransient<IEventFieldService, EventFieldService>();
 builder.Services.AddTransient<IEventFieldValueService, EventFieldValueService>();
@@ -97,14 +105,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    UrlManager.API = "https://simply-novel-shiner.ngrok-free.app";
+    
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 

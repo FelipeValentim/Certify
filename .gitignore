@@ -427,3 +427,4 @@ FodyWeavers.xsd
 .env
 # Antigravity configurations
 .agents/
+package-lock.json

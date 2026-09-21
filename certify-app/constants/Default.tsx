@@ -28,7 +28,7 @@ export const environment = process.env.NODE_ENV;
 
 export const baseURL =
   environment == "development"
-    ? "https://simply-novel-shiner.ngrok-free.app"
+    ? process.env.EXPO_PUBLIC_API_URL || "http://localhost:5073"
     : "https://certify-1wqq.onrender.com";
 
 export const screenHeight = Dimensions.get("window").height;

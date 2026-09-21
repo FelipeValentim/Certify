@@ -68,6 +68,11 @@ Os valores preenchidos pelos convidados **podem aparecer no certificado**, permi
   dotnet run
 ```
 
+### 🔑 Credenciais de Teste
+Para testar o aplicativo localmente, você pode utilizar o usuário padrão gerado pelos scripts de banco de dados (`Certify_PostgreSQL.sql`):
+- **E-mail:** `teste@teste.com`
+- **Senha:** `teste`
+
 ## 📱 Executando o Aplicativo
 
 Certifique-se de ter o Node.js e o Expo CLI instalados.

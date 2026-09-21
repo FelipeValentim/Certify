@@ -1,10 +1,9 @@
-﻿namespace Domain.Constants
+namespace Domain.Constants
 {
 	public static class UrlManager
     {
-		public const string Storage = "https://meucertificado.uk";
+        public static string Storage => Environment.GetEnvironmentVariable("STORAGE_URL") ?? "https://meucertificado.uk";
 
-        public static string API = "https://certify-1wqq.onrender.com";
-        //public const string API = "https://simply-novel-shiner.ngrok-free.app";
+        public static string API => Environment.GetEnvironmentVariable("API_URL") ?? "https://certify-1wqq.onrender.com";
     }
 }

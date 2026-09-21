@@ -1,4 +1,4 @@
-﻿using Domain.Constants;
+using Domain.Constants;
 using Domain.DTO;
 using Domain.Entities;
 using Domain.Enum;
@@ -225,7 +225,7 @@ namespace Services
 
                 //mailMessage.AddEmbedded(qrCode.Data, qrCode.MimeType, "Convite - QRCode", "{qrcode}");
 
-                _mailService.SendMailCheckfyAsync(mailMessage);
+                Task.Run(() => _mailService.SendMailCheckfyAsync(mailMessage));
             }
         }
 

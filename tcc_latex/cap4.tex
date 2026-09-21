@@ -46,7 +46,7 @@ Os requisitos funcionais foram extraídos da análise dos \textit{Controllers}, 
 
 A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalidades mapeadas a partir dos \textit{controllers}. O \textbf{Organizador} acessa as rotas protegidas pelo \texttt{[Authorize]}, enquanto o \textbf{Convidado} interage exclusivamente com o \texttt{FormController} (\texttt{[AllowAnonymous]}).
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Casos de Uso do Sistema Certify}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_1.png}
@@ -56,7 +56,7 @@ A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalid
 \section{Descrição dos Casos de Uso}
 % ─────────────────────────────────────────────────────────────────
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{CDU001 – Criar Conta}
 \begin{tabular}{|p{4cm}|p{11cm}|}
@@ -74,7 +74,7 @@ A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalid
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{CDU002 – Realizar Login}
 \begin{tabular}{|p{4cm}|p{11cm}|}
@@ -95,7 +95,7 @@ A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalid
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{CDU004 – Criar Evento}
 \begin{tabular}{|p{4cm}|p{11cm}|}
@@ -115,7 +115,7 @@ A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalid
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{CDU007 – Cadastrar Convidado Manualmente}
 \begin{tabular}{|p{4cm}|p{11cm}|}
@@ -135,7 +135,7 @@ A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalid
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{CDU009 – Check-in via QR Code (Painel Admin)}
 \begin{tabular}{|p{4cm}|p{11cm}|}
@@ -156,7 +156,7 @@ A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalid
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{CDU012 – Gerar e Enviar Certificados em Lote}
 \begin{tabular}{|p{4cm}|p{11cm}|}
@@ -184,7 +184,7 @@ A Figura 1 ilustra as interações dos dois atores do sistema com as funcionalid
 
 O diagrama abaixo representa a hierarquia real de entidades da camada \texttt{Domain}, conforme implementada nos arquivos \texttt{.cs} do projeto. Todas as entidades auditáveis herdam de \texttt{AuditableEntity}, que por sua vez herda de \texttt{EntityBase} (que define o \texttt{Guid Id}).
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Classes do Domínio}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_2.png}
@@ -194,55 +194,55 @@ O diagrama abaixo representa a hierarquia real de entidades da camada \texttt{Do
 \section{Diagramas de Sequências}
 % ─────────────────────────────────────────────────────────────────
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Realizar Login}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_3.png}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Check-in via QR Code (Painel Admin)}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_4.png}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Envio de Certificados em Lote}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_5.png}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Cadastro de Evento}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_6.png}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Gerenciamento de Campos Dinâmicos}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_7.png}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Cadastro Manual de Convidado}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_8.png}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Auto-cadastro Público de Convidado}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_9.png}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Check-in em Lote}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_10.png}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Diagrama de Sequência: Upload de Template .docx}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_11.png}
@@ -251,7 +251,7 @@ O diagrama abaixo representa a hierarquia real de entidades da camada \texttt{Do
 \section{Visão Geral do Projeto do Sistema}
 % ─────────────────────────────────────────────────────────────────
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Arquitetura Distribuída: Cliente, Servidor e Banco de Dados}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_12.png}
@@ -267,7 +267,7 @@ O sistema utiliza o \textbf{Entity Framework Core} como ORM (\textit{Object-Rela
 
 \subsection{MER - Modelo de Entidade Relacional}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Modelo de Entidade Relacional (MER)}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_13.png}
@@ -301,7 +301,7 @@ A API é estruturada em cinco projetos isolados que seguem a \textit{Onion Archi
 
 \subsection{Endpoints da API}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Mapeamento Completo de Endpoints da API Certify}
 \footnotesize
@@ -351,7 +351,7 @@ PUT & /Form/Guest/Checkin/\{code\} & Auto check-in via código de acesso & Não 
 
 Para demonstrar a aplicação prática da \textit{Onion Architecture} através da Injeção de Dependências, a Figura 8 ilustra como a camada de \textit{API Layer} (Controllers) interage com o \textit{Services Layer} via interfaces puras. A inversão de dependência garante que o controlador desconheça a implementação concreta do repositório, garantindo desacoplamento.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Estrutura do Componente Evento (Onion Architecture)}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_14.png}
@@ -367,7 +367,7 @@ O ecossistema do frontend utiliza o \textbf{React Native} juntamente com o \text
 
 A segurança no cliente é implementada salvando a chave primária JWT (JSON Web Token) no \texttt{expo-secure-store}, evitando acesso à memória cache e restringindo-o apenas via keystore nativa do SO.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \caption{Fluxo da Camada de Frontend (App Mobile)}
 \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{imagens/figura_15.png}

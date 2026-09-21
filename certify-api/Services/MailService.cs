@@ -1,4 +1,4 @@
-﻿using Domain.DTO;
+using Domain.DTO;
 using Domain.Interfaces.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -13,7 +13,10 @@ namespace Services
 		{
 			var message = new MimeMessage();
 
-			message.From.Add(new MailboxAddress("Certify", "checkfy.helper@gmail.com"));
+			var mailUser = Environment.GetEnvironmentVariable("MAIL_USER");
+			var mailPass = Environment.GetEnvironmentVariable("MAIL_PASSWORD");
+
+			message.From.Add(new MailboxAddress("Certify", mailUser));
 
 			foreach (var to in mailMessage.To)
 			{
@@ -48,7 +51,7 @@ namespace Services
 			{
 				client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-				client.Authenticate("checkfy.helper@gmail.com", "yssv xjdf nzdo wkrc"); /*yssv xjdf nzdo wkrc*/
+				client.Authenticate(mailUser, mailPass);
 
 				await client.SendAsync(message);
 

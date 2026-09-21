@@ -30,27 +30,27 @@
 \contentsline {section}{\numberline {4.1}Requisitos Funcionais}{27}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Requisitos Não Funcionais}{28}{section.4.2}%
 \contentsline {section}{\numberline {4.3}Diagrama de Casos de Uso}{29}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Descrição dos Casos de Uso}{30}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Diagrama de Classes}{33}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Diagramas de Sequências}{35}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Visão Geral do Projeto do Sistema}{39}{section.4.7}%
-\contentsline {section}{\numberline {4.8}Visão do Banco de Dados}{40}{section.4.8}%
-\contentsline {subsection}{\numberline {4.8.1}SGBD}{40}{subsection.4.8.1}%
-\contentsline {subsection}{\numberline {4.8.2}MER - Modelo de Entidade Relacional}{41}{subsection.4.8.2}%
-\contentsline {section}{\numberline {4.9}Visão do Backend (API RESTful)}{42}{section.4.9}%
-\contentsline {subsection}{\numberline {4.9.1}Tecnologias a serem usadas}{42}{subsection.4.9.1}%
-\contentsline {subsection}{\numberline {4.9.2}Projeto do Backend (Onion Architecture)}{42}{subsection.4.9.2}%
-\contentsline {subsection}{\numberline {4.9.3}Endpoints da API}{43}{subsection.4.9.3}%
-\contentsline {subsection}{\numberline {4.9.4}Estrutura de Componentes da API}{43}{subsection.4.9.4}%
-\contentsline {section}{\numberline {4.10}Visão do Frontend (App Mobile)}{45}{section.4.10}%
+\contentsline {section}{\numberline {4.4}Descrição dos Casos de Uso}{29}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Diagrama de Classes}{29}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Diagramas de Sequências}{38}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Visão Geral do Projeto do Sistema}{38}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Visão do Banco de Dados}{38}{section.4.8}%
+\contentsline {subsection}{\numberline {4.8.1}SGBD}{38}{subsection.4.8.1}%
+\contentsline {subsection}{\numberline {4.8.2}MER - Modelo de Entidade Relacional}{39}{subsection.4.8.2}%
+\contentsline {section}{\numberline {4.9}Visão do Backend (API RESTful)}{39}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Tecnologias a serem usadas}{39}{subsection.4.9.1}%
+\contentsline {subsection}{\numberline {4.9.2}Projeto do Backend (Onion Architecture)}{39}{subsection.4.9.2}%
+\contentsline {subsection}{\numberline {4.9.3}Endpoints da API}{41}{subsection.4.9.3}%
+\contentsline {subsection}{\numberline {4.9.4}Estrutura de Componentes da API}{41}{subsection.4.9.4}%
+\contentsline {section}{\numberline {4.10}Visão do Frontend (App Mobile)}{41}{section.4.10}%
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
-\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{Apresentação do Sistema}}{47}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Tecnologias a serem usadas no Frontend}{47}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Projeto das Interfaces}{48}{section.5.2}%
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{Apresentação do Sistema}}{45}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Tecnologias a serem usadas no Frontend}{45}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Projeto das Interfaces}{46}{section.5.2}%
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
-\contentsline {chapter}{\chapternumberline {6}\MakeTextUppercase []{Considerações Finais}}{55}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Conclusão}{55}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Implementações Futuras}{55}{section.6.2}%
+\contentsline {chapter}{\chapternumberline {6}\MakeTextUppercase []{Considerações Finais}}{69}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Conclusão}{69}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Implementações Futuras}{69}{section.6.2}%
 \vspace {\cftbeforechapterskip }
 \vspace {\cftbeforechapterskip }
 \vspace {\cftbeforechapterskip }

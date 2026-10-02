@@ -428,3 +428,8 @@ FodyWeavers.xsd
 # Antigravity configurations
 .agents/
 package-lock.json
+
+# Service Account & Credentials
+*inviscan.json
+*-credentials.json
+
